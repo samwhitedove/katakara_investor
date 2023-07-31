@@ -9,7 +9,7 @@ import 'package:katakara_investor/values/values.dart';
 import '../models/services/model.service.response.dart';
 
 class MyRequestClass {
-  static String _baseUrl = "http://3.89.218.227:3000/api/v1";
+  static String _baseUrl = "http://3.88.230.155:4000/api/v1";
   static CancelToken? cancelToken;
   static Dio? _dio;
 

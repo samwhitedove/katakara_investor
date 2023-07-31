@@ -16,4 +16,5 @@ class EndPoint {
   static String updateInvestorSignature = '/user/uploadInvestorSignature';
   static String changeUserPassword = '/user/changeUserPassword';
   static String fetchFaq = '/user/fetchFaq';
+  static String createRedFlag = '/user/createRedFlag';
 }

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom.widget.dart';
@@ -47,9 +48,9 @@ class PortfolioScreen extends StatelessWidget {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(businessName)
+                          Text(tBusinessName)
                               .title(fontSize: 20, color: AppColor.white),
-                          Text(sendReceipt).subTitle(
+                          Text(tSendReceipt).subTitle(
                             color: AppColor.white.withOpacity(.7),
                           ),
                         ],
@@ -64,18 +65,85 @@ class PortfolioScreen extends StatelessWidget {
                   child: CW.column(
                     children: [
                       Container(
-                        height: 50,
-                        color: AppColor.black,
+                        height: 60,
+                        color: AppColor.white,
                         width: Get.width,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              Text("03").title(fontSize: 13, color: AppColor.text,),
+                              Text(tActiveProduct).subTitle(fontSize: 12, color: AppColor.grey,),
+                            ],),
+                            Column(
+                               crossAxisAlignment: CrossAxisAlignment.end,children: [
+                              Text("03").title(fontSize: 13, color: AppColor.text,),
+                              Text(tPending).subTitle(fontSize: 12, color: AppColor.grey,),
+                            ],),
+                          ],
+                        ).paddingSymmetric(horizontal: 15, vertical: 5)
+                      ).roundCorner(
+                        showShadow: true,
+                       borderColor: AppColor.white,
+                       blurRadius: 1
                       )
                     ],
                   ),
                 ),
               ],
             ),
+            CW.AppSpacer(h: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(_.productStatus.length, (index) => 
+              Text(_.productStatus[index])
+                .subTitle(color: _.currentViewIndex == index ? AppColor.white : AppColor.primary).align(Al.center)
+                .toButton(onTap: ()=> _.changeStatus(index))
+                .roundCorner(
+                  bgColor:_.currentViewIndex == index ? AppColor.primary : AppColor.primaryLight,
+                  radius: 30,
+                  showShadow: false, showBorder: false,height: 30,
+                  width: HC.spaceHorizontal(70),
+                  padding: EdgeInsets.symmetric( horizontal: 10),),),)
+                .marginSymmetric(horizontal: HC.spaceHorizontal(63),),
+             CW.AppSpacer(h: 15),
+            Container(
+              height: Get.height * .63,
+              child: Expanded(
+                child: PageView(
+                  controller: _.pageController,
+                  onPageChanged: (value) => _.changeStatus(value),
+                  children: List.generate(_.productStatus.length, (index) => Wrap(children: List.generate(3, (index) => Container(
+                    
+                    width: HC.spaceHorizontal(104),
+                    margin: EdgeInsets.all(3),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                      Container(decoration: BoxDecoration(
+                        image: DecorationImage
+                        (image: CachedNetworkImageProvider(userData.profileImageUrl!,),fit: BoxFit.cover
+                        ),
+                      ),
+                      height: HC.spaceVertical(70)
+                      ),
+                      Text("testing dummy content").subTitle(fontSize: 10),
+                      Text(tNaira + "200,000").title(fontSize: 12,color: AppColor.text),
+                    ],)
+                  )//,
+                  ),
+                  ).marginSymmetric(horizontal: 15),
+                  )
+                ),
+              ),
+            )
           ],
         );
       },
     );
   }
+
 }

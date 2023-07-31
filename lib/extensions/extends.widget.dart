@@ -70,6 +70,7 @@ extension ExtendWidget on Widget {
     BlurStyle blurStyle = BlurStyle.normal,
     double? width,
     bool showBorder = true,
+    bool showShadow = false,
     double height = 50,
   }) {
     return Container(
@@ -78,12 +79,12 @@ extension ExtendWidget on Widget {
       padding: padding,
       margin: margin,
       decoration: BoxDecoration(
-        border: Border.all(
-            color: !showBorder ? AppColor.transparent : borderColor,
+        border: showBorder ? Border.all(
+            color: borderColor,
             style: BorderStyle.solid,
-            width: !showBorder ? 0 : 2),
+            width:  2) : null,
         color: bgColor,
-        boxShadow: [
+        boxShadow: showShadow ? [
           BoxShadow(
             color: AppColor.grey,
             blurRadius: blurRadius,
@@ -91,7 +92,7 @@ extension ExtendWidget on Widget {
             spreadRadius: elevation,
             offset: offSet,
           ),
-        ],
+        ] : null,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(radius ?? bottomLeftRadius),
           topLeft: Radius.circular(radius ?? topLeftRadius),

@@ -2,28 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:katakara_investor/values/values.dart';
 
 extension ExtendString on Text {
-  Text title({Color? color, double? fontSize = 24}) {
+  Text title({Color? color, double? fontSize = 24, lines = 5}) {
     return Text(
       data!,
+      maxLines: lines,
       softWrap: true,
       textScaleFactor: 1,
       style: TextStyle(
         fontFamily: 'Inter',
         fontSize: fontSize,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w700,overflow: TextOverflow.ellipsis,
         color: color ?? AppColor.primary,
       ),
     );
   }
 
-  Text subTitle({Color? color, double? fontSize = 12}) {
+  Text subTitle({Color? color, double? fontSize = 12, lines = 2}) {
     return Text(
       data!,
       softWrap: true,
       textScaleFactor: 1,
+      maxLines: lines,
       style: TextStyle(
         fontFamily: 'Inter',
         fontSize: fontSize,
+        overflow: TextOverflow.ellipsis,
         fontWeight: FontWeight.w400,
         color: color ?? AppColor.subTitle,
       ),

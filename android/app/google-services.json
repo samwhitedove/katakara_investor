@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1071339281251",
+    "project_id": "kakakara-investor",
+    "storage_bucket": "kakakara-investor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071339281251:android:ea0f6e81d5cfb2331bd156",
+        "android_client_info": {
+          "package_name": "com.buyandsell.katakara_investor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1071339281251-0id39mt2v21qhs362la0jvbkrp5faatv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBN7RibWC4PtcVeyrTOA34C8m9iQj13wKw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1071339281251-0id39mt2v21qhs362la0jvbkrp5faatv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

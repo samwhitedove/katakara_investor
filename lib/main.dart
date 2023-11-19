@@ -1,27 +1,51 @@
 import 'dart:developer';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/helper/bindings.dart';
 import 'package:katakara_investor/helper/helper.settings.dart';
+import 'package:katakara_investor/helper/notifications.dart' as notification;
+import 'package:katakara_investor/helper/notifications.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/product/product.add.controller.dart';
 import 'helper/helper.dart';
 import 'services/service.endpoints.dart';
 import 'services/service.http.dart';
 
+/// Define a top-level named handler which background/terminated messages
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  if (message.notification != null) return;
+  NotificationController.createNotification(message);
+  log('Handling a background message ${message.messageId}');
+}
+
 void main() async {
+  notification.awesome_notification();
   WidgetsFlutterBinding.ensureInitialized();
   final appLifecycleObserver = AppLifecycleObserver();
-
   WidgetsBinding.instance.addObserver(appLifecycleObserver);
 
   await Config.initConfig();
   await AppSettings.init();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await Firebase.initializeApp();
+
+  final messaging = HC.initFCM();
+
+  await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: true,
+    provisional: false,
+    sound: true,
+  );
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // Set your desired color here
@@ -41,8 +65,28 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    AwesomeNotifications().setListeners(
+        onActionReceivedMethod: NotificationController.onActionReceivedMethod,
+        onNotificationCreatedMethod:
+            NotificationController.onNotificationCreatedMethod,
+        onNotificationDisplayedMethod:
+            NotificationController.onNotificationDisplayedMethod,
+        onDismissActionReceivedMethod:
+            NotificationController.onDismissActionReceivedMethod);
+
+    accept_permission();
+  }
 
   @override
   Widget build(BuildContext context) {

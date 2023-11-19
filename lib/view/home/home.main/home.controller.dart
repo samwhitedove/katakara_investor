@@ -1,12 +1,15 @@
 import 'dart:developer';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/helper/helper.dart';
+import 'package:katakara_investor/helper/notifications.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';
 import 'package:katakara_investor/services/services.home.dart';
 import 'package:katakara_investor/services/services.auth.dart';
 import 'package:katakara_investor/values/values.dart';
+import 'package:katakara_investor/view/home/home.dart';
 
 class HomeScreenController extends GetxController {
   RxBool isLoading = false.obs;
@@ -17,11 +20,34 @@ class HomeScreenController extends GetxController {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final AuthService authService = Get.find<AuthService>();
 
+  @override
+  void onReady() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      NotificationController.createNotification(message);
+    });
+    super.onReady();
+  }
+
+  @override
+  onInit() {
+    super.onInit();
+    Get.put(PortfolioController());
+    Get.put(HomeKFIController());
+  }
+
   goLive() async {
     isLoading.value = true;
-    final RequestResponsModel response =
-        await authService.goLive({"status": !isActive.value});
+    String? deviceToken = "";
+    if (!isActive.value) {
+      deviceToken = await HC.initFCM().getToken();
+      log('$deviceToken ---------- device token ');
+    }
+    final RequestResponsModel response = await authService
+        .goLive({"status": !isActive.value, "fcmToken": deviceToken});
     if (response.success) {
+      await Get.find<PortfolioController>().fetchPortfolio();
+      await Get.find<HomeKFIController>().fetchKFIAccount();
+      await Get.find<HomeKFIController>().fetchKFIInvestment();
       if ((!isActive.value) == true) {
         RequestResponsModel youtube =
             await Get.find<HomeService>().fetchYoutube();
@@ -94,6 +120,15 @@ class HomeScreenController extends GetxController {
   ];
 
   List<Map<String, dynamic>> menuItemMain = [
+    {
+      'image': Assets.assetsSvgBell,
+      "isSelected": false.obs,
+      "onTap": () {
+        Get.back();
+        Get.toNamed(AppRoutes.name(RouteName.notifications));
+      },
+      "label": "Notification"
+    },
     {
       'image': Assets.assetsSvgNairaSvgsquare,
       "isSelected": false.obs,

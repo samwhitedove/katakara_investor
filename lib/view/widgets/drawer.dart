@@ -48,7 +48,7 @@ class AppDrawer extends StatelessWidget {
             CW.AppSpacer(h: 20),
             const Divider(),
             ...List.generate(
-              _.menuItemHeader.length,
+              _.menuItemMain.length,
               (index) => customMenuWidget(_.menuItemMain[index]),
             ),
             const Divider(),

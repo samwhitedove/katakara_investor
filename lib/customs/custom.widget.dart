@@ -500,6 +500,7 @@ class CW {
   static Scaffold pageWithAppBar(
       {double topPadding = 60,
       double size = 15,
+      String title = tAddProduct,
       required List<Widget> children,
       Function()? onTap}) {
     return Scaffold(
@@ -510,7 +511,7 @@ class CW {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CW.backButton(onTap: onTap).align(Al.left),
-              const Text(tAddProduct).title(),
+              Text(title).title(),
               const SizedBox(width: 25),
             ],
           ),
@@ -520,11 +521,14 @@ class CW {
     );
   }
 
-  static Padding column({double size = 15, required List<Widget> children}) {
+  static Padding column(
+      {double size = 15,
+      required List<Widget> children,
+      ScrollPhysics? scroll}) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: size),
       child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: scroll ?? const BouncingScrollPhysics(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

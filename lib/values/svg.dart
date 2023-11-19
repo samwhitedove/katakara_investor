@@ -37,6 +37,10 @@ class Assets {
   /// assets/fonts/Inter-Thin.ttf
   static const String assetsFontsInterThin = "assets/fonts/Inter-Thin.ttf";
 
+  /// Assets for assetsImagesBell
+  /// assets/images/bell.png
+  static const String assetsImagesBell = "assets/images/bell.png";
+
   /// Assets for assetsImagesImage
   /// assets/images/image.png
   static const String assetsImagesImage = "assets/images/image.png";
@@ -57,6 +61,10 @@ class Assets {
   /// assets/images/reciept.png
   static const String assetsImagesReciept = "assets/images/reciept.png";
 
+  /// Assets for assetsImagesSwipeDown
+  /// assets/images/swipe_down.png
+  static const String assetsImagesSwipeDown = "assets/images/swipe_down.png";
+
   /// Assets for assetsImagesWelcome
   /// assets/images/welcome.png
   static const String assetsImagesWelcome = "assets/images/welcome.png";
@@ -68,6 +76,10 @@ class Assets {
   /// Assets for assetsSvgBank
   /// assets/svg/bank.svg
   static const String assetsSvgBank = "assets/svg/bank.svg";
+
+  /// Assets for assetsSvgBell
+  /// assets/svg/bell.svg
+  static const String assetsSvgBell = "assets/svg/bell.svg";
 
   /// Assets for assetsSvgBriefcase
   /// assets/svg/briefcase.svg

@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/customs.dart';
 import 'package:katakara_investor/extensions/extensions.dart';
+import 'package:katakara_investor/helper/notifications.dart';
 import 'package:katakara_investor/services/services.auth.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/home/home.dart';
@@ -145,8 +148,11 @@ class HomePageScreen extends StatelessWidget {
               CW.button(
                 color: ctr.isActive.value ? null : AppColor.inActiveBlack,
                 onPress: ctr.isActive.value
-                    ? () {
-                        Get.find<AuthService>().fetchUser();
+                    ? () async {
+                        // Get.find<AuthService>().fetchUser();
+                        var deviceToken = await HC.initFCM().getToken();
+                        // NotificationController.createNotification();
+                        log(deviceToken.toString());
                       }
                     : () => HC.snack(tGoLiveToActive),
                 text: tInvestNow,

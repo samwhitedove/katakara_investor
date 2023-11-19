@@ -41,6 +41,8 @@ class LoginScreenController extends GetxController {
       log("data -------------21");
       HC.snack(response.message, success: response.success);
       log("data -------------22");
+      //TODO update
+
       Get.offAllNamed(AppRoutes.name(RouteName.home));
       return;
     }

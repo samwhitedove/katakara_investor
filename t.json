@@ -1,0 +1,79 @@
+// {
+//     "senderId": null,
+//     "category": null,
+//     "collapseKey": "com.buyandsell.katakara_investor",
+//     "contentAvailable": false,
+//     "data": {},
+//     "from": 1071339281251,
+//     "messageId": "0: 1700385687807327%61ac50b161ac50b1",
+//     "messageType": null,
+//     "mutableContent": false,
+//     "notification": {
+//         "title": "Account Merge Request",
+//         "titleLocArgs": [],
+//         "titleLocKey": null,
+//         "body": "Sunjay request an account merge as kfi account use CoDe to accept invitation"
+//     },
+//     "bodyLocArgs": [],
+//     "bodyLocKey": null,
+//     "android": {
+//         "channelId": null,
+//         "clickAction": null,
+//         "color": null,
+//         "count": null,
+//         "imageUrl": null,
+//         "link": null,
+//         "priority": 0,
+//         "smallIcon": null,
+//         "sound": null,
+//         "ticker": null,
+//         "tag": null,
+//         "visibility": 0
+//     },
+//     "apple": null,
+//     "web": null
+// },
+//     "sentTime": 1700385687788,
+//     "threadId": null,
+//     "ttl": 2419200
+    
+
+
+//     {
+//         senderId: null, 
+//         category: null, 
+//         collapseKey: com.buyandsell.katakara_investor,
+//         contentAvailable: false,
+//         data: {}, 
+//         from: 1071339281251, 
+//         messageId: 0:1700385687807327%61ac50b161ac50b1, 
+//         messageType: null, 
+//         mutableContent: false, 
+//         notification: {title: Account Merge Request, 
+//         titleLocArgs: [], 
+//         titleLocKey: null, 
+//         body: Sunjay request an account merge as kfi account use CoDe to accept invitation"
+//     }, 
+//         bodyLocArgs: [], 
+//         bodyLocKey: null, 
+//         android: {
+//             channelId: null, 
+//             clickAction: null,
+//             color: null, 
+//             count: null, 
+//             imageUrl: null, 
+//             link: null,
+//             priority: 0, 
+//             smallIcon: null, 
+//             sound: null, 
+//             ticker: null, 
+//             tag: null, 
+//             visibility: 0
+//         }, 
+//         apple: null, 
+//         web: null
+//     }, 
+//         sentTime: 1700385687788, 
+//         threadId: null, 
+//         ttl: 2419200
+//     }

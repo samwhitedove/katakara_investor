@@ -132,29 +132,6 @@ class PortfolioScreen extends StatelessWidget {
                 refresh: _.fetchPortfolio,
               ),
             )
-            // Obx(
-            //   () => RefreshIndicator(
-            //     onRefresh: () async {
-            //       await _.fetchPortfolio();
-            //     },
-            //     child: SizedBox(
-            //       // color: AppColor.black,
-            //       height: Get.height * .63,
-            //       width: double.infinity,
-            //       child: _.isFetchingProducts.value
-            //           ? const ProductTypeCategoryLoadingState()
-            //           : _.isError.value
-            //               ? ErrorFetchingScreen(
-            //                   error: _.errorMessage,
-            //                   onRefresh: _.fetchPortfolio,
-            //                 )
-            //               : ProductTypeCategory(
-            //                   product: _.personalProduct,
-            //                   onRefresh: _.fetchPortfolio,
-            //                 ),
-            //     ),
-            //   ),
-            // ),
           ],
         );
       },

@@ -55,7 +55,8 @@ class UserBusinessDetails extends StatelessWidget {
                       uploadProgress: _.uploadProgress.value,
                     )
                     .toButton(
-                      onTap: userData.investorSignature!.isNotEmpty &&
+                      onTap: userData.investorSignature == null ||
+                              userData.investorSignature!.isNotEmpty &&
                                   _.isUploadingImage.value ||
                               userData.investorSignature!.length > 10
                           ? null

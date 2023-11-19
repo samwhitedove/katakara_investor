@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -13,6 +14,15 @@ import 'package:katakara_investor/services/services.auth.dart';
 import '../values/values.dart';
 
 class HC {
+  static final HC _singleton = HC._internal();
+  static dynamic _fcm = null;
+
+  factory HC() {
+    return _singleton;
+  }
+
+  HC._internal();
+
   static Future<RequestResponsModel> mockFailedResponse() async {
     return await Get.find<AuthService>().mockFailedResponse();
   }
@@ -185,5 +195,11 @@ class HC {
         width: size?.width.toInt() ?? 200, height: size?.height.toInt() ?? 200);
     Uint8List resizedImg = Uint8List.fromList(img.encodePng(resized));
     return resizedImg.first as File;
+  }
+
+  static FirebaseMessaging initFCM() {
+    if (_fcm != null) return _fcm;
+    _fcm = FirebaseMessaging.instance;
+    return _fcm;
   }
 }

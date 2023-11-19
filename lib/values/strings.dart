@@ -36,7 +36,8 @@ enum RouteName {
   viewRedFlag,
   usersReceipts,
   addReceipts,
-  addFaq
+  addFaq,
+  notifications,
 }
 
 enum Al { center, right, left }

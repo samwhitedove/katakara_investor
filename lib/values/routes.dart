@@ -12,6 +12,7 @@ import 'package:katakara_investor/view/admin/users/admin.user.view.dart';
 import 'package:katakara_investor/view/auth/register/register_controller/stepFour.controller.dart';
 import 'package:katakara_investor/view/auth/register/register_controller/stepOne.controller.dart';
 import 'package:katakara_investor/view/auth/register/register_controller/stepTwo.controller.dart';
+import 'package:katakara_investor/view/home/home.notification/home.notification.view.dart';
 import 'package:katakara_investor/view/home/home.receipt/home.receipt.reveiw.dart';
 import 'package:katakara_investor/view/home/home.receipt/home.receipt.create.dart';
 import 'package:katakara_investor/view/home/home.sub/chat/chat.screen.dart';
@@ -80,6 +81,8 @@ class AppRoutes {
         return '/admin';
       case RouteName.user:
         return '/user';
+      case RouteName.notifications:
+        return '/notifications';
       default:
         return '/unknown';
     }
@@ -195,6 +198,10 @@ class AppRoutes {
       GetPage(
         name: _routeName(RouteName.addFaq),
         page: () => const AddFaq(),
+      ),
+      GetPage(
+        name: _routeName(RouteName.notifications),
+        page: () => const NotificationScreen(),
       ),
     ];
   }

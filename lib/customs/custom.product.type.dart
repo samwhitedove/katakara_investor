@@ -32,7 +32,7 @@ class ProductTypeCategory extends StatelessWidget {
                 (index) => Stack(
                   children: [
                     Container(
-                      width: HC.spaceHorizontal(120),
+                      width: HC.spaceHorizontal(118),
                       margin: const EdgeInsets.all(3),
                       child: ProductCard(
                         isNetwork: true,
@@ -123,27 +123,38 @@ class ErrorFetchingScreen extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () => onRefresh?.call(),
       child: SingleChildScrollView(
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CW.AppSpacer(h: 30),
-            const Icon(
-              Icons.wifi_tethering_error,
-              size: 50,
-            ),
-            Text(error!.isNotEmpty ? error! : "Error fetching data")
-                .subTitle()
-                .align(Al.center),
-            CW.AppSpacer(h: 30),
-            SizedBox(
-                height: HC.spaceVertical(50),
-                width: HC.spaceHorizontal(100),
-                child: CW.button(
-                    onPress: onRefresh,
-                    text: "Reload",
-                    color: AppColor.primarySwatch.withAlpha(100)))
-          ],
+        child: SizedBox(
+          height: Get.height * .6,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CW.AppSpacer(h: 30),
+              Text(error!.isNotEmpty ? error! : "Error fetching data")
+                  .subTitle(color: AppColor.red)
+                  .align(Al.center),
+              CW.AppSpacer(h: 10),
+              Column(
+                children: [
+                  Image.asset(
+                    Assets.assetsImagesSwipeDown,
+                    scale: 3,
+                    color: AppColor.grey,
+                  ),
+                  const Text("Swipe down to reload or click button below")
+                      .subTitle()
+                ],
+              ),
+              CW.AppSpacer(h: 30),
+              SizedBox(
+                  height: HC.spaceVertical(50),
+                  width: HC.spaceHorizontal(100),
+                  child: CW.button(
+                      onPress: onRefresh,
+                      text: "Reload",
+                      color: AppColor.primarySwatch.withAlpha(100)))
+            ],
+          ),
         ),
       ),
     );

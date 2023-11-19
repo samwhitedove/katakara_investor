@@ -56,6 +56,7 @@ class MyRequestClass {
           } else {
             userData.token = response.data['token'];
             userData.refreshToken = response.data['refreshToken'];
+            AppSettings.updateLocalUserData(userData.toJson());
           }
 
           krequest(
@@ -228,6 +229,15 @@ class MyRequestClass {
         statusCode: error.response?.data?['statusCode'],
         success: error.response?.data?['success'] ?? false,
       );
+    } else if (error.type == DioExceptionType.unknown) {
+      log('Response unknown error: ${error.message}');
+      log('Response unknown status code: ${error.response?.statusCode}');
+      log('Response unknown data: ${error.response?.data}');
+      if (error.response?.statusCode == 401 && hasTryRefresh == false) {
+        return RequestResponsModel(message: "Checking ...", success: true);
+      }
+      return RequestResponsModel(
+          message: "Unknown Server error, please try again");
     } else if (error.type == DioExceptionType.unknown) {
       log('Response unknown error: ${error.message}');
       log('Response unknown status code: ${error.response?.statusCode}');

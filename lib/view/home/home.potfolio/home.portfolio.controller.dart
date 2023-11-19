@@ -32,14 +32,6 @@ class PortfolioController extends GetxController {
     update();
   }
 
-  @override
-  onInit() {
-    super.onInit();
-    log('fetching...');
-    fetchPortfolio();
-    log('done fetching...');
-  }
-
   fetchPortfolio(
       {Map<String, dynamic> type = const {'type': 'personal'}}) async {
     isFetchingProducts.value = true;

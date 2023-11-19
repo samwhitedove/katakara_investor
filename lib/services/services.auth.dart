@@ -100,7 +100,7 @@ class AuthService extends GetxController {
     return response;
   }
 
-  Future<RequestResponsModel> goLive(Map<String, bool> data) async {
+  Future<RequestResponsModel> goLive(Map<String, dynamic> data) async {
     RequestResponsModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.goLiveAndOffline, body: data, method: Methods.patch);
     return response;

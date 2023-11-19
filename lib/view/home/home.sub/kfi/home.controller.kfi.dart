@@ -1,7 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom.widget.dart';
+import 'package:katakara_investor/helper/helper.dart';
+import 'package:katakara_investor/models/kfi/model.kfi.dart';
 import 'package:katakara_investor/models/product/models.fetch.portfolio.response.dart';
+import 'package:katakara_investor/models/services/model.service.response.dart';
+import 'package:katakara_investor/services/services.kfi.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/home/home.dart';
 
@@ -9,40 +15,41 @@ class HomeKFIController extends GetxController {
   List<String> fkis = [tInvestments, tKFIAccount];
   RxInt currentKfi = 0.obs;
   RxBool isLoading = false.obs;
+  RxBool isInviting = false.obs;
+  RxBool hasValidInput = false.obs;
+  RxBool isErrorFetchingMergeProduct = false.obs;
+  RxBool isErrorFetchingMergeUser = false.obs;
+  RxBool isFetchingMerge = false.obs;
+  List<MergeUsers> users = <MergeUsers>[];
   HomeScreenController? homeScreenController;
+  TextEditingController email = TextEditingController();
+  TextEditingController code = TextEditingController();
+  final kfiService = KFIService();
 
-  List<Map<String, dynamic>> fkiData = [
-    {
-      'name': "Emeka Emaku Alios",
-      'state': 'Abuja',
-      'lga': "Gwaladwa",
-      'workDays': ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun']
-    },
-    {
-      'name': "Emeka Emaku Alios",
-      'state': 'Abuja',
-      'lga': "Gwaladwa",
-      'workDays': ['Mon', 'Sun']
-    },
-    {
-      'name': "Emeka Emaku Alios",
-      'state': 'Abuja',
-      'lga': "Gwaladwa",
-      'workDays': ['Mon', 'Tue', 'Wed', 'Thur', 'Sun']
-    },
-    {
-      'name': "Emeka Emaku Alios",
-      'state': 'Abuja',
-      'lga': "Gwaladwa",
-      'workDays': ['Mon', 'Tue', 'Wed', 'Thur', 'Fri']
-    },
-    {
-      'name': "Emeka Emaku Alios",
-      'state': 'Abuja',
-      'lga': "Gwaladwa",
-      'workDays': ['Thur', 'Fri', 'Sat', 'Sun']
-    }
-  ];
+  changeEmailValue() => hasValidInput.value = HC.validateEmail(email.text);
+  checkCode() => hasValidInput.value = code.text.length == 6;
+
+  inviteUser() async {
+    isInviting.value = true;
+    final RequestResponsModel response =
+        await kfiService.inviteUser(body: {'email': email.text});
+    isInviting.value = false;
+    Get.back();
+    hasValidInput.value = false;
+    email.clear();
+    HC.snack(response.message, success: response.success);
+  }
+
+  acceptInvite() async {
+    isInviting.value = true;
+    final RequestResponsModel response =
+        await kfiService.acceptUser(body: {'code': code.text});
+    isInviting.value = false;
+    Get.back();
+    hasValidInput.value = false;
+    code.clear();
+    HC.snack(response.message, success: response.success);
+  }
 
   PageController pageController = PageController(initialPage: 0);
   changeTab(index) {
@@ -51,17 +58,18 @@ class HomeKFIController extends GetxController {
         duration: CW.onesSec, curve: Curves.fastEaseInToSlowEaseOut);
   }
 
-  RxBool isError = false.obs;
+  // RxBool isError = false.obs;
   RxString errorMessage = ''.obs;
   List<Datum> kfiProduct = [];
   Future<List<Datum>> fetchKFIInvestment() async {
+    isErrorFetchingMergeProduct.value = false;
     isLoading.value = true;
     Get.put(PortfolioController());
     final portfolioController = Get.find<PortfolioController>();
     final data =
         await portfolioController.fetchPortfolio(type: {'type': 'merge'});
     if (data['status'] == false) {
-      isError.value = true;
+      isErrorFetchingMergeProduct.value = true;
       errorMessage.value = data['errorMessage'];
     }
     kfiProduct = portfolioController.mergeProduct;
@@ -69,16 +77,31 @@ class HomeKFIController extends GetxController {
     return portfolioController.mergeProduct;
   }
 
-  Future<Map<String, dynamic>> fetchKFIAccount() async {
-    return {"message": "messate", "data": []};
+  Future fetchKFIAccount() async {
+    isErrorFetchingMergeUser.value = false;
+    isFetchingMerge.value = true;
+    final RequestResponsModel response = await kfiService.fetchMergeUser();
+    isFetchingMerge.value = false;
+    if (response.success == false) {
+      isErrorFetchingMergeUser.value = true;
+      HC.snack(response.message, success: response.success);
+      return;
+    }
+    users.clear();
+    for (var user in response.data) {
+      users.add(MergeUsers.fromJson(user));
+    }
   }
 
-  // findKFI(int value) async {
-  //   homeScreenController!.isLoading.value = true;
-  //   isLoading.value = true;
-  //   await Future.delayed(CW.onesSec);
-  //   currentKfi.value = value;
-  //   isLoading.value = false;
-  //   homeScreenController!.isLoading.value = false;
-  // }
+  RxBool isUnlinking = false.obs;
+  Future unlinkUser(String email) async {
+    isUnlinking.value = true;
+    final RequestResponsModel response =
+        await kfiService.unlinkUser(body: {"email": email});
+    isUnlinking.value = false;
+    if (response.success) fetchKFIAccount();
+    Get.back();
+    HC.snack(response.message, success: response.success);
+    return;
+  }
 }

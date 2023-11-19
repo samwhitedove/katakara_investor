@@ -1,21 +1,19 @@
-import 'dart:developer';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom,product.load.dart';
+import 'package:katakara_investor/customs/custom.product.type.dart';
 import 'package:katakara_investor/customs/custom.product.type.loading.dart';
 import 'package:katakara_investor/customs/customs.dart';
 import 'package:katakara_investor/extensions/extensions.dart';
 import 'package:katakara_investor/helper/helper.dart';
-import 'package:katakara_investor/models/product/models.fetch.portfolio.response.dart';
+import 'package:katakara_investor/models/kfi/model.kfi.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/home/home.dart';
 
-import '../../../../customs/custom.product.type.dart';
-
 class KFIPageScreen extends StatelessWidget {
   final HomeScreenController ctr;
-  const KFIPageScreen({super.key, required this.ctr});
+  KFIPageScreen({super.key, required this.ctr});
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +27,22 @@ class KFIPageScreen extends StatelessWidget {
               child: SizedBox(
                 child: Scaffold(
                   floatingActionButton: _.currentKfi.value == 1
-                      ? FloatingActionButton.extended(
-                          onPressed: () {},
-                          label: const Row(
-                            children: [Icon(Icons.add), Text("Invite KFI")],
-                          ),
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            FloatingActionButton.extended(
+                              onPressed: () =>
+                                  InviteUser(context, _, isAccept: true),
+                              label: const Text("Accept Invite"),
+                            ),
+                            CW.AppSpacer(h: 20),
+                            FloatingActionButton.extended(
+                              onPressed: () => InviteUser(context, _),
+                              label: const Row(
+                                children: [Icon(Icons.add), Text("Invite KFI")],
+                              ),
+                            ),
+                          ],
                         )
                       : null,
                   body: Column(
@@ -99,29 +108,68 @@ class KFIPageScreen extends StatelessWidget {
                                     () => ShowProducts(
                                       refresh: _.fetchKFIInvestment,
                                       isLoading: _.isLoading.value,
-                                      isError: _.isError.value,
+                                      isError:
+                                          _.isErrorFetchingMergeProduct.value,
                                       product: _.kfiProduct,
                                       errorMessage: _.errorMessage.value,
                                     ),
                                   ),
-                            FutureBuilder<Map<String, dynamic>>(
-                              future: _.fetchKFIAccount(),
-                              builder: (context, snapshot) => ListView.builder(
-                                itemBuilder: (context, index) => ListTile(
-                                  leading: SizedBox(
-                                    height: HC.spaceVertical(50),
-                                    width: HC.spaceVertical(50),
-                                    child:
-                                        Image.asset(Assets.assetsImagesImage),
-                                  ),
-                                  title: const Text('User Name')
-                                      .title(fontSize: 14),
-                                  subtitle: const Text(
-                                          "074673673434 * Ikeja * Lagos State")
-                                      .subTitle(fontSize: 10),
-                                ),
-                              ),
-                            ),
+                            Obx(
+                              () => _.isFetchingMerge.value
+                                  ? const Center(
+                                      child: CircularProgressIndicator())
+                                  : _.users.isEmpty
+                                      ? RefreshIndicator(
+                                          onRefresh: _.fetchKFIAccount,
+                                          child: SingleChildScrollView(
+                                            physics:
+                                                const AlwaysScrollableScrollPhysics(),
+                                            child: SizedBox(
+                                              height: Get.height * (.63),
+                                              child: Center(
+                                                child: NoDataScreen(
+                                                  oncall: () {},
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : RefreshIndicator(
+                                          onRefresh: _.fetchKFIAccount,
+                                          child: ListView.builder(
+                                            itemCount: _.users.length,
+                                            itemBuilder: (context, index) =>
+                                                ListTile(
+                                              onTap: () => ViewInformation(
+                                                  context, _.users[index], _),
+                                              leading: SizedBox(
+                                                height: HC.spaceVertical(50),
+                                                width: HC.spaceVertical(50),
+                                                child: _.users[index]
+                                                                .profileImage !=
+                                                            null &&
+                                                        _.users[index]
+                                                            .profileImage!
+                                                            .startsWith('http')
+                                                    ? CachedNetworkImage(
+                                                        imageUrl: _.users[index]
+                                                            .profileImage!)
+                                                    : Image.asset(
+                                                        Assets
+                                                            .assetsImagesImage,
+                                                        scale: 3,
+                                                      ),
+                                              ),
+                                              title:
+                                                  Text(_.users[index].fullName!)
+                                                      .title(fontSize: 14),
+                                              subtitle: Text(
+                                                      "${_.users[index].phoneNumber} * ${_.users[index].lga} * ${_.users[index].state}")
+                                                  .subTitle(fontSize: 10),
+                                            ),
+                                          ),
+                                        ),
+                            )
                           ],
                         ),
                       )
@@ -133,6 +181,163 @@ class KFIPageScreen extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  ViewInformation(context, MergeUsers user, HomeKFIController _) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        contentPadding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+        content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  user.profileImage != null &&
+                          user.profileImage!.startsWith('http')
+                      ? CachedNetworkImage(imageUrl: user.profileImage!)
+                      : Image.asset(
+                          Assets.assetsImagesImage,
+                          scale: 3,
+                        ),
+                  // SizedBox(child: CW.button(onPress: () {}, text: "Unlink")),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("State").subTitle(),
+                        Text(user.state!).title(
+                          fontSize: 12,
+                        ),
+                        const Text("LGA").subTitle(),
+                        Text(user.lga!).title(
+                          fontSize: 12,
+                        ),
+                        const Text("Phone Number").subTitle(),
+                        Text(user.phoneNumber!).title(
+                          fontSize: 12,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              const Text('Full Name').subTitle(fontSize: 12),
+              Text(user.fullName!).title(fontSize: 12),
+              const Text("Email Address").subTitle(),
+              Text(user.email!).title(
+                fontSize: 12,
+              ),
+              const Text("Address").subTitle(),
+              Text(user.address!).title(
+                fontSize: 12,
+              ),
+              const Text("Own Vehicle").subTitle(),
+              Text(user.ownVehicle! ? "Yes" : "No").title(
+                fontSize: 12,
+              ),
+              CW.button(
+                  onPress: () {
+                    Get.back();
+                    ConfirmUnlink(context, user.email!, _);
+                  },
+                  text: 'Unlink',
+                  color: AppColor.red)
+            ]),
+      ),
+    );
+  }
+
+  ConfirmUnlink(BuildContext context, String email, HomeKFIController _) {
+    return showModalBottomSheet(
+      enableDrag: true,
+      context: context,
+      clipBehavior: Clip.none,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+      builder: (context) => SingleChildScrollView(
+        child: Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Obx(
+                  () => CW
+                      .button(
+                        isLoading: _.isUnlinking.value,
+                        onPress: () => _.unlinkUser(email),
+                        text: "Continue",
+                      )
+                      .halfWidth(width: .3),
+                ),
+                CW
+                    .button(
+                        onPress: Get.back, text: "Cancel", color: AppColor.red)
+                    .halfWidth(width: .5),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  InviteUser(BuildContext context, HomeKFIController _,
+      {bool isAccept = false}) {
+    return showModalBottomSheet(
+      enableDrag: true,
+      context: context,
+      clipBehavior: Clip.none,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+      builder: (context) => SingleChildScrollView(
+        child: Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            width: double.infinity,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CW.textField(
+                  label: isAccept ? tCode : tEmailAddress,
+                  inputType: isAccept
+                      ? TextInputType.number
+                      : TextInputType.emailAddress,
+                  controller: isAccept ? _.code : _.email,
+                  fieldName: isAccept ? tCode : tEmail,
+                  validate: true,
+                  onChangeValue: isAccept ? _.checkCode : _.changeEmailValue,
+                ),
+                Obx(
+                  () => CW.button(
+                      isLoading: _.isInviting.value,
+                      onPress: _.hasValidInput.value
+                          ? isAccept
+                              ? _.acceptInvite
+                              : _.inviteUser
+                          : null,
+                      text: isAccept ? 'Accept Invite' : "Invite"),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

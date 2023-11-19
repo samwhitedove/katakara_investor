@@ -321,7 +321,7 @@ class ProfileController extends GetxController {
     update();
     Get.back();
     AppStorage.deleteStorage(storageName: StorageNames.settingsStorage.name);
-    Get.find<AuthService>().goLive({"status": false});
+    Get.find<AuthService>().goLive({"status": false, "fcmToken": ""});
     Get.find<AuthService>().logOutUser();
     await Config.clearImageStorage();
     Config.clearImageUrls();

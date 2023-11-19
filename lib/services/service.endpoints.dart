@@ -44,4 +44,10 @@ class EndPoint {
   static String createReciept = '/user/create-receipt';
   // go live or offline
   static String goLiveAndOffline = '/user/go-live';
+  // kfi endpoint
+  static String inviteUser = '/user/invite-user';
+  static String acceptInvite = '/user/accept-invite';
+  static String unlinkUser = '/user/unlink-user-request';
+  static String acceptUnlink = '/user/accept-unlink';
+  static String fetchMerge = '/user/fetch-merge';
 }

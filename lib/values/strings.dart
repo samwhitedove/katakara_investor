@@ -38,15 +38,22 @@ enum RouteName {
   addReceipts,
   addFaq,
   notifications,
+  youtube
 }
 
 enum Al { center, right, left }
 
-enum StorageNames { settingsStorage, configStorage, imageStorage, appState }
+enum StorageNames {
+  settingsStorage,
+  configStorage,
+  notificationStorage,
+  imageStorage,
+  appState
+}
 
 enum LocalStateName { addPortfolio }
 
-enum StorageKeys { isNewUser, uploadUrls }
+enum StorageKeys { isNewUser, uploadUrls, notifications, unReadNotification }
 
 enum IdType { government, letterHeaded, cac, profleImage }
 

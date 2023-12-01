@@ -2,12 +2,14 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart' as dio;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:katakara_investor/customs/custom.widget.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';
 import 'package:katakara_investor/services/services.auth.dart';
 
@@ -15,7 +17,7 @@ import '../values/values.dart';
 
 class HC {
   static final HC _singleton = HC._internal();
-  static dynamic _fcm = null;
+  static dynamic _fcm;
 
   factory HC() {
     return _singleton;
@@ -25,6 +27,14 @@ class HC {
 
   static Future<RequestResponsModel> mockFailedResponse() async {
     return await Get.find<AuthService>().mockFailedResponse();
+  }
+
+  static mockUnathorizedResponse() async {
+    await Future.delayed(CW.onesSec);
+    return dio.DioException.badResponse(
+        statusCode: 401,
+        requestOptions: dio.RequestOptions(),
+        response: dio.Response(requestOptions: dio.RequestOptions()));
   }
 
   static Future<RequestResponsModel> mockSuccesResponse(dynamic data) async {

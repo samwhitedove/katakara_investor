@@ -5,8 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/customs.dart';
 import 'package:katakara_investor/extensions/extensions.dart';
-import 'package:katakara_investor/helper/notifications.dart';
-import 'package:katakara_investor/services/services.auth.dart';
+import 'package:katakara_investor/services/service.notification.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/home/home.dart';
 
@@ -17,7 +16,7 @@ class HomePageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetX<HomeScreenController>(
+    return GetBuilder<HomeScreenController>(
       init: Get.find<HomeScreenController>(),
       initState: (_) {},
       builder: (ctr) {
@@ -28,16 +27,36 @@ class HomePageScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
-                    Icons.sort,
-                    size: 30,
-                    color: ctr.isActive.value
-                        ? AppColor.primary
-                        : AppColor.inActiveBlack,
-                  ).toButton(
-                    onTap: () => ctr.isActive.value
-                        ? ctr.scaffoldKey.currentState?.openDrawer()
-                        : () => HC.snack(tGoLiveToActive),
+                  Stack(
+                    children: [
+                      Icon(
+                        Icons.sort,
+                        size: 30,
+                        color: ctr.isActive.value
+                            ? AppColor.primary
+                            : AppColor.inActiveBlack,
+                      ).toButton(
+                        onTap: () => ctr.isActive.value
+                            ? ctr.scaffoldKey.currentState?.openDrawer()
+                            : () => HC.snack(tGoLiveToActive),
+                      ),
+                      Positioned(
+                        right: 0,
+                        child: Visibility(
+                          visible: NotificationLocalStorageService
+                                  .notificationCount >
+                              0,
+                          child: CircleAvatar(
+                            backgroundColor: AppColor.red,
+                            radius: 7,
+                            child: Text(NotificationLocalStorageService
+                                    .notificationCount
+                                    .toString())
+                                .subTitle(fontSize: 8, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   CustomSwitcher(
                     onChange: ctr.goLive,

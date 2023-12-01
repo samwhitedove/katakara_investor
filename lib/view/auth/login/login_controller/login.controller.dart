@@ -6,6 +6,7 @@ import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';
 import 'package:katakara_investor/services/services.auth.dart';
 import 'package:katakara_investor/values/values.dart';
+import 'package:katakara_investor/helper/notifications.dart' as notification;
 
 class LoginScreenController extends GetxController {
   RxBool isLoading = false.obs;
@@ -13,6 +14,12 @@ class LoginScreenController extends GetxController {
   RxBool canLogin = false.obs;
   TextEditingController email = TextEditingController();
   TextEditingController pass = TextEditingController();
+
+  @override
+  Future<void> onReady() async {
+    await notification.acceptPermission();
+    super.onReady();
+  }
 
   bool onChange() {
     if (email.text.isNotEmpty &&

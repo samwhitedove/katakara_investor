@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom.product.type.dart';
 import 'package:katakara_investor/customs/custom.product.type.loading.dart';
 import 'package:katakara_investor/models/product/models.fetch.portfolio.response.dart';
-import 'package:katakara_investor/values/values.dart';
 
 class ShowProducts extends StatelessWidget {
   final Function() refresh;

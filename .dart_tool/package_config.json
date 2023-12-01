@@ -614,6 +614,54 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "url_launcher",
+      "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/url_launcher-6.1.14",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "url_launcher_android",
+      "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/url_launcher_android-6.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "url_launcher_ios",
+      "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/url_launcher_ios-6.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "url_launcher_linux",
+      "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/url_launcher_linux-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "url_launcher_macos",
+      "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/url_launcher_macos-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "url_launcher_platform_interface",
+      "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/url_launcher_platform_interface-2.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "url_launcher_web",
+      "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/url_launcher_web-2.0.19",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "url_launcher_windows",
+      "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/url_launcher_windows-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "uuid",
       "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/uuid-3.0.7",
       "packageUri": "lib/",
@@ -644,6 +692,30 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "webview_flutter",
+      "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/webview_flutter-4.4.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "webview_flutter_android",
+      "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/webview_flutter_android-3.12.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "webview_flutter_platform_interface",
+      "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/webview_flutter_platform_interface-2.8.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "webview_flutter_wkwebview",
+      "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/webview_flutter_wkwebview-3.9.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "win32",
       "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/win32-4.1.4",
       "packageUri": "lib/",
@@ -662,13 +734,25 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "youtube_player_iframe",
+      "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/youtube_player_iframe-4.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "youtube_player_iframe_web",
+      "rootUri": "file:///Users/apple/.pub-cache/hosted/pub.dev/youtube_player_iframe_web-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "katakara_investor",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-11-19T12:12:18.040770Z",
+  "generated": "2023-12-01T09:23:50.489707Z",
   "generator": "pub",
   "generatorVersion": "3.0.6"
 }

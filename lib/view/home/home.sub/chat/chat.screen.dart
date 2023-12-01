@@ -61,6 +61,7 @@ class ChatScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     CW.backButton(),
+                    // ignore: prefer_const_constructors
                     Text("Olad Sam")
                         .title(fontSize: 20, lines: 1, color: AppColor.black)
                         .paddingOnly(left: 20),

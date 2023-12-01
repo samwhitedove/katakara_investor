@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom.product.card.dart';
@@ -8,7 +6,6 @@ import 'package:katakara_investor/extensions/extensions.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/models/product/models.fetch.portfolio.response.dart';
 import 'package:katakara_investor/values/values.dart';
-import 'package:katakara_investor/view/home/home.dart';
 
 // ignore: must_be_immutable
 class ProductTypeCategory extends StatelessWidget {
@@ -89,6 +86,7 @@ class ProductTypeCategory extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class NoDataScreen extends StatelessWidget {
   Function()? oncall;
   NoDataScreen({super.key, required this.oncall});

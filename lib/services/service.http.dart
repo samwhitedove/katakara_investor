@@ -1,8 +1,13 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers, constant_identifier_names
+
 import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
+import 'package:get_storage/get_storage.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:katakara_investor/customs/custom.widget.dart';
+import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/helper/helper.settings.dart';
 import 'package:katakara_investor/services/services.auth.dart';
 import 'package:katakara_investor/services/service.endpoints.dart';
@@ -22,58 +27,68 @@ class MyRequestClass {
     receiveTimeout: const Duration(seconds: 30),
   );
 
-  static bool hasTryRefresh = false;
+  static getx.RxBool hasTryRefresh = false.obs;
 
   static cancelAllConnection() {
     cancelToken?.cancel();
   }
 
-  static InterceptorsWrapper _interceptor(Map<String, dynamic> data) {
-    log(data.toString());
+  static InterceptorsWrapper _interceptor() {
     return InterceptorsWrapper(
       onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
         log("HEADER ::- ${_dio!.options.headers}");
         log("QUERY ::- ${_dio!.options.queryParameters}");
-        log("REQUEST ::- $data");
+        log("REQUEST DATA::- ${options.data}");
         log("BODY ::- ${options.data}");
         return handler.next(options);
       },
       onResponse: (Response response, ResponseInterceptorHandler handler) {
-        // Do something with response data.
         return handler.next(response);
       },
       onError: (DioException e, ErrorInterceptorHandler handler) async {
-        // Do something with response error.
-
-        if (e.response?.statusCode == 401 && hasTryRefresh != true) {
-          hasTryRefresh = true;
-          log("$e --------------- 401 error recalling for refresh token error ------------");
-          final response =
-              await getx.Get.find<AuthService>().refreshAuthToken();
-          if (!response.success) {
-            final _ = getx.Get.lazyPut(() => ProfileController());
-            return getx.Get.find<ProfileController>().clearData();
-          } else {
-            userData.token = response.data['token'];
-            userData.refreshToken = response.data['refreshToken'];
-            AppSettings.updateLocalUserData(userData.toJson());
-          }
-
-          krequest(
-            endPoint: data['endPoint'],
-            method: (data['method'] as Methods),
-            query: data['query'],
-            body: data['body'],
-          );
+        if (e.response?.statusCode == 401 && !hasTryRefresh.value) {
+          await _refreshTokenAndRetry(e, handler);
+        } else {
+          return handler.next(e);
         }
-        if (hasTryRefresh) {
-          hasTryRefresh = false;
-          if (getx.Get.currentRoute == '/login') {
-            return getx.Get.offAllNamed(AppRoutes.name(RouteName.login));
-          }
-        }
-        return handler.next(e);
       },
+    );
+  }
+
+  static Future<void> _refreshTokenAndRetry(
+      DioException e, ErrorInterceptorHandler handler) async {
+    hasTryRefresh.value = true;
+    log("$e --------------- 401 error recalling for refresh token error ------------");
+
+    final response = await AuthService().refreshAuthToken();
+
+    if (response.success) {
+      _updateToken(response.data['token'], response.data['refreshToken']);
+      return await _retryOriginalRequest(e.requestOptions);
+    }
+    return await _handleTokenRefreshFailure();
+  }
+
+  static void _updateToken(String token, String refreshToken) {
+    userData.token = token;
+    userData.refreshToken = refreshToken;
+    AppSettings.updateLocalUserData(userData.toJson());
+  }
+
+  static Future<void> _handleTokenRefreshFailure() async {
+    final _ = getx.Get.lazyPut(() => ProfileController());
+    await getx.Get.find<ProfileController>().clearData();
+  }
+
+  static Future<void> _retryOriginalRequest(
+      RequestOptions requestOptions) async {
+    await _dio!.request(
+      requestOptions.path,
+      data: requestOptions.data,
+      options: Options(
+        method: requestOptions.method,
+        headers: requestOptions.headers,
+      ),
     );
   }
 
@@ -105,9 +120,7 @@ class MyRequestClass {
       if (_request['query'] == null) _request.remove('query');
 
       // Adding inteceptor
-      _dio!.interceptors.add(
-        _interceptor(_request),
-      );
+      _dio!.interceptors.add(_interceptor());
 
       Response? response;
       switch (method) {

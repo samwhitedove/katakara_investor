@@ -35,22 +35,23 @@ class HomeScreenController extends GetxController {
     Get.put(HomeKFIController());
   }
 
+  String? deviceToken = "";
+
   goLive() async {
     isLoading.value = true;
-    String? deviceToken = "";
-    if (!isActive.value) {
+    if (!isActive.value && deviceToken!.isEmpty) {
       deviceToken = await HC.initFCM().getToken();
       log('$deviceToken ---------- device token ');
     }
     final RequestResponsModel response = await authService
         .goLive({"status": !isActive.value, "fcmToken": deviceToken});
     if (response.success) {
-      await Get.find<PortfolioController>().fetchPortfolio();
-      await Get.find<HomeKFIController>().fetchKFIAccount();
-      await Get.find<HomeKFIController>().fetchKFIInvestment();
+      RequestResponsModel youtube =
+          await Get.find<HomeService>().fetchYoutube();
+      Get.find<PortfolioController>().fetchPortfolio();
+      Get.find<HomeKFIController>().fetchKFIAccount();
+      Get.find<HomeKFIController>().fetchKFIInvestment();
       if ((!isActive.value) == true) {
-        RequestResponsModel youtube =
-            await Get.find<HomeService>().fetchYoutube();
         authService.fetchUser();
 
         if (youtube.success) {
@@ -60,6 +61,7 @@ class HomeScreenController extends GetxController {
       }
       isLoading.value = false;
       isActive.toggle();
+      update();
       HC.snack(response.message, success: response.success);
       return;
     }
@@ -67,36 +69,15 @@ class HomeScreenController extends GetxController {
     isLoading.value = false;
   }
 
-  List<Map<String, dynamic>> videoData = [
-    // {
-    //   "color": AppColor.blue,
-    //   "onTap": () {
-    //     log("Hellie1");
-    //   },
-    //   "label": "About Us"
-    // },
-    {
-      "color": AppColor.primary,
-      "onTap": () {
-        log("Hellie1");
-      },
-      "label": "About Katakara Investment"
-    },
-    // {
-    //   "color": AppColor.lightRed,
-    //   "onTap": () {
-    //     log("Hellie1");
-    //   },
-    //   "label": "How to Advertise"
-    // },
-    // {
-    //   "color": AppColor.orange,
-    //   "onTap": () {
-    //     log("Hellie1");
-    //   },
-    //   "label": "Invite a friend"
-    // }
-  ];
+  get videoData => [
+        {
+          "color": AppColor.primary,
+          "onTap": () async {
+            Get.toNamed(RouteName.youtube.name, arguments: youtubeLink);
+          },
+          "label": "About Katakara Investment"
+        },
+      ];
 
   List<Map<String, dynamic>> menuItemHeader = [
     {

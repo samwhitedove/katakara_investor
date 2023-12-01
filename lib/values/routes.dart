@@ -16,6 +16,7 @@ import 'package:katakara_investor/view/home/home.notification/home.notification.
 import 'package:katakara_investor/view/home/home.receipt/home.receipt.reveiw.dart';
 import 'package:katakara_investor/view/home/home.receipt/home.receipt.create.dart';
 import 'package:katakara_investor/view/home/home.sub/chat/chat.screen.dart';
+import 'package:katakara_investor/view/home/home.sub/homepage/home.youtube.dart';
 import 'package:katakara_investor/view/product/product.full.image.dart';
 import 'package:katakara_investor/view/product/product.portfolio.add.dart';
 import 'package:katakara_investor/view/product/product.details.dart';
@@ -83,6 +84,8 @@ class AppRoutes {
         return '/user';
       case RouteName.notifications:
         return '/notifications';
+      case RouteName.youtube:
+        return '/youtube';
       default:
         return '/unknown';
     }
@@ -201,7 +204,11 @@ class AppRoutes {
       ),
       GetPage(
         name: _routeName(RouteName.notifications),
-        page: () => const NotificationScreen(),
+        page: () => NotificationScreen(),
+      ),
+      GetPage(
+        name: _routeName(RouteName.youtube),
+        page: () => YoutubePlay(),
       ),
     ];
   }

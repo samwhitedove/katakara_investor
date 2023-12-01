@@ -22,7 +22,7 @@ class ProfileController extends GetxController {
   RxDouble uploadProgress = 0.0.obs;
   RxBool isUploadingImage = false.obs;
   HomeScreenController? homeScreenController;
-  String hasVehicle = userData.ownVehicle!;
+  String hasVehicle = userData.ownVehicle ?? "No";
   String? bankName;
 
   RxBool showPassword = false.obs;
@@ -62,7 +62,7 @@ class ProfileController extends GetxController {
   @override
   void onInit() {
     log(userData.investorSignature.toString());
-    bankName = userData.bankName!;
+    bankName = userData.bankName ?? '';
     if ((userData.investorSignature ?? "").isNotEmpty &&
         (userData.investorSignature ?? "").length > 10) {
       hasUploadSignature(true);

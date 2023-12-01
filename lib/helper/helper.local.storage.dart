@@ -39,10 +39,13 @@ class AppStorage extends GetxService {
   }
 
   static listenToKeyChanges(
-      {required String storageName, required String key}) async {
-    final box = GetStorage(storageName);
-    box.listenKey(key, (value) {
+      {required GetStorage storageName,
+      required String key,
+      required Function action}) async {
+    // final box = GetStorage(storageName);
+    storageName.listenKey(key, (value) {
       log('new key is $value');
+      action(value);
     });
   }
 

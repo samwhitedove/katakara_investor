@@ -1,3 +1,4 @@
+import 'package:get_storage/get_storage.dart';
 import 'package:katakara_investor/helper/helper.dart';
 
 import '../values/strings.dart';
@@ -5,12 +6,22 @@ import '../values/strings.dart';
 class Config {
   static bool? isNew;
 
+  static GetStorage? notificationStorage;
+  static GetStorage? imageStorage;
+  static GetStorage? configStorage;
+
   static initConfig() async {
     // loads the configuration storage
-    await AppStorage.initStorage(storageName: StorageNames.configStorage.name);
+    configStorage = await AppStorage.initStorage(
+        storageName: StorageNames.configStorage.name);
     // loads the uploaded image that is saved in the local storage
-    await AppStorage.initStorage(storageName: StorageNames.imageStorage.name);
+    imageStorage = await AppStorage.initStorage(
+        storageName: StorageNames.imageStorage.name);
     // await AppStorage.deleteStorage(storageName: StorageNames.config.name);
+    notificationStorage = await AppStorage.initStorage(
+        storageName: StorageNames.notificationStorage.name);
+    // read if is a new user
+    await readConfig(StorageKeys.isNewUser, StorageNames.configStorage);
     // read if is a new user
     await readConfig(StorageKeys.isNewUser, StorageNames.configStorage);
     // read all local saved image

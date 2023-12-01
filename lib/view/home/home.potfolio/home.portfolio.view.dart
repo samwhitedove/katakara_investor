@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom,product.load.dart';
-import 'package:katakara_investor/customs/custom.product.type.dart';
 import 'package:katakara_investor/customs/custom.widget.dart';
 import 'package:katakara_investor/extensions/extensions.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/home/home.dart';
-import '../../../customs/custom.product.type.loading.dart';
 
 class PortfolioScreen extends StatelessWidget {
   const PortfolioScreen({super.key});

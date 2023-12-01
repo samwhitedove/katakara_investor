@@ -1,12 +1,15 @@
-// ignore_for_file: non_constant_identifier_names
-
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:get/get.dart';
+import 'package:katakara_investor/models/notificatons/notification.data.model.dart';
+import 'package:katakara_investor/models/notificatons/notification.model.dart';
 import 'package:katakara_investor/values/values.dart';
+import 'package:katakara_investor/view/home/home.notification/home.notification.controller.dart';
 
-awesome_notification() => AwesomeNotifications().initialize(
+void awesomeNotification() => AwesomeNotifications().initialize(
       // set the icon to null if you want to use the default app icon
       'resource://drawable/logon',
       [
@@ -29,12 +32,12 @@ awesome_notification() => AwesomeNotifications().initialize(
         NotificationChannelGroup(
           channelGroupKey: 'message_importance_channel_group',
           channelGroupName: 'Message channel',
-        )
+        ),
       ],
       debug: true,
     );
 
-accept_permission() =>
+acceptPermission() =>
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
         // This is just a basic example. For real apps, you must show some
@@ -60,17 +63,14 @@ class NotificationController {
   static Future<void> onNotificationCreatedMethod(
       ReceivedNotification receivedNotification) async {
     // Your code goes here
-    log("notification is created receivedNotification ----- oncreated");
-    // createNotification(receivedNotification.title, receivedNotification.body,
-    //     receivedNotification.id);
+    log("notification is created ${receivedNotification.id} ----- oncreated");
   }
 
   /// Use this method to detect every time that a new notification is displa yed
   @pragma("vm:entry-point")
   static Future<void> onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
-    // Your code goes here
-    log("notification is displayed receivedNotification  ----- on displayed");
+    log("notification is displayed rece- on displayedivedNotification  ----- on displayed");
   }
 
   /// Use this method to detect if the user dismissed a notification
@@ -90,28 +90,55 @@ class NotificationController {
     // log("notification is onAction received $receivedAction ----- on action");
     AwesomeNotifications()
         .dismissNotificationsByGroupKey(receivedAction.groupKey!);
+    if (Get.currentRoute == RouteName.notifications.name) return;
+    Get.toNamed(RouteName.notifications.name);
   }
 
-  static createNotification(RemoteMessage message) {
-    AwesomeNotifications().createNotification(
+  static createNotification(RemoteMessage message) async {
+    final messageData = NotificationResposeDataModel.fromJson(message.data);
+
+    try {
+      await AwesomeNotifications().createNotification(
         content: NotificationContent(
-            backgroundColor: AppColor.primary,
-            color: AppColor.white,
-            id: message.hashCode,
-            title: message.data['title'],
-            body: message.data['body'],
-            channelKey: 'high_channel',
-            groupKey: message.data['notificationType'] == "notification"
-                ? "notification_importance_channel"
-                : "message_importance_channel_group",
-            wakeUpScreen: true,
-            bigPicture: message.data['image'],
-            largeIcon: message.data['image'],
-            hideLargeIconOnExpand: true,
-            ticker: 'Katakara',
-            payload: message.data['payload'],
-            notificationLayout: message.data.containsKey('image')
-                ? NotificationLayout.BigPicture
-                : NotificationLayout.Inbox));
+          backgroundColor: AppColor.primary,
+          color: AppColor.white,
+          id: message.hashCode,
+          title: messageData.title,
+          body: messageData.body,
+          channelKey: 'high_channel',
+          groupKey: messageData.notificationType == "notification"
+              ? "notification_importance_channel"
+              : "message_importance_channel_group",
+          wakeUpScreen: true,
+          bigPicture: messageData.image,
+          largeIcon: messageData.image,
+          hideLargeIconOnExpand: true,
+          ticker: 'Katakara',
+          notificationLayout: messageData.image != null
+              ? NotificationLayout.BigPicture
+              : NotificationLayout.Inbox,
+        ),
+      );
+
+      var extra = jsonDecode(messageData.extra);
+
+      if (message.data['notificationType'] == 'notification') {
+        log("-------- extra ${extra['hasAction']} notification saving  --------------");
+        final notification = Get.find<AppNotificationController>();
+        log("-------- notification saving  --------------");
+        final model = NotificationAlertModel(
+          body: messageData.body,
+          title: messageData.title,
+          hasAction: extra['hasAction'] ?? false,
+          image: messageData.image,
+          isRead: false,
+          hashedCode: messageData.hashCode,
+          date: DateTime.now(),
+        );
+        notification.addNotificationToLocalStrorage(model);
+      }
+    } catch (e) {
+      log("$e error ----------------");
+    }
   }
 }

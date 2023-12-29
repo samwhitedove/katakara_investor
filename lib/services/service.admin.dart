@@ -65,7 +65,7 @@ class AdminService extends GetxController {
     return response;
   }
 
-  Future<RequestResponseModel> updateFaq(Map<String, String> body) async {
+  Future<RequestResponseModel> updateFaq(Map<String, dynamic> body) async {
     RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.updateFaq, method: Methods.patch, body: body);
     log("unblock user info ------- ${response.message}");
@@ -75,6 +75,20 @@ class AdminService extends GetxController {
   Future<RequestResponseModel> deleteFaq(int id) async {
     RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.deleteFaq(id), method: Methods.get);
+    log("unblock user info ------- ${response.message}");
+    return response;
+  }
+
+  Future<RequestResponseModel> deleteRedFlag(int id) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: EndPoint.deleteRedFlag(id), method: Methods.get);
+    log("unblock user info ------- ${response.message}");
+    return response;
+  }
+
+  Future<RequestResponseModel> fetchRedFlag() async {
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: EndPoint.fetchRedFlag, method: Methods.get);
     log("unblock user info ------- ${response.message}");
     return response;
   }

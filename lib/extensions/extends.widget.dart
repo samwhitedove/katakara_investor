@@ -42,13 +42,6 @@ extension ExtendWidget on Widget {
     return GestureDetector(onTap: onTap, child: this);
   }
 
-  Container marginSymmetric({double vertical = 0, double horizontal = 0}) {
-    return Container(
-        margin:
-            EdgeInsets.symmetric(vertical: vertical, horizontal: horizontal),
-        child: this);
-  }
-
   InkWell toElevatedButton({Function()? onTap, BorderRadius? radius}) {
     return InkWell(
       borderRadius: radius,

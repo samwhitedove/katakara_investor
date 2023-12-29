@@ -121,13 +121,16 @@ class CW {
                 .title(fontSize: 14, color: AppColor.text)
                 .addPaddingVertical(size: 15),
             ...List.generate(
-                data.length,
-                (index) => CW
-                    .button(
-                        onPress: data[index]['onTap'],
-                        color: data[index]['color'],
-                        text: data[index]['label'])
-                    .marginSymmetric(horizontal: 20))
+              data.length,
+              //TODO
+              (index) => Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: CW.button(
+                    onPress: data[index]['onTap'],
+                    color: data[index]['color'],
+                    text: data[index]['label']),
+              ).marginSymmetric(horizontal: 20),
+            )
           ],
         ),
       ),
@@ -509,6 +512,7 @@ class CW {
       String title = tAddProduct,
       required List<Widget> children,
       ScrollPhysics? scroll,
+      Widget? others,
       Function()? onTap}) {
     return Scaffold(
       body: column(
@@ -520,7 +524,7 @@ class CW {
             children: [
               CW.backButton(onTap: onTap).align(Al.left),
               Text(title).title(fontSize: 20),
-              const SizedBox(width: 25),
+              others ?? const SizedBox(width: 25),
             ],
           ),
           ...children

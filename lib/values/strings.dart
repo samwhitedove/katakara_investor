@@ -34,6 +34,7 @@ enum RouteName {
   broadcast,
   addProduct,
   viewRedFlag,
+  viewRedFlagDetails,
   usersReceipts,
   addReceipts,
   addFaq,

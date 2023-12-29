@@ -12,11 +12,11 @@ class FaqController extends GetxController {
 
   final fromAdmin = Get.arguments;
 
-  updateIsView(int index, bool value, Map<String, dynamic> data) {
+  updateIsView(int index, Map<String, dynamic> incoming) {
     if (fromAdmin != null) {
-      return Get.toNamed(RouteName.addFaq.name, arguments: data);
+      return Get.toNamed(RouteName.addFaq.name, arguments: incoming);
     }
-    data[index]['isView'] = !value;
+    data[index]['isView'] = incoming['isView'];
     update();
   }
 
@@ -32,6 +32,7 @@ class FaqController extends GetxController {
     log('$data ----------- data --------');
     final RequestResponseModel faq = await homeService.fetchFaq();
     if (faq.success) {
+      data.clear();
       for (Map<String, dynamic> element in faq.data) {
         data.add(element..addAll({"isView": false}));
       }

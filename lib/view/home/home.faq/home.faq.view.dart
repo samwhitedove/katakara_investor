@@ -105,14 +105,8 @@ class FaqScreen extends StatelessWidget {
                                 ),
                               )
                                   .toButton(
-                                    onTap: () => _.updateIsView(
-                                      index,
-                                      _.data[index]['isView'],
-                                      {
-                                        "question": _.data[index]['question'],
-                                        "answer": _.data[index]['answer'],
-                                      },
-                                    ),
+                                    onTap: () =>
+                                        _.updateIsView(index, _.data[index]),
                                   )
                                   .marginOnly(bottom: 10),
                             ),

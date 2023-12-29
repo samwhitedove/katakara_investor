@@ -5,15 +5,17 @@ import 'package:get/get.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';
 import 'package:katakara_investor/services/service.admin.dart';
-import 'package:katakara_investor/services/services.home.dart';
 
+import '../../home/home.faq/home.faq.controller.dart';
 import '../../widgets/bottom.confirm.dart';
 
 class AddFaqController extends GetxController {
   bool isLoading = false;
+  bool isDeleting = false;
+  bool isUpdating = false;
   bool isGoodInput = false;
   final AdminService adminService = Get.find<AdminService>();
-  final HomeService homeService = Get.find<HomeService>();
+  final FaqController homeService = Get.find<FaqController>();
 
   int? id;
 
@@ -28,6 +30,7 @@ class AddFaqController extends GetxController {
       question.text = args['question'];
       answer.text = args['answer'];
       isGoodInput = true;
+      id = args['id'];
     }
     super.onInit();
   }
@@ -35,7 +38,7 @@ class AddFaqController extends GetxController {
   loadFaq() async {
     isLoading = true;
     update();
-    await homeService.fetchFaq();
+    await homeService.loadFaq();
     isLoading = false;
     update();
     return;
@@ -69,13 +72,13 @@ class AddFaqController extends GetxController {
 
   updateFaq() async {
     HC.hideKeyBoard();
-    isLoading = true;
+    isUpdating = true;
     update();
-    final RequestResponseModel faq = await adminService
-        .saveFaq({'question': question.text, 'answer': answer.text, "id": id});
+    final RequestResponseModel faq = await adminService.updateFaq(
+        {'question': question.text, 'answer': answer.text, "id": id});
     HC.snack(faq.message, success: faq.success);
     await loadFaq();
-    isLoading = false;
+    isUpdating = false;
     update();
     return;
   }
@@ -86,12 +89,13 @@ class AddFaqController extends GetxController {
   }
 
   deleteFaq() async {
-    isLoading = true;
+    isDeleting = true;
     update();
     final RequestResponseModel faq = await adminService.deleteFaq(id!);
     HC.snack(faq.message, success: faq.success);
+    await loadFaq();
     if (faq.success) Get.back();
-    isLoading = false;
+    isDeleting = false;
     update();
     return;
   }

@@ -9,6 +9,7 @@ import 'package:katakara_investor/view/admin/products/add/admin.product.add.view
 import 'package:katakara_investor/view/admin/products/booked/admin.product.booked.view.dart';
 import 'package:katakara_investor/view/admin/receipts/admin.receipt.add.view.dart';
 import 'package:katakara_investor/view/admin/receipts/admin.receipt.receipts.view.dart';
+import 'package:katakara_investor/view/admin/red_flag/admin.redflag.details.dart';
 import 'package:katakara_investor/view/admin/red_flag/admin.redflag.view.dart';
 import 'package:katakara_investor/view/admin/users/admin.user.view.dart';
 import 'package:katakara_investor/view/auth/register/register_controller/stepFour.controller.dart';
@@ -132,6 +133,9 @@ class AppRoutes {
       GetPage(
           name: '/${RouteName.viewRedFlag.name}',
           page: () => const ViewRedFlag()),
+      GetPage(
+          name: '/${RouteName.viewRedFlagDetails.name}',
+          page: () => const RedFlagDetails()),
       GetPage(
           name: '/${RouteName.usersReceipts.name}',
           page: () => const UserReceipts()),

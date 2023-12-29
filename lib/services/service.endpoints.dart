@@ -27,7 +27,7 @@ class EndPoint {
   static String addPortfolio = '/user/add-portfolio';
   // red flag
   static String createRedFlag = '/user/red-flag';
-  static String fetchRedFlad = '/user/fetch-flag';
+  // static String fetchRedFlad = '/user/fetch-flag';
   // KFI
   static String inviteKFI = '/user/invite-user';
   static String acceptKFIInvite = '/user/accept-invite';
@@ -60,4 +60,6 @@ class EndPoint {
   static String addFaq = '/console/add-faq';
   static String updateFaq = '/console/update-faq';
   static String deleteFaq(int id) => '/console/delete-faq?id=$id';
+  static String deleteRedFlag(int id) => '/console/delete-red-flag?id=$id';
+  static String fetchRedFlag = '/console/fetch-red-flag';
 }

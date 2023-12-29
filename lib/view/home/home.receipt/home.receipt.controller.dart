@@ -130,7 +130,7 @@ class ReceiptController extends GetxController {
   fetchReceipt() async {
     isLoading = true;
     update();
-    final RequestResponsModel response = await receiptService.fetchReceipt();
+    final RequestResponseModel response = await receiptService.fetchReceipt();
     isLoading = false;
     update();
     if (response.success) {
@@ -155,7 +155,7 @@ class ReceiptController extends GetxController {
     receipt.remove("receiptId");
     isLoading = true;
     update();
-    final RequestResponsModel response =
+    final RequestResponseModel response =
         await receiptService.saveReceipt(receipt);
     await fetchReceipt();
     isLoading = false;

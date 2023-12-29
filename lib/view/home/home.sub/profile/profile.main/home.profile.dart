@@ -101,7 +101,7 @@ class ProfilePageScreen extends StatelessWidget {
 
   Widget profileMenuList(
       String label, String icon, Function() onTap, int index) {
-    return index != 4
+    return label != "Admin"
         ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -138,7 +138,7 @@ class ProfilePageScreen extends StatelessWidget {
             )
             .marginSymmetric(vertical: 10)
             .toButton(onTap: () => onTap())
-        : index == 4 && !userData.isAdmin!
+        : userData.isAdmin!
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -47,7 +47,9 @@ class HomePageScreen extends StatelessWidget {
                                   .notificationCount >
                               0,
                           child: CircleAvatar(
-                            backgroundColor: AppColor.red,
+                            backgroundColor: ctr.isActive.value
+                                ? AppColor.red
+                                : AppColor.grey,
                             radius: 7,
                             child: Text(NotificationLocalStorageService
                                     .notificationCount

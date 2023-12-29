@@ -29,7 +29,7 @@ class HomeKFIController extends GetxController {
 
   inviteUser() async {
     isInviting.value = true;
-    final RequestResponsModel response =
+    final RequestResponseModel response =
         await kfiService.inviteUser(body: {'email': email.text});
     isInviting.value = false;
     Get.back();
@@ -40,7 +40,7 @@ class HomeKFIController extends GetxController {
 
   acceptInvite() async {
     isInviting.value = true;
-    final RequestResponsModel response =
+    final RequestResponseModel response =
         await kfiService.acceptUser(body: {'code': code.text});
     isInviting.value = false;
     Get.back();
@@ -78,7 +78,7 @@ class HomeKFIController extends GetxController {
   Future fetchKFIAccount() async {
     isErrorFetchingMergeUser.value = false;
     isFetchingMerge.value = true;
-    final RequestResponsModel response = await kfiService.fetchMergeUser();
+    final RequestResponseModel response = await kfiService.fetchMergeUser();
     isFetchingMerge.value = false;
     if (response.success == false) {
       isErrorFetchingMergeUser.value = true;
@@ -94,7 +94,7 @@ class HomeKFIController extends GetxController {
   RxBool isUnlinking = false.obs;
   Future unlinkUser(String email) async {
     isUnlinking.value = true;
-    final RequestResponsModel response =
+    final RequestResponseModel response =
         await kfiService.unlinkUser(body: {"email": email});
     isUnlinking.value = false;
     if (response.success) fetchKFIAccount();

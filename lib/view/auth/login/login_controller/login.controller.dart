@@ -35,7 +35,7 @@ class LoginScreenController extends GetxController {
   void login() async {
     HC.hideKeyBoard();
     isLoading.value = true;
-    RequestResponsModel response = await Get.find<AuthService>()
+    RequestResponseModel response = await Get.find<AuthService>()
         .login({'email': email.text.trim(), "password": pass.text.trim()});
     isLoading.value = false;
     if (response.success) {
@@ -50,7 +50,7 @@ class LoginScreenController extends GetxController {
       log("data -------------22");
       //TODO update
 
-      Get.offAllNamed(AppRoutes.name(RouteName.home));
+      Get.offAllNamed(RouteName.home.name);
       return;
     }
     log("data -------------1");

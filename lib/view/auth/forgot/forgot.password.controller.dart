@@ -42,7 +42,7 @@ class ForgotPasswordController extends GetxController {
 
   void setNewPassword() async {
     isLoading.value = true;
-    final RequestResponsModel data = await MyRequestClass.krequest(
+    final RequestResponseModel data = await MyRequestClass.krequest(
         endPoint: EndPoint.resetUserPassword,
         method: Methods.post,
         body: {
@@ -54,7 +54,7 @@ class ForgotPasswordController extends GetxController {
     if (data.success) {
       HC.snack(data.message, success: data.success);
       isLoading.value = false;
-      return Get.offAllNamed(AppRoutes.name(RouteName.login));
+      return Get.offAllNamed(RouteName.login.name);
     }
     isLoading.value = false;
     HC.snack(data.message);
@@ -73,10 +73,10 @@ class ForgotPasswordController extends GetxController {
 
   void confirmEmail() async {
     HC.hideKeyBoard();
-    RequestResponsModel model = await requestCode();
+    RequestResponseModel model = await requestCode();
     if (model.success) {
       HC.snack(model.message, success: model.success);
-      return Get.toNamed(AppRoutes.name(RouteName.setNewPassword));
+      return Get.toNamed(RouteName.setNewPassword.name);
     }
     HC.snack(model.message);
   }

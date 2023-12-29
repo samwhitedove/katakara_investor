@@ -71,7 +71,7 @@ class ProductController extends GetxController {
   deleteProduct() async {
     isDeleting.value = true;
     update();
-    final RequestResponsModel response =
+    final RequestResponseModel response =
         await portfolioService.deleteProduct(product!.sku!);
     isDeleting.value = false;
     update();

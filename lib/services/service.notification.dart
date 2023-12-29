@@ -59,27 +59,27 @@ class NotificationLocalStorageService {
             key: StorageKeys.notifications.name,
           ) ??
           <Map<String, dynamic>>{};
-      log('${data['data'].length} lenght read -------- ');
+      // log('${data['data'].length} lenght read -------- ');
       LocalNotificationModel local = LocalNotificationModel.fromJson(data);
       if (local.data!.isEmpty) return true;
       // find the index of the data to update
-      log('action 1 -------- ');
+      // log('action 1 -------- ');
       final index = local.data!
           .indexWhere((element) => element.hashedCode == model.hashedCode);
       if (index != -1) {
-        log('action 2 -------- ');
+        // log('action 2 -------- ');
         //remove the data
         local.data!.removeAt(index);
         // add the updated value of the data
-        log('action 3 -------- ');
+        // log('action 3 -------- ');
         local.data!.insert(index, Datum.fromJson(model.toJson()));
         //remove all the data from the storage
-        log('action 4 -------- ');
+        // log('action 4 -------- ');
         await AppStorage.removeData(
             storageName: StorageNames.notificationStorage.name,
             key: StorageKeys.notifications.name);
         // add all the data from the storage back to the storage.
-        log('action 5 -------- ');
+        // log('action 5 -------- ');
         await AppStorage.saveData(
             storageName: StorageNames.notificationStorage.name,
             key: StorageKeys.notifications.name,
@@ -87,7 +87,7 @@ class NotificationLocalStorageService {
               "count": _notifications.count! - 1,
               "data": local.data!.map((e) => e.toJson()).toList()
             });
-        log('action done -------- ');
+        // log('action done -------- ');
         _readNotification();
         //refresh the homepage to show notification
         Get.find<HomeScreenController>().update();
@@ -103,6 +103,7 @@ class NotificationLocalStorageService {
 
   //read all notification when starting app
   static Future<void> _readNotification() async {
+    log("Class has been initialized ------------------------ ");
     final Map<String, dynamic> notifies = await AppStorage.readData(
           storageName: StorageNames.notificationStorage.name,
           key: StorageKeys.notifications.name,
@@ -117,7 +118,7 @@ class NotificationLocalStorageService {
 
   static Future<List<Map<String, dynamic>>> fetchNotification(
       {int limit = 10, int page = 1}) async {
-    log("${_notifications.data!.length} ------- fetch data ----------");
+    log("${_notifications.data!.length} ------- fetch data from notification ----------");
     if (_notifications.data!.isEmpty) return [];
     final List<Datum> data = _notifications.data!
         .skip(page == 1 ? 0 : limit * (page - 1))
@@ -128,9 +129,9 @@ class NotificationLocalStorageService {
     return data.map((e) => e.toJson()).toList();
   }
 
-  static Future<void> clearNotifications() async {
-    await AppStorage.deleteStorage(
-        storageName: StorageNames.notificationStorage.name);
-    log("------- storage deleted ----------");
-  }
+  // static Future<void> clearNotifications() async {
+  //   await AppStorage.deleteStorage(
+  //       storageName: StorageNames.notificationStorage.name);
+  //   log("------- storage deleted ----------");
+  // }
 }

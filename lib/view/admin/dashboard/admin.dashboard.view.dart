@@ -66,8 +66,10 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                               padding:
                                   const EdgeInsets.symmetric(vertical: 6.0),
                               child: FittedBox(
-                                child: Text(_.data[index]['value'].toString())
-                                    .title(fontSize: 20, color: AppColor.white),
+                                child: Text(_.data[index]['title']
+                                        .toString()
+                                        .split(" ")[0])
+                                    .title(fontSize: 18, color: AppColor.white),
                               ),
                             ),
                             Text(_.data[index]['title'].toString())

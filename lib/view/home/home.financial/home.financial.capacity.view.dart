@@ -94,7 +94,7 @@ class FinancialScreen extends StatelessWidget {
   save() async {
     final profileService = Get.find<ProfileService>();
     isSaving.value = true;
-    RequestResponsModel response = await profileService.updateUserInformation(
+    RequestResponseModel response = await profileService.updateUserInformation(
         data: {"financialCapacity": selectedValue.value});
     isSaving.value = false;
     if (response.success) selected.value = selectedValue.value;

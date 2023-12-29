@@ -1,5 +1,6 @@
 import 'package:get_storage/get_storage.dart';
 import 'package:katakara_investor/helper/helper.dart';
+import 'package:katakara_investor/services/service.notification.dart';
 
 import '../values/strings.dart';
 
@@ -20,6 +21,7 @@ class Config {
     // await AppStorage.deleteStorage(storageName: StorageNames.config.name);
     notificationStorage = await AppStorage.initStorage(
         storageName: StorageNames.notificationStorage.name);
+    final _ = NotificationLocalStorageService();
     // read if is a new user
     await readConfig(StorageKeys.isNewUser, StorageNames.configStorage);
     // read if is a new user

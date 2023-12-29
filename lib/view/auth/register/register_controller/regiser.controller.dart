@@ -76,10 +76,10 @@ class RegisterScreenController extends GetxController {
     if (currentPage.value == 0) {
       //cancel ongoing request to the server
       MyRequestClass.cancelAllConnection();
-      // if (Get.previousRoute != AppRoutes.name(RouteName.welcome)) {
+      // if (Get.previousRoute != RouteName.welcome.name) {
       //   return Get.offAllNamed();
       // }
-      return Get.offAllNamed(AppRoutes.name(RouteName.login));
+      return Get.offAllNamed(RouteName.login.name);
     }
     //setting the previous screen stepper is isActive to false
     steps['step${currentPage.value + 1}']!['isActive'] = false;
@@ -96,7 +96,7 @@ class RegisterScreenController extends GetxController {
     if (currentPage.value + 1 == steps.length) {
       final data1 = Get.find<StepTwoController>().accountName;
       log('---- ${data1.text}');
-      return Get.toNamed(AppRoutes.name(RouteName.createAccount));
+      return Get.toNamed(RouteName.createAccount.name);
     }
     //setting the current screen stepper is done to false
     steps['step${currentPage.value + 1}']!['isDone'] = true;
@@ -154,7 +154,7 @@ class RegisterScreenController extends GetxController {
           log(data.toString());
           HC.snack(response.message, success: response.success);
           isLoading.value = false;
-          return Get.offAllNamed(AppRoutes.name(RouteName.login));
+          return Get.offAllNamed(RouteName.login.name);
         }
         HC.snack(response.message, success: response.success);
         return;

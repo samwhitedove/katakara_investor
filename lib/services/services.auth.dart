@@ -9,9 +9,9 @@ import 'package:katakara_investor/services/service.http.dart';
 import 'package:katakara_investor/values/values.dart';
 
 class AuthService extends GetxController {
-  Future<RequestResponsModel> mockSuccessResponse({dynamic data}) async {
+  Future<RequestResponseModel> mockSuccessResponse({dynamic data}) async {
     return await Future.delayed(const Duration(seconds: 3)).then((value) {
-      RequestResponsModel response = RequestResponsModel(
+      RequestResponseModel response = RequestResponseModel(
         data: data ?? [],
         message: "successful request",
         statusCode: 200,
@@ -21,9 +21,9 @@ class AuthService extends GetxController {
     });
   }
 
-  Future<RequestResponsModel> mockFailedResponse() async {
+  Future<RequestResponseModel> mockFailedResponse() async {
     return await Future.delayed(const Duration(seconds: 3)).then((value) {
-      RequestResponsModel response = RequestResponsModel(
+      RequestResponseModel response = RequestResponseModel(
         data: null,
         message: "Failed request",
         statusCode: 400,
@@ -33,8 +33,8 @@ class AuthService extends GetxController {
     });
   }
 
-  Future<RequestResponsModel> fetchUser() async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+  Future<RequestResponseModel> fetchUser() async {
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.fetchUserInfo, method: Methods.get);
     log('${response.data} -----------fetch user');
     if (response.success && response.data != null) {
@@ -53,7 +53,7 @@ class AuthService extends GetxController {
   //   return response;
   // }
 
-  Future<RequestResponsModel> deleteImage(String downloadUrl) async {
+  Future<RequestResponseModel> deleteImage(String downloadUrl) async {
     final response = await MyRequestClass.krequest(
         endPoint: EndPoint.deleteImage,
         body: {"url": downloadUrl},
@@ -71,28 +71,29 @@ class AuthService extends GetxController {
   //   }
   // }
 
-  Future<RequestResponsModel> verifyEmail(Map<String, String> data) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+  Future<RequestResponseModel> verifyEmail(Map<String, String> data) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.validateEmailCode, body: data, method: Methods.post);
     return response;
   }
 
-  Future<RequestResponsModel> requestEmailCode(Map<String, String> data) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+  Future<RequestResponseModel> requestEmailCode(
+      Map<String, String> data) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.generateEmailToken,
         body: data,
         method: Methods.post);
     return response;
   }
 
-  Future<RequestResponsModel> register(CreateAccountModel data) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+  Future<RequestResponseModel> register(CreateAccountModel data) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.register, body: data.toJson(), method: Methods.put);
     return response;
   }
 
-  Future<RequestResponsModel> login(Map<String, String> data) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+  Future<RequestResponseModel> login(Map<String, String> data) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.login, body: data, method: Methods.post);
     if (response.success) {
       AppSettings.saveUserToLocal(response.data);
@@ -100,20 +101,20 @@ class AuthService extends GetxController {
     return response;
   }
 
-  Future<RequestResponsModel> goLive(Map<String, dynamic> data) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+  Future<RequestResponseModel> goLive(Map<String, dynamic> data) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.goLiveAndOffline, body: data, method: Methods.patch);
     return response;
   }
 
-  Future<RequestResponsModel> logOutUser() async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+  Future<RequestResponseModel> logOutUser() async {
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.logOut, method: Methods.post);
     return response;
   }
 
-  Future<RequestResponsModel> refreshAuthToken() async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+  Future<RequestResponseModel> refreshAuthToken() async {
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.refreshToken(userData.refreshToken),
         method: Methods.get);
     if (response.success) {

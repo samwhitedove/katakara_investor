@@ -84,14 +84,13 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Katakara Investor',
       theme: lightTheme,
-      unknownRoute: AppRoutes.routes.first,
       getPages: AppRoutes.routes,
       initialBinding: AllBindings(),
       initialRoute: Config.isNew!
-          ? AppRoutes.name(RouteName.welcome)
+          ? RouteName.welcome.name
           : AppSettings.isLogin ?? false
-              ? AppRoutes.name(RouteName.home)
-              : AppRoutes.name(RouteName.login),
+              ? RouteName.home.name
+              : RouteName.login.name,
     );
   }
 }

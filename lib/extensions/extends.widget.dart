@@ -42,6 +42,13 @@ extension ExtendWidget on Widget {
     return GestureDetector(onTap: onTap, child: this);
   }
 
+  Container marginSymmetric({double vertical = 0, double horizontal = 0}) {
+    return Container(
+        margin:
+            EdgeInsets.symmetric(vertical: vertical, horizontal: horizontal),
+        child: this);
+  }
+
   InkWell toElevatedButton({Function()? onTap, BorderRadius? radius}) {
     return InkWell(
       borderRadius: radius,
@@ -64,10 +71,13 @@ extension ExtendWidget on Widget {
   }
 
   Container simpleRoundCorner(
-      {double height = 40, double width = 40, Color? bgColor}) {
+      {double height = 40,
+      double? radius = 40,
+      double width = 40,
+      Color? bgColor}) {
     return Container(
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(8), color: bgColor),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(radius ?? 8), color: bgColor),
       height: HC.spaceVertical(height),
       width: HC.spaceHorizontal(width),
       child: this,

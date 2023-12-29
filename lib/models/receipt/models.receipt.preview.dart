@@ -45,6 +45,8 @@ class ReceiptPreviewData {
         receiptId: json["receiptId"],
       );
 
+  get receiptProductInfo => null;
+
   Map<String, dynamic> toJson() => {
         "title": title,
         "customerName": customerName,

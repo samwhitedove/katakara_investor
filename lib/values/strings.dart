@@ -38,10 +38,14 @@ enum RouteName {
   addReceipts,
   addFaq,
   notifications,
-  youtube
+  youtube,
+  search,
+  viewInformationCard
 }
 
 enum Al { center, right, left }
+
+enum SearchPageType { users }
 
 enum StorageNames {
   settingsStorage,

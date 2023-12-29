@@ -33,7 +33,7 @@ class PortfolioController extends GetxController {
   fetchPortfolio(
       {Map<String, dynamic> type = const {'type': 'personal'}}) async {
     isFetchingProducts.value = true;
-    final RequestResponsModel response =
+    final RequestResponseModel response =
         await portfolioService.fetchPortfolio(query: type);
     if (response.success) {
       isError.value = false;

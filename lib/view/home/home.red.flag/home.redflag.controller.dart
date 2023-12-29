@@ -23,7 +23,7 @@ class RegFlagController extends GetxController {
     if (hasValidValue.value) {
       isLoading.value = true;
       update();
-      RequestResponsModel response = await MyRequestClass.krequest(
+      RequestResponseModel response = await MyRequestClass.krequest(
           endPoint: EndPoint.createRedFlag,
           body: {
             "title": "Red flag",

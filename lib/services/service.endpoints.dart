@@ -50,4 +50,14 @@ class EndPoint {
   static String unlinkUser = '/user/unlink-user-request';
   static String acceptUnlink = '/user/accept-unlink';
   static String fetchMerge = '/user/fetch-merge';
+  // kfi endpoint
+  static String fetchUser({String? type, String? find, bool? block}) =>
+      '/console/fetch-user${type == null ? "" : "?type=$type"}${find == null ? "" : "&find=$find"}${block == null ? "" : "&block=$block"}';
+  // block and unblock user admin
+  static String blockUser(int id) => '/console/block-user?id=$id';
+  static String unblockUser(int id) => '/console/unblock-user?id=$id';
+  // admin faq
+  static String addFaq = '/console/add-faq';
+  static String updateFaq = '/console/update-faq';
+  static String deleteFaq(int id) => '/console/delete-faq?id=$id';
 }

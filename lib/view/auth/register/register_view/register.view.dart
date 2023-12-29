@@ -117,7 +117,7 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ).align(Al.center).toButton(
                         onTap: () => Get.toNamed(
-                          AppRoutes.name(RouteName.register),
+                          RouteName.register.name,
                         ),
                       ),
                 ),

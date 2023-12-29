@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:katakara_investor/view/admin/broadcast/admin.broadcast.view.dart';
 import 'package:katakara_investor/view/admin/dashboard/admin.dashboard.view.dart';
@@ -20,100 +22,39 @@ import 'package:katakara_investor/view/home/home.sub/homepage/home.youtube.dart'
 import 'package:katakara_investor/view/product/product.full.image.dart';
 import 'package:katakara_investor/view/product/product.portfolio.add.dart';
 import 'package:katakara_investor/view/product/product.details.dart';
+import '../view/admin/search/admin.search.view.dart';
+import '../view/home/home.sub/profile/profile.information.card/home.card.info.view.dart';
 import '../view/view.dart';
 import 'strings.dart';
 
 class AppRoutes {
-  static name(RouteName name) => _routeName(name);
+  // static name(RouteName name) => _routeName(name);
 
   static List<GetPage> get routes => _appRoutes();
-
-  static String _routeName(RouteName name) {
-    switch (name) {
-      case RouteName.welcome:
-        return '/';
-      case RouteName.home:
-        return '/home';
-      case RouteName.unknown:
-        return '/unknown';
-      case RouteName.login:
-        return '/login';
-      case RouteName.forgotPassword:
-        return '/forgotPassword';
-      case RouteName.register:
-        return '/register';
-      case RouteName.setNewPassword:
-        return '/setNewPassword';
-      case RouteName.createAccount:
-        return '/createAccount';
-      case RouteName.redFlag:
-        return '/redFlag';
-      case RouteName.userDetails:
-        return '/userDetails';
-      case RouteName.userBusiness:
-        return '/userBusiness';
-      case RouteName.userSecurity:
-        return '/userSecurity';
-      case RouteName.userBank:
-        return '/userBank';
-      case RouteName.portfolio:
-        return '/portfolio';
-      case RouteName.receipt:
-        return '/receipt';
-      case RouteName.financial:
-        return '/financial';
-      case RouteName.calculator:
-        return '/calculator';
-      case RouteName.faq:
-        return '/faq';
-      case RouteName.productDetails:
-        return '/productDetails';
-      case RouteName.fullImageView:
-        return '/fullImageView';
-      case RouteName.addPortfolio:
-        return '/addPortfolio';
-      case RouteName.createReceipt:
-        return '/createReceipt';
-      case RouteName.receiptReview:
-        return '/receiptReview';
-      case RouteName.chatScreen:
-        return '/chatScreen';
-      case RouteName.admin:
-        return '/admin';
-      case RouteName.user:
-        return '/user';
-      case RouteName.notifications:
-        return '/notifications';
-      case RouteName.youtube:
-        return '/youtube';
-      default:
-        return '/unknown';
-    }
-  }
 
   static List<GetPage> _appRoutes() {
     return [
       GetPage(
-        name: _routeName(RouteName.unknown),
+        name: '/${RouteName.unknown.name}',
         page: () => const UnknownRoutePage(),
       ),
       GetPage(
-        name: _routeName(RouteName.welcome),
+        name: '/${RouteName.welcome.name}',
         page: () => WelcomeScreen(),
       ),
       GetPage(
-        name: _routeName(RouteName.login),
+        name: '/${RouteName.login.name}',
         page: () => const LoginScreen(),
       ),
-      GetPage(name: _routeName(RouteName.home), page: () => const HomeScreen()),
+      GetPage(name: '/${RouteName.home.name}', page: () => const HomeScreen()),
       GetPage(
-          name: _routeName(RouteName.forgotPassword),
+          name: '/${RouteName.forgotPassword.name}',
           page: () => const ForgotPasswordScreen()),
       GetPage(
-          name: _routeName(RouteName.setNewPassword),
+          name: '/${RouteName.setNewPassword.name}',
           page: () => const SetNewPasswordScreen()),
       GetPage(
-          name: _routeName(RouteName.register),
+          name: '/${RouteName.register.name}',
           page: () => const RegisterScreen(),
           bindings: [
             StepOneBinding(),
@@ -121,94 +62,101 @@ class AppRoutes {
             RegisterScreenBinding()
           ]),
       GetPage(
-          name: _routeName(RouteName.createAccount),
+          name: '/${RouteName.createAccount.name}',
           page: () => const CreateAccountRegisterScreen(),
           binding: StepFourBinding()),
       GetPage(
-          name: _routeName(RouteName.redFlag),
+          name: '/${RouteName.redFlag.name}',
           page: () => const RedFlagScreen()),
       GetPage(
-          name: _routeName(RouteName.userBank),
+          name: '/${RouteName.userBank.name}',
           page: () => const UserBanksDetails()),
       GetPage(
-          name: _routeName(RouteName.userDetails),
+          name: '/${RouteName.userDetails.name}',
           page: () => const UserDetails()),
       GetPage(
-          name: _routeName(RouteName.userBusiness),
+          name: '/${RouteName.userBusiness.name}',
           page: () => const UserBusinessDetails()),
       GetPage(
-          name: _routeName(RouteName.userSecurity),
+          name: '/${RouteName.userSecurity.name}',
           page: () => const UserSecurity()),
       GetPage(
-          name: _routeName(RouteName.portfolio),
+          name: '/${RouteName.portfolio.name}',
           page: () => const PortfolioScreen()),
       GetPage(
-          name: _routeName(RouteName.receipt),
+          name: '/${RouteName.receipt.name}',
           page: () => const ReceiptScreen()),
       GetPage(
-          name: _routeName(RouteName.financial), page: () => FinancialScreen()),
+          name: '/${RouteName.financial.name}', page: () => FinancialScreen()),
       GetPage(
-          name: _routeName(RouteName.calculator),
+          name: '/${RouteName.calculator.name}',
           page: () => const CalculatorScreen()),
-      GetPage(name: _routeName(RouteName.faq), page: () => const FaqScreen()),
+      GetPage(name: '/${RouteName.faq.name}', page: () => const FaqScreen()),
       GetPage(
-          name: _routeName(RouteName.productDetails),
+          name: '/${RouteName.productDetails.name}',
           page: () => const ProductDetails()),
       GetPage(
-          name: _routeName(RouteName.fullImageView),
+          name: '/${RouteName.fullImageView.name}',
           page: () => FullImageView()),
       GetPage(
-          name: _routeName(RouteName.addPortfolio),
+          name: '/${RouteName.addPortfolio.name}',
           page: () => const AddPortfolioProduct()),
       GetPage(
-          name: _routeName(RouteName.createReceipt),
+          name: '/${RouteName.createReceipt.name}',
           page: () => const CreateReceiptView()),
       GetPage(
-          name: _routeName(RouteName.receiptReview),
+          name: '/${RouteName.receiptReview.name}',
           page: () => HomeReceiptReview()),
       GetPage(
-          name: _routeName(RouteName.chatScreen),
+          name: '/${RouteName.chatScreen.name}',
           page: () => const ChatScreen()),
       GetPage(
-          name: _routeName(RouteName.admin),
-          page: () => const AdminDashBoard()),
+          name: '/${RouteName.admin.name}', page: () => const AdminDashBoard()),
       GetPage(
-        name: _routeName(RouteName.user),
+        name: '/${RouteName.user.name}',
         page: () => const UserListView(),
       ),
       GetPage(
-          name: _routeName(RouteName.activeProduct),
+          name: '/${RouteName.activeProduct.name}',
           page: () => const ActiveProduct()),
       GetPage(
-          name: _routeName(RouteName.bookedProduct),
+          name: '/${RouteName.bookedProduct.name}',
           page: () => const BookedProduct()),
       GetPage(
-        name: _routeName(RouteName.broadcast),
+        name: '/${RouteName.broadcast.name}',
         page: () => const Broadcast(),
       ),
       GetPage(
-          name: _routeName(RouteName.addProduct),
+          name: '/${RouteName.addProduct.name}',
           page: () => const AddProduct()),
       GetPage(
-          name: _routeName(RouteName.viewRedFlag),
+          name: '/${RouteName.viewRedFlag.name}',
           page: () => const ViewRedFlag()),
       GetPage(
-          name: _routeName(RouteName.usersReceipts),
+          name: '/${RouteName.usersReceipts.name}',
           page: () => const UserReceipts()),
       GetPage(
-          name: _routeName(RouteName.addReceipts),
+          name: '/${RouteName.addReceipts.name}',
           page: () => const AddReceipt()),
       GetPage(
-        name: _routeName(RouteName.addFaq),
-        page: () => const AddFaq(),
+        name: '/${RouteName.addFaq.name}',
+        page: () => const AddFAQScreen(),
       ),
       GetPage(
-        name: _routeName(RouteName.notifications),
+        name: '/${RouteName.notifications.name}',
         page: () => NotificationScreen(),
       ),
       GetPage(
-        name: _routeName(RouteName.youtube),
+        name: '/${RouteName.youtube.name}',
         page: () => YoutubePlay(),
+      ),
+      GetPage(
+        name: '/${RouteName.search.name}',
+        page: () => const SearchPage(),
+      ),
+      GetPage(
+        name: '/${RouteName.viewInformationCard.name}',
+        page: () => const ViewInformationCard(),
       ),
     ];
   }

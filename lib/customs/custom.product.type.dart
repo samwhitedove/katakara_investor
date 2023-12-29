@@ -89,7 +89,8 @@ class ProductTypeCategory extends StatelessWidget {
 // ignore: must_be_immutable
 class NoDataScreen extends StatelessWidget {
   Function()? oncall;
-  NoDataScreen({super.key, required this.oncall});
+  String? message;
+  NoDataScreen({super.key, required this.oncall, this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +103,7 @@ class NoDataScreen extends StatelessWidget {
         child: Column(
           children: [
             Image.asset(Assets.assetsImagesNoData, scale: 4),
-            const Text("No Data Found").subTitle(),
+            Text(message ?? "No Data Found").subTitle(),
           ],
         ),
       ),

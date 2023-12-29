@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:katakara_investor/services/service.admin.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/admin/users/admin.user.controller.dart';
 
 class AdminDashboardController extends GetxController {
+  // ignore: unused_field
+  final _ = Get.put(AdminService());
   List<Map<String, dynamic>> data = [
     {
       'title': "Total Users",
@@ -48,7 +51,7 @@ class AdminDashboardController extends GetxController {
       'icon': Icons.screenshot_sharp,
       "value": 500,
       'color': AppColor.brown,
-      "onTap": () => () => Get.toNamed(RouteName.broadcast.name)
+      "onTap": () => Get.toNamed(RouteName.broadcast.name)
     },
     {
       'title': "Add Product",
@@ -83,7 +86,7 @@ class AdminDashboardController extends GetxController {
       'icon': Icons.question_mark_sharp,
       "value": 500,
       'color': AppColor.purple,
-      "onTap": () => Get.toNamed(RouteName.addFaq.name)
+      "onTap": () => Get.toNamed(RouteName.faq.name, arguments: "admin")
     }
   ];
 }

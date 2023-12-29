@@ -12,6 +12,7 @@ import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/models/kfi/model.kfi.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/home/home.dart';
+import 'package:katakara_investor/view/view.dart';
 
 class KFIPageScreen extends StatelessWidget {
   final HomeScreenController ctr;
@@ -139,37 +140,23 @@ class KFIPageScreen extends StatelessWidget {
                                       : RefreshIndicator(
                                           onRefresh: _.fetchKFIAccount,
                                           child: ListView.builder(
-                                            itemCount: _.users.length,
-                                            itemBuilder: (context, index) =>
-                                                ListTile(
-                                              onTap: () => ViewInformation(
-                                                  context, _.users[index], _),
-                                              leading: SizedBox(
-                                                height: HC.spaceVertical(50),
-                                                width: HC.spaceVertical(50),
-                                                child: _.users[index]
-                                                                .profileImage !=
-                                                            null &&
-                                                        _.users[index]
-                                                            .profileImage!
-                                                            .startsWith('http')
-                                                    ? CachedNetworkImage(
-                                                        imageUrl: _.users[index]
-                                                            .profileImage!)
-                                                    : Image.asset(
-                                                        Assets
-                                                            .assetsImagesImage,
-                                                        scale: 3,
-                                                      ),
-                                              ),
-                                              title:
-                                                  Text(_.users[index].fullName!)
-                                                      .title(fontSize: 14),
-                                              subtitle: Text(
-                                                      "${_.users[index].phoneNumber} * ${_.users[index].lga} * ${_.users[index].state}")
-                                                  .subTitle(fontSize: 10),
-                                            ),
-                                          ),
+                                              itemCount: _.users.length,
+                                              itemBuilder: (context, index) =>
+                                                  UserOverviewListTile(
+                                                    fullName: _
+                                                        .users[index].fullName!,
+                                                    image: _.users[index]
+                                                        .profileImage,
+                                                    phone: _.users[index]
+                                                        .phoneNumber!,
+                                                    lga: _.users[index].lga!,
+                                                    state:
+                                                        _.users[index].state!,
+                                                    onTap: ViewInformation(
+                                                        context,
+                                                        _.users[index],
+                                                        _),
+                                                  )),
                                         ),
                             )
                           ],

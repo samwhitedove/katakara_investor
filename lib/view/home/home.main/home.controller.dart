@@ -43,10 +43,10 @@ class HomeScreenController extends GetxController {
       deviceToken = await HC.initFCM().getToken();
       log('$deviceToken ---------- device token ');
     }
-    final RequestResponsModel response = await authService
+    final RequestResponseModel response = await authService
         .goLive({"status": !isActive.value, "fcmToken": deviceToken});
     if (response.success) {
-      RequestResponsModel youtube =
+      RequestResponseModel youtube =
           await Get.find<HomeService>().fetchYoutube();
       Get.find<PortfolioController>().fetchPortfolio();
       Get.find<HomeKFIController>().fetchKFIAccount();
@@ -73,6 +73,12 @@ class HomeScreenController extends GetxController {
         {
           "color": AppColor.primary,
           "onTap": () async {
+            if (youtubeLink == null || youtubeLink!.isEmpty) {
+              final youtube = await Get.find<HomeService>().fetchYoutube();
+              if (youtube.success == false) return;
+              if (youtube.success && youtube.data[0]) return;
+              youtubeLink = youtube.data[0]['link'];
+            }
             Get.toNamed(RouteName.youtube.name, arguments: youtubeLink);
           },
           "label": "About Katakara Investment"
@@ -85,7 +91,7 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "onTap": () {
         Get.back();
-        Get.toNamed(AppRoutes.name(RouteName.portfolio));
+        Get.toNamed(RouteName.portfolio.name);
       },
       "label": "Portfolio"
     },
@@ -94,7 +100,7 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "onTap": () {
         Get.back();
-        Get.toNamed(AppRoutes.name(RouteName.receipt));
+        Get.toNamed(RouteName.receipt.name);
       },
       "label": "Receipt"
     },
@@ -106,7 +112,7 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "onTap": () {
         Get.back();
-        Get.toNamed(AppRoutes.name(RouteName.notifications));
+        Get.toNamed(RouteName.notifications.name);
       },
       "label": "Notification"
     },
@@ -115,7 +121,7 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "onTap": () {
         Get.back();
-        Get.toNamed(AppRoutes.name(RouteName.financial));
+        Get.toNamed(RouteName.financial.name);
       },
       "label": "Financial capacity"
     },
@@ -124,7 +130,7 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "onTap": () {
         Get.back();
-        Get.toNamed(AppRoutes.name(RouteName.calculator));
+        Get.toNamed(RouteName.calculator.name);
       },
       "label": "Investment Calculator"
     },
@@ -136,7 +142,7 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "onTap": () {
         Get.back();
-        Get.toNamed(AppRoutes.name(RouteName.faq));
+        Get.toNamed(RouteName.faq.name);
       },
       "label": "FAQ"
     },
@@ -145,7 +151,7 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "onTap": () {
         Get.back();
-        Get.toNamed(AppRoutes.name(RouteName.redFlag));
+        Get.toNamed(RouteName.redFlag.name);
       },
       "label": "Red flag"
     },

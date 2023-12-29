@@ -63,14 +63,14 @@ class NotificationController {
   static Future<void> onNotificationCreatedMethod(
       ReceivedNotification receivedNotification) async {
     // Your code goes here
-    log("notification is created ${receivedNotification.id} ----- oncreated");
+    // log("notification is created ${receivedNotification.id} ----- oncreated");
   }
 
   /// Use this method to detect every time that a new notification is displa yed
   @pragma("vm:entry-point")
   static Future<void> onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
-    log("notification is displayed rece- on displayedivedNotification  ----- on displayed");
+    // log("notification is displayed rece- on displayedivedNotification  ----- on displayed");
   }
 
   /// Use this method to detect if the user dismissed a notification
@@ -78,7 +78,7 @@ class NotificationController {
   static Future<void> onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
     // Your code goes here
-    log("notification is dismissed receivedAction ----- on dismiss");
+    // log("notification is dismissed receivedAction ----- on dismiss");
     AwesomeNotifications().dismissAllNotifications();
   }
 
@@ -90,6 +90,8 @@ class NotificationController {
     // log("notification is onAction received $receivedAction ----- on action");
     AwesomeNotifications()
         .dismissNotificationsByGroupKey(receivedAction.groupKey!);
+    // log(Get.currentRoute);
+    // log((Get.currentRoute == RouteName.notifications.name).toString());
     if (Get.currentRoute == RouteName.notifications.name) return;
     Get.toNamed(RouteName.notifications.name);
   }
@@ -123,9 +125,9 @@ class NotificationController {
       var extra = jsonDecode(messageData.extra);
 
       if (message.data['notificationType'] == 'notification') {
-        log("-------- extra ${extra['hasAction']} notification saving  --------------");
+        // log("-------- extra ${extra['hasAction']} notification saving  --------------");
         final notification = Get.find<AppNotificationController>();
-        log("-------- notification saving  --------------");
+        // log("-------- notification saving  --------------");
         final model = NotificationAlertModel(
           body: messageData.body,
           title: messageData.title,

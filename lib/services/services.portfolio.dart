@@ -9,9 +9,9 @@ import 'package:katakara_investor/services/service.http.dart';
 import 'package:katakara_investor/values/values.dart';
 
 class PortfolioService extends GetxController {
-  Future<RequestResponsModel> addProductToPortfolio(
+  Future<RequestResponseModel> addProductToPortfolio(
       UploadProductModel product) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.addPortfolio,
         method: Methods.post,
         body: product.toJson());
@@ -19,9 +19,9 @@ class PortfolioService extends GetxController {
     return response;
   }
 
-  Future<RequestResponsModel> updateProductPortfolio(
+  Future<RequestResponseModel> updateProductPortfolio(
       Map<String, dynamic> product) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.updatePortfolio,
         method: Methods.patch,
         body: product);
@@ -29,28 +29,29 @@ class PortfolioService extends GetxController {
     return response;
   }
 
-  Future<RequestResponsModel> uploadProductImage(
+  Future<RequestResponseModel> uploadProductImage(
       {required File pickedImage}) async {
-    RequestResponsModel response = await MyRequestClass.uploadImage(
+    RequestResponseModel response = await MyRequestClass.uploadImage(
         filePath: pickedImage, fileType: ImageType.IMAGE);
     return response;
   }
 
-  Future<RequestResponsModel> fetchPortfolio(
+  Future<RequestResponseModel> fetchPortfolio(
       {Map<String, dynamic> query = const {}}) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.fetchPortfolio, method: Methods.get, query: query);
     return response;
   }
 
-  Future<RequestResponsModel> deleteProduct(String sku) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+  Future<RequestResponseModel> deleteProduct(String sku) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.deletePortfolio(sku), method: Methods.get);
     return response;
   }
 
-  Future<RequestResponsModel> deleteImage({required String pickedImage}) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+  Future<RequestResponseModel> deleteImage(
+      {required String pickedImage}) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.deleteImage,
         method: Methods.delete,
         body: {

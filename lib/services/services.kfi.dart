@@ -5,36 +5,36 @@ import 'package:katakara_investor/services/service.http.dart';
 import 'package:katakara_investor/values/values.dart';
 
 class KFIService extends GetxController {
-  Future<RequestResponsModel> inviteUser(
+  Future<RequestResponseModel> inviteUser(
       {required Map<String, dynamic>? body}) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.inviteKFI, method: Methods.post, body: body);
     return response;
   }
 
-  Future<RequestResponsModel> acceptUser(
+  Future<RequestResponseModel> acceptUser(
       {required Map<String, dynamic>? body}) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.acceptInvite, method: Methods.post, body: body);
     return response;
   }
 
-  Future<RequestResponsModel> unlinkUser(
+  Future<RequestResponseModel> unlinkUser(
       {required Map<String, dynamic>? body}) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.unlineKFIInvite, method: Methods.post, body: body);
     return response;
   }
 
-  Future<RequestResponsModel> acceptUnlinkUser(
+  Future<RequestResponseModel> acceptUnlinkUser(
       {required Map<String, dynamic>? body}) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.acceptUnlink, method: Methods.post, body: body);
     return response;
   }
 
-  Future<RequestResponsModel> fetchMergeUser() async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+  Future<RequestResponseModel> fetchMergeUser() async {
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.fetchMerge, method: Methods.get);
     return response;
   }

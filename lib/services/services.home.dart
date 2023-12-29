@@ -5,14 +5,14 @@ import 'package:katakara_investor/services/service.http.dart';
 import 'package:katakara_investor/values/values.dart';
 
 class HomeService extends GetxController {
-  Future<RequestResponsModel> fetchYoutube() async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+  Future<RequestResponseModel> fetchYoutube() async {
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.fetchYoutubeVideo, method: Methods.get);
     return response;
   }
 
-  Future<RequestResponsModel> fetchFaq() async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+  Future<RequestResponseModel> fetchFaq() async {
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.fetchFaq, method: Methods.get);
     return response;
   }

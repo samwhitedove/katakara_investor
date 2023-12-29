@@ -25,7 +25,7 @@ class HC {
 
   HC._internal();
 
-  static Future<RequestResponsModel> mockFailedResponse() async {
+  static Future<RequestResponseModel> mockFailedResponse() async {
     return await Get.find<AuthService>().mockFailedResponse();
   }
 
@@ -37,7 +37,7 @@ class HC {
         response: dio.Response(requestOptions: dio.RequestOptions()));
   }
 
-  static Future<RequestResponsModel> mockSuccesResponse(dynamic data) async {
+  static Future<RequestResponseModel> mockSuccesResponse(dynamic data) async {
     return await Get.find<AuthService>().mockSuccessResponse(data: data);
   }
 
@@ -211,5 +211,22 @@ class HC {
     if (_fcm != null) return _fcm;
     _fcm = FirebaseMessaging.instance;
     return _fcm;
+  }
+
+  static String formartValue(dynamic value) {
+    log(value.toString());
+    log(value.runtimeType.toString());
+    if (value.runtimeType == bool) return value ? "Yes" : "No";
+    if (value.runtimeType == int) return value.toString();
+    if (value.runtimeType == Null) return "Unavailable";
+    if (value.toString().contains('-')) {
+      final parseDate = DateTime.tryParse(value.toString());
+      if (parseDate == null) return value;
+      return DateTime.parse(value.toString())
+          .toLocal()
+          .toString()
+          .split('T')[0];
+    }
+    return value.toString();
   }
 }

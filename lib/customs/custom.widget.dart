@@ -346,6 +346,8 @@ class CW {
     bool? numberOnly,
     int maxLength = 50,
     int lines = 1,
+    Widget? prefix,
+    Widget? suffix,
     BorderRadius? radius,
     required TextEditingController controller,
     TextInputType inputType = TextInputType.text,
@@ -419,6 +421,8 @@ class CW {
                   fontFamily: 'Inter',
                   fontWeight: bold ? FontWeight.w700 : FontWeight.normal),
               decoration: InputDecoration(
+                suffixIcon: suffix,
+                prefixIcon: prefix,
                 border: InputBorder.none,
                 hintText: hint ?? 'Enter $label',
                 hintStyle: const TextStyle(color: AppColor.iconInactive),
@@ -504,16 +508,18 @@ class CW {
       double size = 15,
       String title = tAddProduct,
       required List<Widget> children,
+      ScrollPhysics? scroll,
       Function()? onTap}) {
     return Scaffold(
       body: column(
+        scroll: scroll,
         children: [
           CW.AppSpacer(h: topPadding),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CW.backButton(onTap: onTap).align(Al.left),
-              Text(title).title(),
+              Text(title).title(fontSize: 20),
               const SizedBox(width: 25),
             ],
           ),
@@ -524,7 +530,8 @@ class CW {
   }
 
   static Padding column(
-      {double size = 15,
+      {bool maxAlign = false,
+      double size = 15,
       required List<Widget> children,
       ScrollPhysics? scroll}) {
     return Padding(
@@ -532,9 +539,33 @@ class CW {
       child: SingleChildScrollView(
         physics: scroll ?? const BouncingScrollPhysics(),
         child: Column(
+          mainAxisSize: maxAlign ? MainAxisSize.max : MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: children,
+        ),
+      ),
+    );
+  }
+
+  static Obx CircleLoader({
+    RxBool? show,
+    double size = 20,
+  }) {
+    return Obx(
+      () => Visibility(
+        visible: show?.value ?? false,
+        child: Padding(
+          padding: EdgeInsets.only(top: Get.height * .35),
+          child: Center(
+            child: SizedBox(
+              height: size,
+              width: size,
+              child: const CircularProgressIndicator(
+                strokeWidth: 1,
+              ),
+            ),
+          ),
         ),
       ),
     );

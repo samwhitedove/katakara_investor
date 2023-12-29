@@ -186,7 +186,7 @@ class AddProductController extends GetxController {
       sellerImage: images[1],
       productName: productName!.text,
     );
-    final RequestResponsModel response = isUpdate
+    final RequestResponseModel response = isUpdate
         ? await portfolioService.updateProductPortfolio(
             product.toJson()..addAll({"sku": productInfo!.sku!}))
         : await portfolioService.addProductToPortfolio(product);
@@ -231,7 +231,7 @@ class AddProductController extends GetxController {
       // get the current image position from the selected process for upload
       final SelectImageModel data =
           isChooseProcess.where((item) => item.id == index).first;
-      final RequestResponsModel response = await portfolioService
+      final RequestResponseModel response = await portfolioService
           .uploadProductImage(pickedImage: File(imagePath));
       data.isLoading = false;
       update();
@@ -263,7 +263,7 @@ class AddProductController extends GetxController {
     image.isLoading = true;
     update();
     // send a delete request
-    final RequestResponsModel response =
+    final RequestResponseModel response =
         await portfolioService.deleteImage(pickedImage: uploadsImg.$1);
     if (response.success) {
       // if (productInfo != null) hasUpdate = true;

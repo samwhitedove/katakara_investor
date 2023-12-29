@@ -133,8 +133,8 @@ class WelcomeScreen extends StatelessWidget {
 
     if (register) {
       return Get.offAllNamed(
-          AppRoutes.name(register ? RouteName.register : RouteName.login));
+          register ? RouteName.register.name : RouteName.login.name);
     }
-    Get.toNamed(AppRoutes.name(RouteName.login));
+    Get.toNamed(RouteName.login.name);
   }
 }

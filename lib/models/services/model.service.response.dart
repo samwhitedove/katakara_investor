@@ -4,27 +4,27 @@
 
 import 'dart:convert';
 
-RequestResponsModel httpResponsModelFromJson(String str) =>
-    RequestResponsModel.fromJson(json.decode(str));
+RequestResponseModel httpResponsModelFromJson(String str) =>
+    RequestResponseModel.fromJson(json.decode(str));
 
-String httpResponsModelToJson(RequestResponsModel data) =>
+String httpResponsModelToJson(RequestResponseModel data) =>
     json.encode(data.toJson());
 
-class RequestResponsModel {
+class RequestResponseModel {
   final int? statusCode;
   final String? message;
   final bool success;
-  final dynamic data;
+  late final dynamic data;
 
-  RequestResponsModel({
+  RequestResponseModel({
     this.statusCode,
     this.message,
     this.success = false,
     this.data,
   });
 
-  factory RequestResponsModel.fromJson(Map<String, dynamic> json) =>
-      RequestResponsModel(
+  factory RequestResponseModel.fromJson(Map<String, dynamic> json) =>
+      RequestResponseModel(
         statusCode: json["statusCode"] ?? 500,
         message: json["message"],
         success: json["success"] ?? false,

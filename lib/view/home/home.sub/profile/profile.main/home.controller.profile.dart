@@ -93,27 +93,27 @@ class ProfileController extends GetxController {
         {
           'label': "User Details",
           'icon': Assets.assetsSvgProfileActive,
-          "onTap": () => Get.toNamed(AppRoutes.name(RouteName.userDetails))
+          "onTap": () => Get.toNamed(RouteName.userDetails.name)
         },
         {
           'label': "Business Details",
           'icon': Assets.assetsSvgBriefcase,
-          "onTap": () => Get.toNamed(AppRoutes.name(RouteName.userBusiness))
+          "onTap": () => Get.toNamed(RouteName.userBusiness.name)
         },
         {
           'label': "Bank Details",
           'icon': Assets.assetsSvgBank,
-          "onTap": () => Get.toNamed(AppRoutes.name(RouteName.userBank))
+          "onTap": () => Get.toNamed(RouteName.userBank.name)
         },
         {
           'label': "Security",
           'icon': Assets.assetsSvgSecurity,
-          "onTap": () => Get.toNamed(AppRoutes.name(RouteName.userSecurity))
+          "onTap": () => Get.toNamed(RouteName.userSecurity.name)
         },
         {
           'label': "Admin",
           'icon': Assets.assetsSvgSecurity,
-          "onTap": () => Get.toNamed(AppRoutes.name(RouteName.admin))
+          "onTap": () => Get.toNamed(RouteName.admin.name)
         },
         {'label': "Log Out", 'icon': Assets.assetsSvgLogout, "onTap": logOut}
       ];
@@ -128,7 +128,7 @@ class ProfileController extends GetxController {
     if (canUpdate) return HC.snack('No changes for update');
     isSavingCompanyDetails(true);
     update();
-    RequestResponsModel response =
+    RequestResponseModel response =
         await profileService.updateUserInformation(data: {
       "companyName": company.text,
       "ownVehicle": hasVehicle,
@@ -150,7 +150,7 @@ class ProfileController extends GetxController {
     if (canUpdate) return HC.snack('No changes for update');
     isSavingBankDetails(true);
     update();
-    RequestResponsModel response =
+    RequestResponseModel response =
         await profileService.updateUserInformation(data: {
       "bankName": bankName,
       "accountName": accountName.text,
@@ -232,7 +232,7 @@ class ProfileController extends GetxController {
     if (canUpdate) return HC.snack('No changes for update');
     isLoading(true);
     update();
-    RequestResponsModel response =
+    RequestResponseModel response =
         await profileService.updateUserInformation(data: {
       "phoneNumber": phone.text.trim(),
       "phoneNumber2": phone2.text.trim().isEmpty ? "null" : phone2.text.trim(),
@@ -248,7 +248,7 @@ class ProfileController extends GetxController {
     HC.hideKeyBoard();
     isSavingSecurity(true);
     update();
-    final RequestResponsModel model =
+    final RequestResponseModel model =
         await profileService.changePassword(data: {
       "newPassword": newPassword.text,
       "oldPassword": oldPassword.text,
@@ -257,7 +257,7 @@ class ProfileController extends GetxController {
       HC.snack(model.message, success: model.success);
       await signOut();
       isSavingSecurity(false);
-      return Get.offAllNamed(AppRoutes.name(RouteName.login));
+      return Get.offAllNamed(RouteName.login.name);
     }
 
     HC.snack(model.message, success: model.success);
@@ -326,7 +326,7 @@ class ProfileController extends GetxController {
     await Config.clearImageStorage();
     Config.clearImageUrls();
     MyRequestClass.cancelAllConnection();
-    Get.offAllNamed(AppRoutes.name(RouteName.login));
+    Get.offAllNamed(RouteName.login.name);
     isLoading.value = false;
   }
 
@@ -334,6 +334,6 @@ class ProfileController extends GetxController {
     AppStorage.deleteStorage(storageName: StorageNames.settingsStorage.name);
     await Config.clearImageStorage();
     MyRequestClass.cancelAllConnection();
-    Get.offAllNamed(AppRoutes.name(RouteName.login));
+    Get.offAllNamed(RouteName.login.name);
   }
 }

@@ -66,7 +66,7 @@ class StepFourController extends GetxController {
   verifyEmail() async {
     HC.hideKeyBoard();
     isLoading.value = true;
-    RequestResponsModel response = await Get.find<AuthService>().verifyEmail({
+    RequestResponseModel response = await Get.find<AuthService>().verifyEmail({
       "email": Get.find<StepFourController>().email!.text,
       "code": Get.find<StepFourController>().code!.text.replaceAll('-', '')
     });
@@ -97,7 +97,7 @@ class StepFourController extends GetxController {
   void requestEmailVerificationCode() async {
     HC.hideKeyBoard();
     isLoading.value = true;
-    RequestResponsModel response = await Get.find<AuthService>()
+    RequestResponseModel response = await Get.find<AuthService>()
         .requestEmailCode(
             {"email": Get.find<StepFourController>().email!.text});
     if (response.success) {

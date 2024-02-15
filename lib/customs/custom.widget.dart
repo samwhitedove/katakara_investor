@@ -249,6 +249,7 @@ class CW {
     IconData? icon,
     required String? label,
     required dynamic value,
+    bool isLoading = false,
     required Function(String) onChange,
     required List<String> data,
   }) {
@@ -264,31 +265,41 @@ class CW {
           Container(
             height: 50,
             decoration: decoration,
-            // width: Get.width * .8,
+            width: isLoading ? Get.width : null,
             padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: DropdownButton<String>(
-              menuMaxHeight: Get.height * .5,
-              value: value,
-              onChanged: (value) => onChange(value!),
-              items: data.map((value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: SizedBox(
-                    child: Text(
-                      value.toString(),
+            child: isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    )).align(Al.right).paddingOnly(right: 10)
+                : DropdownButton<String>(
+                    menuMaxHeight: Get.height * .5,
+                    value: value,
+                    onChanged: (value) => onChange(value!),
+                    items: data.map((value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: SizedBox(
+                          child: Text(
+                            value.toString(),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    isExpanded: true,
+                    isDense: false,
+                    icon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Icon(
+                        icon ?? Icons.keyboard_arrow_down_sharp,
+                        size: iconSize,
+                        color: iconColor,
+                      ),
                     ),
+                    underline: const SizedBox(),
                   ),
-                );
-              }).toList(),
-              isExpanded: true,
-              isDense: false,
-              icon: Icon(
-                icon ?? Icons.keyboard_arrow_down_sharp,
-                size: iconSize,
-                color: iconColor,
-              ),
-              underline: const SizedBox(),
-            ),
           ),
         ],
       ),
@@ -322,15 +333,18 @@ class CW {
                   ),
                 )
               : Center(
-                  child: child ??
-                      Text(
-                        text!,
-                        textScaleFactor: 1,
-                        style: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
+                  child: FittedBox(
+                    child: child ??
+                        Text(
+                          text!,
+                          // ignore: deprecated_member_use
+                          textScaleFactor: 1,
+                          style: const TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
+                  ),
                 ),
         ),
       ),
@@ -512,9 +526,11 @@ class CW {
       String title = tAddProduct,
       required List<Widget> children,
       ScrollPhysics? scroll,
+      FloatingActionButton? fButton,
       Widget? others,
       Function()? onTap}) {
     return Scaffold(
+      floatingActionButton: fButton,
       body: column(
         scroll: scroll,
         children: [
@@ -522,8 +538,13 @@ class CW {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CW.backButton(onTap: onTap).align(Al.left),
-              Text(title).title(fontSize: 20),
+              Row(
+                children: [
+                  CW.backButton(onTap: onTap).align(Al.left),
+                  CW.AppSpacer(w: 15),
+                  Text(title).title(fontSize: 20),
+                ],
+              ),
               others ?? const SizedBox(width: 25),
             ],
           ),
@@ -575,6 +596,34 @@ class CW {
     );
   }
 
+  static Padding AppBr({
+    Widget? title,
+    Widget? trailing,
+    Widget? leading,
+    double? top = 50,
+    double? right = 20,
+    double? left = 20,
+    double? bottom = 10,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(
+          top: top!, right: right!, left: left!, bottom: bottom!),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              leading ?? backButton(),
+              AppSpacer(w: 15),
+              title ?? const SizedBox(),
+            ],
+          ),
+          trailing ?? const SizedBox()
+        ],
+      ),
+    );
+  }
+
   static SafeArea baseWidget(
       {double side = 15,
       required List<Widget> children,
@@ -611,7 +660,7 @@ class CW {
     required List<Widget> children,
     MainAxisAlignment mainAlignment = MainAxisAlignment.start,
     CrossAxisAlignment crossAlignment = CrossAxisAlignment.start,
-    AppBar? appBar,
+    PreferredSizeWidget? appBar,
     Key? key,
     Widget? drawer,
     ScrollPhysics? scroll,

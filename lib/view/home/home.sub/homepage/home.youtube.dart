@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/values/values.dart';
@@ -14,8 +16,9 @@ class YoutubePlay extends StatefulWidget {
 class _YoutubePlayState extends State<YoutubePlay> {
   @override
   void initState() {
+    log(widget.url.toString());
     _controller = YoutubePlayerController.fromVideoId(
-      videoId: YoutubePlayerController.convertUrlToId(widget.url!)!,
+      videoId: YoutubePlayerController.convertUrlToId(widget.url!).toString(),
       autoPlay: true,
       params: const YoutubePlayerParams(
         showFullscreenButton: true,

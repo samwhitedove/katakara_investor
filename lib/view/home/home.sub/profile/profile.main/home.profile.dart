@@ -10,8 +10,7 @@ import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/home/home.dart';
 
 class ProfilePageScreen extends StatelessWidget {
-  final HomeScreenController ctr;
-  const ProfilePageScreen({super.key, required this.ctr});
+  const ProfilePageScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,6 @@ class ProfilePageScreen extends StatelessWidget {
                   child: CW.AppSpacer(h: 10),
                 ),
                 Builder(builder: (context) {
-                  log(profile.isUploadingImage.value.toString());
                   return Stack(
                     children: [
                       CircleAvatar(
@@ -88,102 +86,105 @@ class ProfilePageScreen extends StatelessWidget {
             ...List.generate(
               profile.menuData().length,
               (index) => profileMenuList(
-                  profile.menuData()[index]['label'],
-                  profile.menuData()[index]['icon'],
-                  profile.menuData()[index]['onTap'],
-                  index),
+                profile.menuData()[index]['label'],
+                profile.menuData()[index]['icon'],
+                profile.menuData()[index]['onTap'],
+              ),
             ),
+            CW.AppSpacer(h: 30),
           ],
         ),
       ),
     );
   }
 
-  Widget profileMenuList(
-      String label, String icon, Function() onTap, int index) {
-    return label != "Admin"
-        ? Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget profileMenuList(String label, String icon, Function() onTap) {
+    log(label);
+    if (label != "Admin") {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 15,
-                    backgroundColor: AppColor.primaryLight,
-                    child: SvgPicture.asset(
-                      icon, height: 17,
-                      // ignore: deprecated_member_use
-                      color: AppColor.primary,
-                    ),
-                  ),
-                  CW.AppSpacer(w: 10),
-                  Text(label).title(color: AppColor.text, fontSize: 14)
-                ],
+              CircleAvatar(
+                radius: 15,
+                backgroundColor: AppColor.primaryLight,
+                child: SvgPicture.asset(
+                  icon, height: 17,
+                  // ignore: deprecated_member_use
+                  color: AppColor.primary,
+                ),
               ),
-              const Icon(
-                Icons.arrow_forward_ios,
-                color: AppColor.text,
+              CW.AppSpacer(w: 10),
+              Text(label).title(color: AppColor.text, fontSize: 14)
+            ],
+          ),
+          const Icon(
+            Icons.arrow_forward_ios,
+            color: AppColor.text,
+            size: 14,
+          )
+        ],
+      )
+          .roundCorner(
+            showBorder: false,
+            blurRadius: 1,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+            ),
+            borderColor: Colors.white10,
+            bgColor: AppColor.white,
+          )
+          .marginSymmetric(vertical: 10)
+          .toButton(onTap: () => onTap());
+    }
+    if (label == "Admin" && userData.role == Roles.SUPER_ADMIN.name) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 15,
+                backgroundColor: AppColor.primaryLight,
+                child: SvgPicture.asset(
+                  icon, height: 17,
+                  // ignore: deprecated_member_use
+                  color: AppColor.primary,
+                ),
+              ),
+              CW.AppSpacer(w: 10),
+              Text(label).title(color: AppColor.text, fontSize: 14)
+            ],
+          ),
+          const Row(
+            children: [
+              Icon(
+                Icons.star,
+                color: AppColor.primary,
                 size: 14,
-              )
+              ),
+              Icon(
+                Icons.star,
+                color: AppColor.primary,
+                size: 14,
+              ),
             ],
           )
-            .roundCorner(
-              showBorder: false,
-              blurRadius: 1,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-              ),
-              borderColor: Colors.white10,
-              bgColor: AppColor.white,
-            )
-            .marginSymmetric(vertical: 10)
-            .toButton(onTap: () => onTap())
-        : userData.isAdmin!
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 15,
-                        backgroundColor: AppColor.primaryLight,
-                        child: SvgPicture.asset(
-                          icon, height: 17,
-                          // ignore: deprecated_member_use
-                          color: AppColor.primary,
-                        ),
-                      ),
-                      CW.AppSpacer(w: 10),
-                      Text(label).title(color: AppColor.text, fontSize: 14)
-                    ],
-                  ),
-                  const Row(
-                    children: [
-                      Icon(
-                        Icons.star,
-                        color: AppColor.primary,
-                        size: 14,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: AppColor.primary,
-                        size: 14,
-                      ),
-                    ],
-                  )
-                ],
-              )
-                .roundCorner(
-                  showBorder: false,
-                  blurRadius: 1,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                  ),
-                  borderColor: Colors.white10,
-                  bgColor: AppColor.white,
-                )
-                .marginSymmetric(vertical: 10)
-                .toButton(onTap: () => onTap())
-            : const SizedBox();
+        ],
+      )
+          .roundCorner(
+            showBorder: false,
+            blurRadius: 1,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+            ),
+            borderColor: Colors.white10,
+            bgColor: AppColor.white,
+          )
+          .marginSymmetric(vertical: 10)
+          .toButton(onTap: () => onTap());
+    }
+    return const SizedBox();
   }
 }

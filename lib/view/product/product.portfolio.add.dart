@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:katakara_investor/customs/custom.upload.card.dart';
 import 'package:katakara_investor/customs/custom.widget.dart';
 import 'package:katakara_investor/extensions/extensions.dart';
-import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/product/product.add.controller.dart';
 
@@ -35,7 +34,6 @@ class AddPortfolioProduct extends StatelessWidget {
                   CW.backButton(onTap: () {
                     if (_.hasUpdate) return showWarningModal(_);
                     if (_.productInfo == null && _.hasData) {
-                      log("is saving data");
                       _.saveAddProductToLocal();
                     }
                     Get.back();
@@ -45,18 +43,19 @@ class AddPortfolioProduct extends StatelessWidget {
                 ],
               ),
               CW.AppSpacer(h: 30),
-              CW.dropdownString(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(
-                    color: AppColor.grey,
-                  ),
-                ),
-                label: tCategory,
-                value: _.category.value,
-                onChange: _.setCategory,
-                data: productCategory,
-              ),
+              Obx(() => CW.dropdownString(
+                    isLoading: _.isFetchingCategory.value,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: AppColor.grey,
+                      ),
+                    ),
+                    label: tCategory,
+                    value: _.category.value,
+                    onChange: _.setCategory,
+                    data: _.categories,
+                  )),
               CW.AppSpacer(h: 10),
               const Text(tAddAtleastOnepPicture)
                   .subTitle()
@@ -77,6 +76,7 @@ class AddPortfolioProduct extends StatelessWidget {
                     ).simpleRoundCorner(
                       height: 70,
                       width: 70,
+                      radius: 10,
                       bgColor: AppColor.black.withAlpha(50),
                     ),
                   ),
@@ -124,6 +124,7 @@ class AddPortfolioProduct extends StatelessWidget {
                     ).simpleRoundCorner(
                       height: 70,
                       width: 70,
+                      radius: 10,
                       bgColor: AppColor.black.withAlpha(50),
                     ),
                   ),
@@ -237,11 +238,11 @@ class AddPortfolioProduct extends StatelessWidget {
   showWarningModal(AddProductController provider) {
     return Get.bottomSheet(
       Container(
-        height: HC.spaceVertical(150),
         color: AppColor.white,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -249,7 +250,12 @@ class AddPortfolioProduct extends StatelessWidget {
                         "Some data has been changed, you need to update product before returning to previous screen.")
                     .subTitle(),
               ),
-              CW.button(onPress: provider.uploadProduct, text: "Update product")
+              CW.button(
+                  onPress: provider.uploadProduct, text: "Update product"),
+              CW.button(
+                  onPress: provider.cancelUpdate,
+                  text: "Cancel Update",
+                  color: AppColor.red)
             ],
           ),
         ),
@@ -258,45 +264,51 @@ class AddPortfolioProduct extends StatelessWidget {
   }
 
   showModal(AddProductController provider, bool isSeller) {
-    return Get.bottomSheet(Container(
-      height: HC.spaceVertical(100),
-      color: AppColor.white,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            GestureDetector(
-              onTap: () => provider.handleImage(ImageSource.camera, isSeller),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.camera,
-                    size: 40,
-                    color: AppColor.primary,
+    return Get.bottomSheet(Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          color: AppColor.white,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GestureDetector(
+                  onTap: () =>
+                      provider.handleImage(ImageSource.camera, isSeller),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.camera,
+                        size: 40,
+                        color: AppColor.primary,
+                      ),
+                      const Text("Camera").subTitle(color: AppColor.primary)
+                    ],
                   ),
-                  const Text("Camera").subTitle(color: AppColor.primary)
-                ],
-              ),
-            ),
-            GestureDetector(
-              onTap: () => provider.handleImage(ImageSource.gallery, isSeller),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.image,
-                    size: 40,
-                    color: AppColor.primary,
+                ),
+                GestureDetector(
+                  onTap: () =>
+                      provider.handleImage(ImageSource.gallery, isSeller),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.image,
+                        size: 40,
+                        color: AppColor.primary,
+                      ),
+                      const Text("Gallery").subTitle(color: AppColor.primary)
+                    ],
                   ),
-                  const Text("Gallery").subTitle(color: AppColor.primary)
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     ));
   }
 }

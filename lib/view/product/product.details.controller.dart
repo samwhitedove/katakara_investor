@@ -36,31 +36,31 @@ class ProductController extends GetxController {
     product = Get.arguments;
     log(product!.toJson().toString());
     // product?.sellerImage?.removeWhere((item) => item.isEmpty);
-    startTimer();
+    // startTimer();
     super.onInit();
   }
 
-  startTimer() {
-    imageLenght = product?.productImage!.length ?? 0;
-    if (imageLenght <= 1) return;
-    time = Timer.periodic(const Duration(seconds: 3), (timer) {
-      log(currentImageView.value.toString());
-      isGoingBack = (currentImageView.value + 1) == imageLenght;
-      if (isGoingBack) {
-        currentImageView.value = 0;
-        pageController.animateToPage(currentImageView.value,
-            duration: CW.onesSec, curve: Curves.easeInOut);
-      } else {
-        currentImageView.value += 1;
-        pageController.nextPage(duration: CW.onesSec, curve: Curves.easeInOut);
-      }
-    });
-  }
+  // startTimer() {
+  //   imageLenght = product?.productImage!.length ?? 0;
+  //   if (imageLenght <= 1) return;
+  //   time = Timer.periodic(const Duration(seconds: 3), (timer) {
+  //     log(currentImageView.value.toString());
+  //     isGoingBack = (currentImageView.value + 1) == imageLenght;
+  //     if (isGoingBack) {
+  //       currentImageView.value = 0;
+  //       pageController.animateToPage(currentImageView.value,
+  //           duration: CW.onesSec, curve: Curves.easeInOut);
+  //     } else {
+  //       currentImageView.value += 1;
+  //       pageController.nextPage(duration: CW.onesSec, curve: Curves.easeInOut);
+  //     }
+  //   });
+  // }
 
-  changeView(value) {
-    log(value.toString());
-    currentImageView.value = value;
-  }
+  // changeView(value) {
+  //   log(value.toString());
+  //   currentImageView.value = value;
+  // }
 
   handleDeleteProduct() {
     return warningModal(
@@ -80,13 +80,11 @@ class ProductController extends GetxController {
       portfolioView.fetchPortfolio();
       return Get.back();
     }
-    HC.snack(response.message);
+    HC.snack(response.message, success: response.success);
   }
 
   actionButtom() {
-    if (product!.isPersonal!) {
-      return Get.toNamed(RouteName.addPortfolio.name, arguments: product);
-    }
+    return Get.toNamed(RouteName.addPortfolio.name, arguments: product);
 
     //TODO go to investment page to invest
   }

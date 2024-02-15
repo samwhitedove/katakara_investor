@@ -30,9 +30,10 @@ class RegFlagController extends GetxController {
             "subject": subject.text,
             "message": summary.text
           },
-          method: Methods.put);
+          method: Methods.post);
       if (response.success) {
         isLoading.value = false;
+        Get.back();
         HC.snack(response.message, success: response.success);
         update();
         return;

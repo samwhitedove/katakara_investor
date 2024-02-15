@@ -1,0 +1,157 @@
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:katakara_investor/helper/helper.function.dart';
+import 'package:katakara_investor/models/product/model.category.dart';
+import 'package:katakara_investor/models/services/model.service.response.dart';
+import 'package:katakara_investor/services/service.admin.dart';
+import 'package:katakara_investor/services/services.portfolio.dart';
+import 'package:katakara_investor/values/strings.dart';
+import 'package:katakara_investor/view/admin/products/active/model.response.dart';
+
+import '../../../../models/receipt/model.fetch.reponse.dart';
+
+class UploadedProductController extends GetxController {
+  bool isLoading = false;
+  RxBool fetchingMore = false.obs;
+  RxBool isFetching = false.obs;
+  RxBool hasSearch = false.obs;
+
+  List<InvestmentDatum>? searchedInvestment = <InvestmentDatum>[];
+  Pagination? searchInvestmentPagination;
+
+  List<InvestmentDatum>? fetchedInvestment = <InvestmentDatum>[];
+  Pagination? pagination;
+
+  final AdminService adminService = Get.find<AdminService>();
+  final PortfolioService portfolioService = Get.find<PortfolioService>();
+
+  TextEditingController searchController = TextEditingController();
+
+  int selected = 0;
+  List<String> fetchCategory = <String>[];
+
+  @override
+  onInit() async {
+    final fetchCategory = await fetchProductCategory();
+    await fetchInvestment();
+    super.onInit();
+  }
+
+  fetchProductCategory() async {
+    isLoading = true;
+    final RequestResponseModel response =
+        await portfolioService.fetchProductCategory();
+    if (response.success) {
+      fetchCategory.clear();
+      List data = response.data ?? [];
+      if (data.isNotEmpty) {
+        fetchCategory.add("All");
+        for (var element in data) {
+          fetchCategory.add(Category.fromJson(element).category.toString());
+        }
+      }
+      isLoading = false;
+    }
+    isLoading = false;
+  }
+
+  viewInvestment(int index) {
+    return Get.toNamed(
+      RouteName.investmentView.name,
+      arguments: fetchedInvestment![index],
+    );
+  }
+
+  fetchInvestment() async {
+    try {
+      isLoading = true;
+      update();
+      final RequestResponseModel response = (selected == 0)
+          ? await adminService.fetchInvestment()
+          : await adminService
+              .filterInvestment({"category": fetchCategory[selected]});
+      isLoading = false;
+      update();
+      if (response.success) {
+        final data = InvestmentResponseDataModel.fromJson(response.toJson());
+        fetchedInvestment = data.data!.data!;
+        pagination = data.data!.pagination;
+        update();
+      }
+    } catch (e) {
+      log('$e ---------------- datat');
+    }
+  }
+
+  searchReceipt() async {
+    try {
+      isFetching(true);
+      HC.hideKeyBoard();
+
+      update();
+      final RequestResponseModel response = searchController.text
+              .startsWith("IST")
+          ? await adminService.searchInvestment({"sku": searchController.text})
+          : await adminService
+              .searchInvestment({"productName": searchController.text});
+      isFetching(false);
+      update();
+      if (response.success) {
+        final data = InvestmentResponseDataModel.fromJson(response.toJson());
+        if (data.data!.data!.isNotEmpty) hasSearch(true);
+        searchedInvestment = data.data!.data!;
+        searchInvestmentPagination = data.data!.pagination;
+        update();
+      }
+    } catch (e) {
+      log('$e ---------------- datat');
+    }
+  }
+
+  getMoreInvestment() async {
+    fetchingMore.value = true;
+    update();
+    final RequestResponseModel response =
+        await adminService.fetchMoreInvestment(url: pagination!.nextPage);
+    if (response.success) {
+      log(response.data.toString());
+      final data = InvestmentResponseDataModel.fromJson(response.toJson());
+      for (var element in data.data!.data!) {
+        fetchedInvestment!.add(element);
+      }
+      log(data.data!.pagination.toString());
+      pagination = data.data!.pagination!;
+      update();
+    }
+    fetchingMore.value = false;
+  }
+
+  changeUserType(String text) {
+    if (fetchCategory[selected] == text) return;
+    switch (text) {
+      case "All":
+        selected = 0;
+        update();
+        break;
+      case "PENDING":
+        selected = 1;
+        update();
+        break;
+      case "APPROVED":
+        selected = 2;
+        update();
+        break;
+      case "REJECTED":
+        selected = 3;
+        update();
+        break;
+      default:
+        selected = 0;
+        update();
+        break;
+    }
+    fetchInvestment();
+  }
+}

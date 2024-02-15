@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:katakara_investor/customs/custom.no.data.dart';
 import 'package:katakara_investor/customs/custom.widget.dart';
 
 import '../../../customs/custom.product.type.dart';
@@ -43,8 +40,7 @@ class SearchPage extends StatelessWidget {
                       ? _.hasSearch.value
                           ? Center(
                               child: NoDataScreen(
-                                oncall: () {},
-                              ),
+                                  oncall: () {}, message: 'No user found'),
                             )
                           : const SizedBox()
                       : ListView.builder(

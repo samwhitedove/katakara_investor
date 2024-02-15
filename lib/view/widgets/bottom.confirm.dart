@@ -7,21 +7,12 @@ import '../../customs/custom.widget.dart';
 import '../../values/colors.dart';
 import '../../values/text.dart';
 
-// class ConfirmBottomWidget extends StatelessWidget {
-//   final Function() onConfirm;
-//   const ConfirmBottomWidget({super.key, required this.onConfirm});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return bottomConfirm(onConfirm);
-//   }
-// }
-
 bottomConfirm(Function() onConfirm, {String? title}) {
   return Get.bottomSheet(
     SizedBox(
-      height: Get.height * .15,
+      // height: Get.height * .15,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(title ?? "Confirm")
               .title(fontSize: 14, color: AppColor.text)

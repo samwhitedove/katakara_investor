@@ -6,6 +6,7 @@ import 'package:katakara_investor/extensions/extensions.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/product/product.details.controller.dart';
+import 'package:katakara_investor/view/widgets/courosel.image.view.dart';
 
 // ignore: must_be_immutable
 class ProductDetails extends StatelessWidget {
@@ -31,9 +32,7 @@ class ProductDetails extends StatelessWidget {
             ),
             height: 70,
             child: CW
-                .button(
-                    onPress: _.actionButtom,
-                    text: _.product!.isPersonal! ? "Edit" : "Invest")
+                .button(onPress: _.actionButtom, text: "Edit")
                 .paddingSymmetric(horizontal: 15),
           ),
           isLoading: _.isDeleting.value,
@@ -58,47 +57,45 @@ class ProductDetails extends StatelessWidget {
             Column(
               children: [
                 SizedBox(
-                  height: HC.spaceVertical(312),
-                  child: Hero(
-                    tag: _.product!.sku!,
-                    child: PageView.builder(
-                      controller: _.pageController,
-                      itemCount: _.product!.productImage!.length,
-                      onPageChanged: _.changeView,
-                      physics: const BouncingScrollPhysics(),
-                      allowImplicitScrolling: true,
-                      itemBuilder: (context, index) => Container(
-                        margin: const EdgeInsets.only(right: 20, left: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: CachedNetworkImageProvider(
-                                _.product!.productImage![index]),
-                            // AssetImage(
-                            //   Assets.assetsImagesImage,
-                            // ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        height: HC.spaceVertical(312),
-                        width: HC.spaceHorizontal(380),
-                      ).toButton(
-                          onTap: () => Get.toNamed(RouteName.fullImageView.name,
-                                  arguments: {
-                                    'tag': _.product!.sku,
-                                    'image': _.product!.productImage![index]
-                                  })),
-                    ),
+                  // height: HC.spaceVertical(312),
+                  child: CouroselImageView(
+                    productImage: _.product!.productImage! as List<String>,
+                    onTap: () {},
+                    sku: _.product!.sku!,
                   ),
+                  // Hero(
+                  //   tag: _.product!.sku!,
+                  //   child: PageView.builder(
+                  //     controller: _.pageController,
+                  //     itemCount: _.product!.productImage!.length,
+                  //     onPageChanged: _.changeView,
+                  //     physics: const BouncingScrollPhysics(),
+                  //     allowImplicitScrolling: true,
+                  //     itemBuilder: (context, index) => Container(
+                  //       margin: const EdgeInsets.only(right: 20, left: 10),
+                  //       decoration: BoxDecoration(
+                  //         borderRadius: BorderRadius.circular(10),
+                  //         image: DecorationImage(
+                  //           image: CachedNetworkImageProvider(
+                  //               _.product!.productImage![index]),
+                  //           // AssetImage(
+                  //           //   Assets.assetsImagesImage,
+                  //           // ),
+                  //           fit: BoxFit.cover,
+                  //         ),
+                  //       ),
+                  //       height: HC.spaceVertical(312),
+                  //       width: HC.spaceHorizontal(380),
+                  //     ).toButton(
+                  // onTap: () => Get.toNamed(RouteName.fullImageView.name,
+                  //         arguments: {
+                  //           'tag': _.product!.sku,
+                  //           'image': _.product!.productImage![index]
+                  //         })),
+                  //   ),
+                  // ),
                 ),
               ],
-            ),
-            CW.AppSpacer(h: 10),
-            CW.PageDot(
-              count: _.product!.productImage!.length,
-              current: _.currentImageView,
-              activeColor: AppColor.grey,
-              inactiveColor: AppColor.greyLigth,
             ),
             CW.column(
               size: 20,

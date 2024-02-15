@@ -35,12 +35,13 @@ class CustomUploadCard extends StatelessWidget {
             isLoading
                 ? Positioned.fill(
                     child: Padding(
-                      padding: const EdgeInsets.all(4.0),
+                      padding: const EdgeInsets.all(6.0),
                       child: Image.asset(Assets.assetsImagesLoading),
                     )
                         .simpleRoundCorner(
+                          radius: 10,
                           bgColor: AppColor.black.withAlpha(150),
-                          height: 50,
+                          height: 40,
                         )
                         .align(Al.center),
                   )

@@ -9,7 +9,7 @@ class AdminDashboardController extends GetxController {
   final _ = Get.put(AdminService());
   List<Map<String, dynamic>> data = [
     {
-      'title': "Total Users",
+      'title': "Registered Users",
       'icon': Icons.group,
       "value": 122,
       'color': AppColor.blue,
@@ -17,35 +17,35 @@ class AdminDashboardController extends GetxController {
           Get.toNamed(RouteName.user.name, arguments: UserViewType.all)
     },
     {
-      'title': "Sign-ups Today",
-      'icon': Icons.group_add,
+      'title': "Category",
+      'icon': Icons.category,
       "value": 200,
       'color': AppColor.primary,
-      "onTap": () =>
-          Get.toNamed(RouteName.user.name, arguments: UserViewType.join)
+      "onTap": () => Get.toNamed(RouteName.productCategory.name,
+          arguments: UserViewType.join)
     },
     {
-      'title': "Active Products",
+      'title': "Investment Available",
       'icon': Icons.propane,
       "value": 150,
       'color': AppColor.purple,
       "onTap": () => Get.toNamed(RouteName.activeProduct.name)
     },
-    {
-      'title': "Booked Products",
-      'icon': Icons.menu_book_rounded,
-      "value": 500,
-      'color': AppColor.orange,
-      "onTap": () => Get.toNamed(RouteName.bookedProduct.name)
-    },
-    {
-      'title': "Blocked Users",
-      'icon': Icons.person_off_sharp,
-      "value": 200,
-      'color': AppColor.lightRed,
-      "onTap": () =>
-          Get.toNamed(RouteName.user.name, arguments: UserViewType.block)
-    },
+    // {
+    //   'title': "Booked Products",
+    //   'icon': Icons.menu_book_rounded,
+    //   "value": 500,
+    //   'color': AppColor.orange,
+    //   "onTap": () => Get.toNamed(RouteName.bookedProduct.name)
+    // },
+    // {
+    //   'title': "Blocked Users",
+    //   'icon': Icons.person_off_sharp,
+    //   "value": 200,
+    //   'color': AppColor.lightRed,
+    //   "onTap": () =>
+    //       Get.toNamed(RouteName.user.name, arguments: UserViewType.block)
+    // },
     {
       'title': "BroadCast",
       'icon': Icons.screenshot_sharp,
@@ -58,7 +58,7 @@ class AdminDashboardController extends GetxController {
       'icon': Icons.add_shopping_cart_rounded,
       "value": 500,
       'color': AppColor.red,
-      "onTap": () => Get.toNamed(RouteName.addProduct.name)
+      "onTap": () => Get.toNamed(RouteName.addInvestment.name)
     },
     {
       'title': "Red Flag",
@@ -72,14 +72,14 @@ class AdminDashboardController extends GetxController {
       'icon': Icons.receipt,
       "value": 500,
       'color': AppColor.orange,
-      "onTap": () => Get.toNamed(RouteName.usersReceipts.name)
+      "onTap": () => Get.toNamed(RouteName.adminViewReceipts.name)
     },
     {
-      'title': "Add Receipt",
-      'icon': Icons.receipt_long_rounded,
+      'title': "Add Youtube",
+      'icon': Icons.play_arrow,
       "value": 500,
       'color': AppColor.blue,
-      "onTap": () => Get.toNamed(RouteName.addReceipts.name)
+      "onTap": () => Get.toNamed(RouteName.youtubeUrl.name)
     },
     {
       'title': "Add Faq",

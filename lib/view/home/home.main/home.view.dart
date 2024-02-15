@@ -20,6 +20,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           Scaffold(
             bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
               onTap: _.isActive.value
                   ? (value) => _.currentIndex(value)
                   : (w) => HC.snack(tGoLiveToActive),
@@ -62,7 +63,7 @@ class HomeScreen extends StatelessWidget {
                 InboxPageScreen(ctr: _),
                 const HomePageScreen(),
                 KFIPageScreen(ctr: _),
-                ProfilePageScreen(ctr: _),
+                ProfilePageScreen(),
               ],
             ),
           ),

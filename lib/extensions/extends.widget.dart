@@ -98,7 +98,7 @@ extension ExtendWidget on Widget {
   }) {
     return Container(
       width: width,
-      height: height,
+      height: height == 0 ? null : height,
       padding: padding,
       margin: margin,
       decoration: BoxDecoration(

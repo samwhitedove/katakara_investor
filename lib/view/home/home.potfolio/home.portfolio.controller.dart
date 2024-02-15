@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom.widget.dart';
@@ -7,7 +9,6 @@ import 'package:katakara_investor/services/services.portfolio.dart';
 import 'package:katakara_investor/values/values.dart';
 
 class PortfolioController extends GetxController {
-  // List<String> productStatus = ["Products", /*"KFI",*/ "Sold"];
   int currentViewIndex = 0;
   PageController pageController = PageController(initialPage: 0);
   List<Datum> personalProduct = [];
@@ -19,6 +20,12 @@ class PortfolioController extends GetxController {
 
   RxInt totalProduct = 0.obs;
   RxInt showing = 0.obs;
+
+  @override
+  void onInit() {
+    fetchPortfolio();
+    super.onInit();
+  }
 
   void changeStatus(int index, {bool isClick = false}) {
     if (isClick) {
@@ -35,6 +42,7 @@ class PortfolioController extends GetxController {
     isFetchingProducts.value = true;
     final RequestResponseModel response =
         await portfolioService.fetchPortfolio(query: type);
+    log('${response.toJson()} -----------------  response}');
     if (response.success) {
       isError.value = false;
       final data = FetchPortfolioResponse.fromJson(response.toJson());

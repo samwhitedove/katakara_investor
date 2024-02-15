@@ -98,7 +98,7 @@ class MyRequestClass {
     Map<String, dynamic>? body,
     Map<String, dynamic>? query,
   }) async {
-    log(endPoint);
+    log('$endPoint query: $query body: $body ------- endpoint');
     try {
       final headers = {
         "Content-Type": "application/json",
@@ -106,6 +106,8 @@ class MyRequestClass {
       };
 
       _dio = Dio(_dioOption..headers = headers);
+
+      log('${_dio!.options.extra.entries} ------- options');
 
       // preparing the request for interceptor
       final Map<String, dynamic> _request = {
@@ -144,17 +146,18 @@ class MyRequestClass {
       }
 
       RequestResponseModel resp = RequestResponseModel.fromJson(response!.data);
-      log(resp.toJson().toString());
+      // log(resp.toJson().toString());
+
       if (resp.statusCode == 500) {
         return RequestResponseModel(
             message: "Cannot process data at the moment", success: false);
       }
-
+      log("${response.statusCode} $endPoint -----request success");
       return resp;
     } catch (e) {
       getx.GetUtils.printFunction("error", e, "error");
       if (e is DioException) {
-        return handleDioError(e);
+        return handleDioError(e, endPoint);
       }
       return RequestResponseModel(message: e.toString());
     }
@@ -213,17 +216,17 @@ class MyRequestClass {
       log(e.toString());
       log('$e--------- 2 2 2 2');
       if (e is DioException) {
-        return handleDioError(e);
+        return handleDioError(e, "File Uplaod endpoint");
       }
       return RequestResponseModel(message: e.toString(), success: false);
     }
   }
 
-  static RequestResponseModel handleDioError(DioException error) {
+  static RequestResponseModel handleDioError(DioException error, String end) {
     log('--------------- its dio error ${error.type}');
+    log('--------------- its dio error ${error.message}');
+    log('--------------- its dio error ${end}');
     if (error.type == DioExceptionType.connectionTimeout) {
-      // return RequestResponsModel(message: error.message, success: false);
-      log('Send timeout error: ${error.message}');
       return RequestResponseModel(
         message: "Server connection timeout, please try again",
         statusCode: error.response?.data?['statusCode'],
@@ -231,35 +234,26 @@ class MyRequestClass {
       );
     } else if (error.type == DioExceptionType.sendTimeout) {
       // Handle send timeout error
-      log('Send timeout error: ${error.message}');
       return RequestResponseModel(
           message: "Server not responding, please try again");
     } else if (error.type == DioExceptionType.receiveTimeout) {
       // Handle receive timeout error
-      log('Receive timeout error: ${error.message}');
       return RequestResponseModel(
         message: "Server timeout, please try again",
         statusCode: error.response?.data?['statusCode'],
         success: error.response?.data?['success'] ?? false,
       );
     } else if (error.type == DioExceptionType.unknown) {
-      log('Response unknown error: ${error.message}');
       log('Response unknown status code: ${error.response?.statusCode}');
       log('Response unknown data: ${error.response?.data}');
-      if (error.response?.statusCode == 401 && hasTryRefresh == false) {
+      log('$end throw the errors ------------------ endpoint error');
+      if (error.response?.statusCode == 401 && hasTryRefresh.value == false) {
         return RequestResponseModel(message: "Checking ...", success: true);
       }
       return RequestResponseModel(
           message: "Unknown Server error, please try again");
-    } else if (error.type == DioExceptionType.unknown) {
-      log('Response unknown error: ${error.message}');
-      log('Response unknown status code: ${error.response?.statusCode}');
-      log('Response unknown data: ${error.response?.data}');
-      return RequestResponseModel(
-          message: "Unknown Server error, please try again");
     } else if (error.type == DioExceptionType.badResponse) {
       // Handle response error
-      log('Response bad request error: ${error.message}');
       log('Response bad request status code: ${error.response?.statusCode}');
       log('Response bad request data: ${error.response?.data}');
       return RequestResponseModel(
@@ -269,11 +263,13 @@ class MyRequestClass {
       );
     } else if (error.type == DioExceptionType.cancel) {
       // Handle request cancellation
-      log('Request cancelled: ${error.message}');
       return RequestResponseModel(message: error.message);
+    } else if (error.type == DioExceptionType.connectionError) {
+      // Handle request cancellation
+      return RequestResponseModel(
+          message: "Error in connection, check internet");
     } else {
       // Handle other Dio errors
-      log('Other Dio error: ${error.message}');
       return RequestResponseModel(message: error.message);
     }
   }

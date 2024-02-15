@@ -44,8 +44,12 @@ class UserBusinessDetails extends StatelessWidget {
                   controller: _.fullAdress,
                   onChangeValue: () {}),
               CW.AppSpacer(h: 20),
-              Obx(
-                () => CW
+              Obx(() {
+                print('${userData.investorSignature} == inivest');
+                print('${_.isUploadingSignature.value} == signature');
+                print('${_.hasUploadSignature.value} == hasUpload');
+                print('${_.uploadProgress.value} == progress');
+                return CW
                     .imageUploaderContainer(
                       label: tUploadSign,
                       imageUrl: userData.investorSignature ?? "",
@@ -55,14 +59,10 @@ class UserBusinessDetails extends StatelessWidget {
                       uploadProgress: _.uploadProgress.value,
                     )
                     .toButton(
-                      onTap: userData.investorSignature == null ||
-                              userData.investorSignature!.isNotEmpty &&
-                                  _.isUploadingImage.value ||
-                              userData.investorSignature!.length > 10
-                          ? null
-                          : () => _.uploadSignature(),
-                    ),
-              ),
+                      onTap: () =>
+                          _.checkCanUpload() ? null : _.uploadSignature(),
+                    );
+              }),
               const Text(tSnapAnsSign).subTitle(fontSize: 10),
               CW.AppSpacer(h: 30),
               CW.button(onPress: _.updateBusinessDetails, text: tSave)

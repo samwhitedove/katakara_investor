@@ -46,18 +46,14 @@ class HomeScreenController extends GetxController {
     final RequestResponseModel response = await authService
         .goLive({"status": !isActive.value, "fcmToken": deviceToken});
     if (response.success) {
-      RequestResponseModel youtube =
-          await Get.find<HomeService>().fetchYoutube();
-      Get.find<PortfolioController>().fetchPortfolio();
-      Get.find<HomeKFIController>().fetchKFIAccount();
-      Get.find<HomeKFIController>().fetchKFIInvestment();
       if ((!isActive.value) == true) {
-        authService.fetchUser();
+        youtubeLink =
+            (await Get.find<HomeService>().fetchYoutube()).data.first['link'] ??
+                '';
+        Get.find<HomeKFIController>().fetchKFIAccount();
+        Get.find<HomeKFIController>().fetchKFIInvestment();
 
-        if (youtube.success) {
-          youtubeLink =
-              (youtube.data as List).isNotEmpty ? youtube.data['link'] : '';
-        }
+        authService.fetchUser();
       }
       isLoading.value = false;
       isActive.toggle();
@@ -74,10 +70,10 @@ class HomeScreenController extends GetxController {
           "color": AppColor.primary,
           "onTap": () async {
             if (youtubeLink == null || youtubeLink!.isEmpty) {
-              final youtube = await Get.find<HomeService>().fetchYoutube();
-              if (youtube.success == false) return;
-              if (youtube.success && youtube.data[0]) return;
-              youtubeLink = youtube.data[0]['link'];
+              youtubeLink = (await Get.find<HomeService>().fetchYoutube())
+                  .data
+                  .first['link'];
+              if (youtubeLink!.isEmpty) return;
             }
             Get.toNamed(RouteName.youtube.name, arguments: youtubeLink);
           },
@@ -125,15 +121,15 @@ class HomeScreenController extends GetxController {
       },
       "label": "Financial capacity"
     },
-    {
-      'image': Assets.assetsSvgCalculator,
-      "isSelected": false.obs,
-      "onTap": () {
-        Get.back();
-        Get.toNamed(RouteName.calculator.name);
-      },
-      "label": "Investment Calculator"
-    },
+    // {
+    //   'image': Assets.assetsSvgCalculator,
+    //   "isSelected": false.obs,
+    //   "onTap": () {
+    //     Get.back();
+    //     Get.toNamed(RouteName.calculator.name);
+    //   },
+    //   "label": "Investment Calculator"
+    // },
   ];
 
   List<Map<String, dynamic>> menuItemFooter = [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:katakara_investor/customs/custom.widget.dart';
 import 'package:katakara_investor/extensions/extensions.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/admin/dashboard/admin.dashbord.controller.dart';
@@ -35,6 +36,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
             ),
             child: Column(
               children: [
+                CW.AppSpacer(h: 10),
                 Expanded(
                   child: GridView.builder(
                     physics: const BouncingScrollPhysics(),
@@ -86,6 +88,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                     },
                   ),
                 ),
+                CW.AppSpacer(h: 10),
               ],
             ),
           ),

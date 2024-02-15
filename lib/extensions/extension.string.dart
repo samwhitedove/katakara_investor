@@ -36,7 +36,7 @@ extension Stringer on String {
       return "$naira${kobo != null ? '.$kobo' : ''}";
     }
     if (count == 1) {
-      return "${remainder == 0 ? '' : '${naira.substring(0, remainder)},'}${naira.substring(remainder)}${kobo != null ? '.$kobo' : ''}";
+      return "${remainder == 0 ? '' : '${naira.substring(0, remainder)}${naira.length > 3 ? "," : ""}'}${naira.substring(remainder)}${kobo != null ? '.$kobo' : ''}";
     }
     String mainSplit = naira.substring(remainder);
     String money = "";
@@ -44,6 +44,6 @@ extension Stringer on String {
       if (i != 0 && i % 3 == 0) money += ',';
       money += mainSplit[i];
     }
-    return "${remainder == 0 ? '' : '${naira.substring(0, remainder)},'}$money${kobo != null ? '.$kobo' : ''}";
+    return "${remainder == 0 ? '' : '${naira.substring(0, remainder)}${naira.length > 3 ? ',' : ''}'}$money${kobo != null ? '.$kobo' : ''}";
   }
 }

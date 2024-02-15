@@ -1,35 +1,58 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/models/admin/model.fetch.user.dart';
+import 'package:katakara_investor/models/receipt/model.fetch.reponse.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';
 import 'package:katakara_investor/services/service.admin.dart';
 
 enum UserViewType { all, block, join }
 
 class UserListController extends GetxController {
-  final UserViewType pageType = Get.arguments;
+  late UserViewType pageType = Get.arguments;
   final AdminService adminService = Get.find<AdminService>();
   String? title;
+  int selected = 0;
+
+  final List<String> userListType = <String>[
+    'All Users',
+    'New Users',
+    'Block Users'
+  ];
 
   @override
   void onInit() {
-    setTitle();
+    changeUserType('all');
     super.onInit();
   }
 
-  void setTitle() {
-    switch (pageType) {
-      case UserViewType.all:
+  changeUserType(text) {
+    if (userListType[selected] == text) return;
+    switch (text) {
+      case "All Users":
+        selected = 0;
+        pageType = UserViewType.all;
         title = "All Users";
+        // update();
         break;
-      case UserViewType.join:
+      case "New Users":
+        selected = 1;
+        pageType = UserViewType.join;
         title = "New Users";
+        // update();
         break;
-      case UserViewType.block:
+      case "Block Users":
+        selected = 2;
+        pageType = UserViewType.block;
         title = "Block Users";
+        // update();
         break;
       default:
-        title = "Un-Categorized User";
+        selected = 0;
+        title = "All User";
+        pageType = UserViewType.all;
+        update();
         break;
     }
     fetchAllAppUser(pageType);
@@ -37,13 +60,15 @@ class UserListController extends GetxController {
 
   RxBool isFetchingAllUser = false.obs;
   RxBool isFetchingMoreUser = false.obs;
-  Map<String, dynamic> fetchedUser = <String, dynamic>{
-    "pagination": <Pagination>{},
-    "users": <FetchedUser>[]
-  };
+  List<FetchedUser>? fetchedUser = <FetchedUser>[];
+  Pagination? pagination;
+  // Map<String, dynamic> fetchedUser = <String, dynamic>{
+  //   "pagination": <Pagination>{},
+  //   "users": <FetchedUser>[]
+  // };
 
   fetchMoreData(UserViewType type) async {
-    String? page = fetchedUser['pagination']['nextPage'];
+    String? page = pagination?.nextPage;
     if (page == null) return;
     isFetchingMoreUser(true);
     update();
@@ -53,8 +78,10 @@ class UserListController extends GetxController {
     update();
     if (responseModel.success) {
       final decode = FetchAllUser.fromJson(responseModel.data);
-      fetchedUser['users'].addAll(decode.data);
-      fetchedUser['pagination'] = decode.pagination;
+      for (var element in decode.data!) {
+        fetchedUser!.add(element);
+      }
+      pagination = decode.pagination!;
       return;
     }
     HC.snack(responseModel.message, success: responseModel.success);
@@ -80,9 +107,9 @@ class UserListController extends GetxController {
     update();
     if (responseModel!.success) {
       final decode = FetchAllUser.fromJson(responseModel.data);
-      fetchedUser['users'] = decode.data;
-      // log("${decode.data} done processing call ------- ------- ---");
-      fetchedUser['pagination'] = decode.pagination;
+      fetchedUser = decode.data;
+      pagination = decode.pagination!;
+      // log("${pagination} done processing call ------- ------- ---");
       // log("${fetchedUser['pagination'].toJson()} done processing call --qqq----- ------- ---");
       return;
     }

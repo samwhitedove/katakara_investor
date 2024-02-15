@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:katakara_investor/customs/custom.widget.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';
 import 'package:katakara_investor/services/services.auth.dart';
@@ -213,6 +214,13 @@ class HC {
     return _fcm;
   }
 
+  static String formatDate(DateTime date, {bool formatSimple = false}) {
+    if (formatSimple) {
+      return '${DateFormat.yMd().format(date)} - ${DateFormat.jm().format(date)}';
+    }
+    return '${DateFormat.yMMMEd().format(date)} - ${DateFormat.jm().format(date)}';
+  }
+
   static String formartValue(dynamic value) {
     log(value.toString());
     log(value.runtimeType.toString());
@@ -222,11 +230,21 @@ class HC {
     if (value.toString().contains('-')) {
       final parseDate = DateTime.tryParse(value.toString());
       if (parseDate == null) return value;
-      return DateTime.parse(value.toString())
-          .toLocal()
-          .toString()
-          .split('T')[0];
+      return HC.formatDate(parseDate);
     }
     return value.toString();
+  }
+
+  static Color handleStatusView(String status) {
+    switch (status) {
+      case "PENDING":
+        return AppColor.grey;
+      case "APPROVED":
+        return AppColor.primary;
+      case "REJECTED":
+        return AppColor.red;
+      default:
+        return AppColor.grey;
+    }
   }
 }

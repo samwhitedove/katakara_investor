@@ -84,6 +84,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Katakara Investor',
       theme: lightTheme,
+      darkTheme: darkTheme,
       getPages: AppRoutes.routes,
       initialBinding: AllBindings(),
       initialRoute: Config.isNew!

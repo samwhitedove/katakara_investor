@@ -23,64 +23,139 @@ class ViewInformationCard extends StatelessWidget {
                 scroll: const NeverScrollableScrollPhysics(),
                 title: "User Information",
                 children: [
-                  CW.AppSpacer(h: 20),
-                  Center(
-                    child: CircleAvatar(
-                      radius: 45,
-                      backgroundImage: _.user?.profileImageUrl != null &&
-                              _.user?.profileImageUrl!.startsWith('http')
-                          ? CachedNetworkImageProvider(_.user?.profileImageUrl)
-                              as ImageProvider
-                          : const AssetImage(Assets.assetsImagesImage),
-                    ),
-                  ),
-                  CW
-                      .button(
-                        isLoading: _.isOperating.value,
-                        color: _.isOperating.value
-                            ? AppColor.greyLigth
-                            : _.action[_.user!.isBlock! ? 1 : 0]['color']
-                                as Color,
-                        onPress: () =>
-                            _.action[_.user!.isBlock! ? 1 : 0]['onTap'](),
-                        text: '',
-                        child: Row(
+                  SizedBox(
+                    height: Get.height * .3,
+                    child: Column(
+                      children: [
+                        CW.AppSpacer(h: 20),
+                        Center(
+                          child: CircleAvatar(
+                            radius: 45,
+                            backgroundImage: _.user?.profileImageUrl != null &&
+                                    _.user?.profileImageUrl!.startsWith('http')
+                                ? CachedNetworkImageProvider(
+                                    _.user?.profileImageUrl) as ImageProvider
+                                : const AssetImage(Assets.assetsImagesImage),
+                          ),
+                        ),
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: Icon(_.action[_.user!.isBlock! ? 1 : 0]
-                                  ['icon'] as IconData?),
-                            ),
-                            Text(
-                              _.action[_.user!.isBlock! ? 1 : 0]['title']
-                                  .toString(),
-                            ),
+                            CW
+                                .button(
+                                  isLoading: _.isTaskAdmin.value,
+                                  color:
+                                      _.isTaskBlock.value || _.isTaskAdmin.value
+                                          ? AppColor.greyLigth
+                                          : _.action[
+                                              _.user!.role! == Roles.USER.name
+                                                  ? 1
+                                                  : 0]['color'] as Color,
+                                  onPress:
+                                      _.isTaskBlock.value || _.isTaskAdmin.value
+                                          ? null
+                                          : () => _.adminAction[
+                                              _.user!.role! == Roles.USER.name
+                                                  ? 1
+                                                  : 0]['onTap'](),
+                                  text: '',
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                        child: Icon(_.adminAction[
+                                            _.user!.role! == Roles.USER.name
+                                                ? 1
+                                                : 0]['icon'] as IconData?),
+                                      ),
+                                      Text(
+                                        _.adminAction[
+                                                _.user!.role! == Roles.USER.name
+                                                    ? 1
+                                                    : 0]['title']
+                                            .toString(),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                .halfWidth(width: .45)
+                                .align(Al.center)
+                                .paddingOnly(top: 10, right: 10),
+                            CW
+                                .button(
+                                  isLoading: _.isTaskBlock.value,
+                                  color:
+                                      _.isTaskBlock.value || _.isTaskAdmin.value
+                                          ? AppColor.greyLigth
+                                          : _.action[_.user!.isBlock! ? 1 : 0]
+                                              ['color'] as Color,
+                                  onPress: _.isTaskBlock.value ||
+                                          _.isTaskAdmin.value
+                                      ? null
+                                      : () => _.action[_.user!.isBlock! ? 1 : 0]
+                                          ['onTap'](),
+                                  text: '',
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                        child: Icon(
+                                            _.action[_.user!.isBlock! ? 1 : 0]
+                                                ['icon'] as IconData?),
+                                      ),
+                                      Text(
+                                        _.action[_.user!.isBlock! ? 1 : 0]
+                                                ['title']
+                                            .toString(),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                .halfWidth(width: .4)
+                                .align(Al.center)
+                                .paddingOnly(top: 10, right: 10),
                           ],
                         ),
-                      )
-                      .halfWidth()
-                      .align(Al.center)
-                      .paddingOnly(top: 10),
+                      ],
+                    ),
+                  ),
                   SizedBox(
-                    height: Get.height * .75,
+                    // color: AppColor.black,
+                    height: Get.height * .57,
                     child: ListView.builder(
+                      controller: _.scrollController,
                       physics: const BouncingScrollPhysics(),
-                      shrinkWrap: true,
+                      // shrinkWrap: true,
                       itemCount: _.userJson?.keys.length ?? 0,
-                      itemBuilder: (context, index) => ListTile(
-                        title: Text(
-                          _.data[index],
-                        ).subTitle(fontSize: 12),
-                        subtitle: Text(
-                          HC.formartValue(_.userJson!.values.toList()[index]),
-                        ).subTitle(
-                          fontSize: 13,
-                          bold: true,
-                        ),
-                        trailing: _.handleTrailing(index),
-                        onTap: () => _.handleClick(index),
-                      ),
+                      itemBuilder: (context, index) =>
+                          _.data[index] == "Profile Image" ||
+                                  _.data[index] == "updateAt" ||
+                                  _.data[index] == "id"
+                              ? const SizedBox()
+                              : ListTile(
+                                  title: Text(
+                                    _.data[index],
+                                  ).subTitle(fontSize: 12),
+                                  subtitle: SelectableText(
+                                    HC.formartValue(
+                                        _.userJson!.values.toList()[index]),
+                                    style: const TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 12,
+                                      overflow: TextOverflow.ellipsis,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColor.subTitle,
+                                    ),
+                                  ),
+                                  trailing: _.handleTrailing(index),
+                                  // onTap: _.data[index] == "Merge"
+                                  //     ? () => _.handleClick(index)
+                                  //     : null,
+                                ),
                     ),
                   ),
                 ],

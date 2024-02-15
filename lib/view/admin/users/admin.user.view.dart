@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:katakara_investor/customs/custom.listview.dart';
 import 'package:katakara_investor/extensions/extensions.dart';
+import 'package:katakara_investor/models/admin/model.fetch.user.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/admin/users/admin.user.controller.dart';
 import 'package:katakara_investor/view/view.dart';
@@ -35,14 +37,48 @@ class UserListView extends StatelessWidget {
                           child: Center(
                             child: FittedBox(
                               child: Text(
-                                (_.fetchedUser['pagination'].total).toString(),
+                                '${_.fetchedUser?.length}/${_.pagination?.total}',
                               ).title(
                                 fontSize: 16,
                                 color: AppColor.white,
                               ),
                             ),
                           ),
-                        )
+                        ),
+                  _.isFetchingAllUser.value
+                      ? const SizedBox()
+                      : PopupMenuButton<String>(
+                          icon: const Icon(Icons.sort),
+                          onSelected: _.changeUserType,
+                          itemBuilder: (BuildContext context) {
+                            return <PopupMenuEntry<String>>[
+                              ...List.generate(
+                                _.userListType.length,
+                                (index) => PopupMenuItem<String>(
+                                  textStyle: const TextStyle(
+                                      fontSize: 12, color: AppColor.text),
+                                  value: _.userListType[index],
+                                  child: Row(
+                                    children: [
+                                      Text(_.userListType[index]),
+                                      _.selected == index
+                                          ? const Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 8.0),
+                                              child: CircleAvatar(
+                                                radius: 3,
+                                                backgroundColor:
+                                                    AppColor.primary,
+                                              ),
+                                            )
+                                          : const SizedBox()
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ];
+                          },
+                        ),
                 ],
               ),
               body: Stack(
@@ -52,37 +88,42 @@ class UserListView extends StatelessWidget {
                     child: Column(
                       children: [
                         Expanded(
-                          child: _.fetchedUser['users'].isEmpty
+                          child: _.fetchedUser!.isEmpty
                               ? Center(
                                   child: NoDataScreen(
                                     oncall: () {},
+                                    message: "No user found",
                                   ),
                                 )
-                              : ListView.builder(
-                                  itemCount: _.fetchedUser['users'].length,
-                                  itemBuilder: (context, index) => _
-                                              .fetchedUser['users'][index].id ==
-                                          userData.id
-                                      ? const SizedBox()
-                                      : UserOverviewListTile(
-                                          fullName: _
-                                              .fetchedUser['users'][index]
-                                              .fullName,
-                                          phone: _.fetchedUser['users'][index]
-                                              .phoneNumber,
-                                          lga:
-                                              _.fetchedUser['users'][index].lga,
-                                          state: _.fetchedUser['users'][index]
-                                              .state,
-                                          image: _.fetchedUser['users'][index]
-                                              .profileImageUrl,
-                                          onTap: () => Get.toNamed(
-                                            RouteName.viewInformationCard.name,
-                                            arguments: _.fetchedUser['users']
-                                                [index],
-                                          ),
-                                        ),
-                                ),
+                              : CustomListViewWithFetchMore(
+                                  child: UserView,
+                                  pagination: _.pagination,
+                                  count: _.fetchedUser!.length,
+                                  getMoreUser: _.fetchMoreData,
+                                  fetchingMore: _.isFetchingMoreUser,
+                                  type: _.pageType,
+                                  fetchedata: _.fetchedUser!),
+                          // : ListView.builder(
+                          //     itemCount: _.fetchedUser!.length,
+                          // itemBuilder: (context, index) =>  _
+                          //             .fetchedUser![index].id ==
+                          //         userData.id
+                          //     ? const SizedBox()
+                          //         : UserOverviewListTile(
+                          //             fullName:
+                          //                 _.fetchedUser![index].fullName!,
+                          //             phone: _
+                          //                 .fetchedUser![index].phoneNumber!,
+                          //             lga: _.fetchedUser![index].lga!,
+                          //             state: _.fetchedUser![index].state!,
+                          //             image: _.fetchedUser![index]
+                          //                 .profileImageUrl,
+                          //             onTap: () => Get.toNamed(
+                          //               RouteName.viewInformationCard.name,
+                          //               arguments: _.fetchedUser![index],
+                          //             ),
+                          //           ),
+                          //   ),
                         )
                       ],
                     ),
@@ -102,4 +143,21 @@ class UserListView extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget UserView(int index, List<FetchedUser> fetchedUser,
+    Function(String) handleStatusView, Function(int) viewReceipt) {
+  return fetchedUser[index].id == userData.id
+      ? const SizedBox()
+      : UserOverviewListTile(
+          fullName: fetchedUser[index].fullName!,
+          phone: fetchedUser[index].phoneNumber!,
+          lga: fetchedUser[index].lga!,
+          state: fetchedUser[index].state!,
+          image: fetchedUser[index].profileImageUrl,
+          onTap: () => Get.toNamed(
+            RouteName.viewInformationCard.name,
+            arguments: fetchedUser[index],
+          ),
+        );
 }

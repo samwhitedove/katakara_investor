@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/helper/helper.dart';
-import 'package:katakara_investor/values/strings.dart';
+import 'package:katakara_investor/models/receipt/model.fetch.reponse.dart';
 
 import '../../../models/admin/model.fetch.user.dart';
 import '../../../models/services/model.service.response.dart';

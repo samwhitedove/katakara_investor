@@ -52,11 +52,10 @@ class HomeKFIController extends GetxController {
   PageController pageController = PageController(initialPage: 0);
   changeTab(index) {
     currentKfi.value = index;
-    pageController.animateToPage(currentKfi.value,
-        duration: CW.onesSec, curve: Curves.fastEaseInToSlowEaseOut);
+    // pageController.animateToPage(currentKfi.value,
+    //     duration: CW.onesSec, curve: Curves.fastEaseInToSlowEaseOut);
   }
 
-  // RxBool isError = false.obs;
   RxString errorMessage = ''.obs;
   List<Datum> kfiProduct = [];
   Future<List<Datum>> fetchKFIInvestment() async {

@@ -50,6 +50,7 @@ class StepFourController extends GetxController {
   Timer? _timer;
 
   startTimer() {
+    _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (time.value != 1) {
         time.value -= 1;

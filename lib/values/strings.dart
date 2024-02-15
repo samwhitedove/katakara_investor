@@ -36,12 +36,19 @@ enum RouteName {
   viewRedFlag,
   viewRedFlagDetails,
   usersReceipts,
-  addReceipts,
+  adminViewReceipts,
   addFaq,
   notifications,
   youtube,
   search,
-  viewInformationCard
+  viewInformationCard,
+  adminReceiptSearch,
+  userReceiptSearch,
+  youtubeUrl,
+  addInvestment,
+  productCategory,
+  investmentView,
+  adminInvestmentSearch,
 }
 
 enum Al { center, right, left }
@@ -56,7 +63,7 @@ enum StorageNames {
   appState
 }
 
-enum LocalStateName { addPortfolio }
+enum LocalStateName { addPortfolio, addInvestment }
 
 enum StorageKeys { isNewUser, uploadUrls, notifications, unReadNotification }
 
@@ -69,6 +76,12 @@ enum SettingsKey { user, isLogin }
 enum CropType { square, ratio3x2, original, ratio4x3, ratio16x9 }
 
 UserDataModel userData = UserDataModel();
+
+enum Roles { SUPER_ADMIN, ADMIN, USER }
+
+enum NewProductStatus { APPROVED, PENDING, REJECTED }
+
+List<String> receiptType = <String>["All", "PENDING", "APPROVED", "REJECTED"];
 
 List<String> productCategory = [
   "-- Select Category --",

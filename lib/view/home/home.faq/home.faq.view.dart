@@ -15,7 +15,6 @@ class FaqScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () {
-        log('refreshing ------- ');
         return true as Future;
       },
       child: GetBuilder<FaqController>(
@@ -23,7 +22,8 @@ class FaqScreen extends StatelessWidget {
         initState: (_) {},
         builder: (_) {
           return Scaffold(
-            floatingActionButton: userData.isAdmin! && _.fromAdmin != null
+            floatingActionButton: userData.role == Roles.SUPER_ADMIN.name &&
+                    _.fromAdmin != null
                 ? CW
                     .button(
                         text: '',
@@ -42,7 +42,7 @@ class FaqScreen extends StatelessWidget {
                             ]),
                         onPress: () => Get.toNamed(RouteName.addFaq.name))
                     .halfWidth()
-                    .simpleRoundCorner(width: 180, height: 60, radius: 20)
+                // .simpleRoundCorner(width: 180, radius: 20)
                 : null,
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -2,22 +2,27 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:katakara_investor/view/admin/broadcast/admin.broadcast.view.dart';
+import 'package:katakara_investor/view/admin/category/category.view.dart';
 import 'package:katakara_investor/view/admin/dashboard/admin.dashboard.view.dart';
 import 'package:katakara_investor/view/admin/faq/admin.faq.view.dart';
 import 'package:katakara_investor/view/admin/products/active/admin.product.active.view.dart';
-import 'package:katakara_investor/view/admin/products/add/admin.product.add.view.dart';
+import 'package:katakara_investor/view/admin/products/active/search.view.dart';
+import 'package:katakara_investor/view/admin/products/add/product.portfolio.add.dart';
 import 'package:katakara_investor/view/admin/products/booked/admin.product.booked.view.dart';
-import 'package:katakara_investor/view/admin/receipts/admin.receipt.add.view.dart';
-import 'package:katakara_investor/view/admin/receipts/admin.receipt.receipts.view.dart';
+import 'package:katakara_investor/view/admin/receipts/admin.receipt.user.view.dart';
+import 'package:katakara_investor/view/home/home.sub/investment/investment.view.dart';
+import 'package:katakara_investor/view/admin/receipts/search.view.dart';
 import 'package:katakara_investor/view/admin/red_flag/admin.redflag.details.dart';
 import 'package:katakara_investor/view/admin/red_flag/admin.redflag.view.dart';
 import 'package:katakara_investor/view/admin/users/admin.user.view.dart';
+import 'package:katakara_investor/view/admin/youtube/youtube.link.view.dart';
 import 'package:katakara_investor/view/auth/register/register_controller/stepFour.controller.dart';
 import 'package:katakara_investor/view/auth/register/register_controller/stepOne.controller.dart';
 import 'package:katakara_investor/view/auth/register/register_controller/stepTwo.controller.dart';
 import 'package:katakara_investor/view/home/home.notification/home.notification.view.dart';
 import 'package:katakara_investor/view/home/home.receipt/home.receipt.reveiw.dart';
 import 'package:katakara_investor/view/home/home.receipt/home.receipt.create.dart';
+import 'package:katakara_investor/view/home/home.receipt/search.view.dart';
 import 'package:katakara_investor/view/home/home.sub/chat/chat.screen.dart';
 import 'package:katakara_investor/view/home/home.sub/homepage/home.youtube.dart';
 import 'package:katakara_investor/view/product/product.full.image.dart';
@@ -128,8 +133,8 @@ class AppRoutes {
         page: () => const Broadcast(),
       ),
       GetPage(
-          name: '/${RouteName.addProduct.name}',
-          page: () => const AddProduct()),
+          name: '/${RouteName.addInvestment.name}',
+          page: () => const AddInvestmentProduct()),
       GetPage(
           name: '/${RouteName.viewRedFlag.name}',
           page: () => const ViewRedFlag()),
@@ -137,11 +142,8 @@ class AppRoutes {
           name: '/${RouteName.viewRedFlagDetails.name}',
           page: () => const RedFlagDetails()),
       GetPage(
-          name: '/${RouteName.usersReceipts.name}',
-          page: () => const UserReceipts()),
-      GetPage(
-          name: '/${RouteName.addReceipts.name}',
-          page: () => const AddReceipt()),
+          name: '/${RouteName.adminViewReceipts.name}',
+          page: () => const AdminViewUserReceipt()),
       GetPage(
         name: '/${RouteName.addFaq.name}',
         page: () => const AddFAQScreen(),
@@ -155,12 +157,36 @@ class AppRoutes {
         page: () => YoutubePlay(),
       ),
       GetPage(
+        name: '/${RouteName.youtubeUrl.name}',
+        page: () => const SetYoutubeUrlScreen(),
+      ),
+      GetPage(
         name: '/${RouteName.search.name}',
         page: () => const SearchPage(),
       ),
       GetPage(
+        name: '/${RouteName.adminReceiptSearch.name}',
+        page: () => const AdminReceiptSearchPage(),
+      ),
+      GetPage(
+        name: '/${RouteName.userReceiptSearch.name}',
+        page: () => const UserReceiptSearchPage(),
+      ),
+      GetPage(
         name: '/${RouteName.viewInformationCard.name}',
         page: () => const ViewInformationCard(),
+      ),
+      GetPage(
+        name: '/${RouteName.productCategory.name}',
+        page: () => const AddCategoryScreen(),
+      ),
+      GetPage(
+        name: '/${RouteName.investmentView.name}',
+        page: () => InvestmentProductView(),
+      ),
+      GetPage(
+        name: '/${RouteName.adminInvestmentSearch.name}',
+        page: () => const AdminInvestmentSearchPage(),
       ),
     ];
   }

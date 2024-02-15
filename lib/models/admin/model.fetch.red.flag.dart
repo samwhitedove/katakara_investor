@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:katakara_investor/models/product/models.fetch.portfolio.response.dart';
+import 'package:katakara_investor/models/receipt/model.fetch.reponse.dart';
 
 FetchRedFlag fetchRedFlagFromJson(String str) =>
     FetchRedFlag.fromJson(json.decode(str));

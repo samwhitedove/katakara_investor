@@ -21,6 +21,7 @@ class EndPoint {
   // portfolio
   static String updatePortfolio = '/user/update-product';
   static String fetchPortfolio = '/user/fetch-portfolio';
+  static String fetchCategory = '/user/fetch-category';
   static String fetchPortfolioWithSearch(String type, int limit) =>
       '/user/fetch-portfolio?type=$type&limit=$limit';
   static String deletePortfolio(String sku) => '/user/delete-product?sku=$sku';
@@ -62,4 +63,17 @@ class EndPoint {
   static String deleteFaq(int id) => '/console/delete-faq?id=$id';
   static String deleteRedFlag(int id) => '/console/delete-red-flag?id=$id';
   static String fetchRedFlag = '/console/fetch-red-flag';
+  static String fetchUsersReceipt = '/console/fetch-receipt';
+  static String deleteReceipt(int id) => '/console/delete-receipt?id=$id';
+  static String approveReceipt(int id) => '/console/approve-receipt?id=$id';
+  static String rejectReceipt(int id) => '/console/decline-receipt?id=$id';
+  static String makeAdmin = '/console/make-admin';
+  static String addYoutube = '/console/add-yotube';
+  static String addCategory = '/console/add-category';
+  static String updateCategory = '/console/update-category';
+  static String deleteCategory = '/console/delete-category';
+  static String addInvestment = '/console/add-investment';
+  static String updateInvestment = '/console/update-investment';
+  static String deleteInvestment = '/console/delete-investment';
+  static String fetchInvestment = '/console/fetch-investment';
 }

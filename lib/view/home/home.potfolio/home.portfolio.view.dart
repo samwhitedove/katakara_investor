@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:katakara_investor/customs/custom,product.load.dart';
+import 'package:katakara_investor/customs/custom.product.load.dart';
 import 'package:katakara_investor/customs/custom.widget.dart';
 import 'package:katakara_investor/extensions/extensions.dart';
 import 'package:katakara_investor/helper/helper.dart';
@@ -29,7 +29,7 @@ class PortfolioScreen extends StatelessWidget {
                 Container(
                   color: AppColor.primary,
                   width: Get.width,
-                  height: HC.spaceHorizontal(248),
+                  height: Get.height * .3,
                   child: CW.column(
                     children: [
                       CW.AppSpacer(h: 70),
@@ -53,8 +53,14 @@ class PortfolioScreen extends StatelessWidget {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(tBusinessName)
-                              .title(fontSize: 20, color: AppColor.white),
+                          FittedBox(
+                            child: Text(userData.companyName ?? tBusinessName)
+                                .title(
+                              fontSize: 20,
+                              color: AppColor.white,
+                            ),
+                          ),
+                          CW.AppSpacer(h: 10),
                           const Text(tSendReceipt).subTitle(
                             color: AppColor.white.withOpacity(.7),
                           ),
@@ -64,7 +70,7 @@ class PortfolioScreen extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  bottom: -35,
+                  bottom: -30,
                   left: 0,
                   right: 0,
                   child: CW.column(
@@ -120,7 +126,6 @@ class PortfolioScreen extends StatelessWidget {
                 ),
               ],
             ),
-            CW.AppSpacer(h: 60),
             Obx(
               () => ShowProducts(
                 errorMessage: _.errorMessage,

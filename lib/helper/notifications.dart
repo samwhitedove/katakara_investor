@@ -4,8 +4,8 @@ import 'dart:developer';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
-import 'package:katakara_investor/models/notificatons/notification.data.model.dart';
-import 'package:katakara_investor/models/notificatons/notification.model.dart';
+import 'package:katakara_investor/models/notifications/notification.data.model.dart';
+import 'package:katakara_investor/models/notifications/notification.model.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/home/home.notification/home.notification.controller.dart';
 
@@ -70,7 +70,7 @@ class NotificationController {
   @pragma("vm:entry-point")
   static Future<void> onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
-    // log("notification is displayed rece- on displayedivedNotification  ----- on displayed");
+    log("notification is displayed rece- on displayedivedNotification  ----- on displayed");
   }
 
   /// Use this method to detect if the user dismissed a notification

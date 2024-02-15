@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import '../receipt/model.fetch.reponse.dart';
+
 FetchAllUser fetchAllUserFromJson(String str) =>
     FetchAllUser.fromJson(json.decode(str));
 
@@ -62,6 +64,7 @@ class FetchedUser {
   bool? isLive;
   bool? isBlock;
   bool? isMerge;
+  String? role;
 
   FetchedUser({
     this.id,
@@ -89,6 +92,7 @@ class FetchedUser {
     this.isLive,
     this.isBlock,
     this.isMerge,
+    this.role,
   });
 
   factory FetchedUser.fromJson(Map<String, dynamic> json) => FetchedUser(
@@ -120,6 +124,7 @@ class FetchedUser {
         isLive: json["isLive"],
         isBlock: json["isBlock"],
         isMerge: json["isMerge"],
+        role: json["role"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -148,45 +153,6 @@ class FetchedUser {
         "isLive": isLive,
         "isBlock": isBlock,
         "isMerge": isMerge,
-      };
-}
-
-class Pagination {
-  int? total;
-  int? totalPage;
-  int? perPage;
-  int? currentPageItemCount;
-  int? currentPage;
-  dynamic previousPage;
-  dynamic nextPage;
-
-  Pagination({
-    this.total,
-    this.totalPage,
-    this.perPage,
-    this.currentPageItemCount,
-    this.currentPage,
-    this.previousPage,
-    this.nextPage,
-  });
-
-  factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
-        total: json["total"],
-        totalPage: json["totalPage"],
-        perPage: json["perPage"],
-        currentPageItemCount: json["currentPageItemCount"],
-        currentPage: json["currentPage"],
-        previousPage: json["previousPage"],
-        nextPage: json["nextPage"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "total": total,
-        "totalPage": totalPage,
-        "perPage": perPage,
-        "currentPageItemCount": currentPageItemCount,
-        "currentPage": currentPage,
-        "previousPage": previousPage,
-        "nextPage": nextPage,
+        "role": role,
       };
 }

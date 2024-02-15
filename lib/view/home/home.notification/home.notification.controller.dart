@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:katakara_investor/services/service.notification.dart';
-import 'package:katakara_investor/models/notificatons/notification.model.dart';
+import 'package:katakara_investor/models/notifications/notification.model.dart';
 
 class AppNotificationController extends GetxController {
   RxBool isOpened = false.obs;

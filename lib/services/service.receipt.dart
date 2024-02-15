@@ -14,9 +14,27 @@ class ReceiptService extends GetxController {
     return response;
   }
 
-  Future<RequestResponseModel> fetchReceipt() async {
+  Future<RequestResponseModel> fetchReceipt(
+      {Map<String, dynamic>? query}) async {
     RequestResponseModel response = await MyRequestClass.krequest(
-        endPoint: EndPoint.fetchReceipt, method: Methods.get);
+        endPoint: EndPoint.fetchReceipt,
+        method: Methods.get,
+        query: query ?? {});
+    return response;
+  }
+
+  Future<RequestResponseModel> searchReceipt(Map<String, String> query) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: EndPoint.fetchReceipt, method: Methods.get, query: query);
+    return response;
+  }
+
+  Future<RequestResponseModel> fetchMoreReceipt(
+      {Map<String, dynamic>? query, String? url}) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: url ?? EndPoint.fetchReceipt,
+        method: Methods.get,
+        query: query);
     return response;
   }
 }

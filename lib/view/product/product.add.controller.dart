@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/helper/helper.settings.dart';
+import 'package:katakara_investor/models/product/model.category.dart';
 import 'package:katakara_investor/models/product/model.select.image.dart';
 import 'package:katakara_investor/models/product/model.upload.product.dart';
 import 'package:katakara_investor/models/product/models.fetch.portfolio.response.dart';
@@ -66,27 +67,66 @@ class AddProductController extends GetxController {
     update();
   }
 
+  cancelUpdate() async {
+    List seller = productInfo!.sellerImage;
+    List? images = productInfo!.productImage!..forEach((element) => element);
+    for (var item in seller) {
+      uploadedSellerImage.removeWhere((element) => element.$1 == item);
+    }
+    for (var item in images!) {
+      uploadedImage.removeWhere((element) => element.$1 == item);
+    }
+    for (var element in uploadedImage) {
+      await portfolioService.deleteImage(pickedImage: element.$1);
+    }
+    for (var element in uploadedSellerImage) {
+      await portfolioService.deleteImage(pickedImage: element.$1);
+    }
+    Get.close(2);
+  }
+
   TextEditingController? productName;
   TextEditingController? description;
   TextEditingController? amountSell;
   TextEditingController? amountBuy;
   RxBool canUpload = false.obs;
   RxBool isUploading = false.obs;
+  RxBool isFetchingCategory = false.obs;
 
   RxString selectedState = stateAndLga.keys.first.obs;
   RxString selectedLga = stateAndLga.values.first.first.obs;
-  RxString category = productCategory.first.obs;
+  RxString category = "".obs; // "productCategory.first.obs";
   final portfolioService = Get.find<PortfolioService>();
   final portfolioController = Get.find<PortfolioController>();
+  List<String> categories = <String>[];
 
   @override
   onInit() {
     super.onInit();
+    fetchProductCategory();
     productName = TextEditingController();
     amountSell = TextEditingController();
     amountBuy = TextEditingController();
     description = TextEditingController();
     setViewForUpdateproduct();
+  }
+
+  fetchProductCategory() async {
+    isFetchingCategory.value = true;
+    final RequestResponseModel response =
+        await portfolioService.fetchProductCategory();
+    log('${response.toJson()} -----------------  response}');
+    if (response.success) {
+      List data = response.data ?? [];
+      if (data.isNotEmpty) {
+        for (var element in data) {
+          categories.add(Category.fromJson(element).category.toString());
+        }
+        category.value = categories.first;
+        log(categories.toString());
+      }
+      isFetchingCategory.value = false;
+    }
   }
 
   onChange({bool init = false}) {

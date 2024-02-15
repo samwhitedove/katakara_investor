@@ -43,6 +43,12 @@ class PortfolioService extends GetxController {
     return response;
   }
 
+  Future<RequestResponseModel> fetchProductCategory() async {
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: EndPoint.fetchCategory, method: Methods.get);
+    return response;
+  }
+
   Future<RequestResponseModel> deleteProduct(String sku) async {
     RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.deletePortfolio(sku), method: Methods.get);

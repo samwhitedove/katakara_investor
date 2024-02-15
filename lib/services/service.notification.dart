@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:katakara_investor/helper/helper.dart';
-import 'package:katakara_investor/models/notificatons/notification.local.model.dart';
-import 'package:katakara_investor/models/notificatons/notification.model.dart';
+import 'package:katakara_investor/models/notifications/notification.local.model.dart';
+import 'package:katakara_investor/models/notifications/notification.model.dart';
 import 'package:katakara_investor/values/strings.dart';
 import 'package:katakara_investor/view/home/home.dart';
 
@@ -104,7 +104,7 @@ class NotificationLocalStorageService {
   //read all notification when starting app
   static Future<void> _readNotification() async {
     log("Class has been initialized ------------------------ ");
-    final Map<String, dynamic> notifies = await AppStorage.readData(
+    final notifies = await AppStorage.readData(
           storageName: StorageNames.notificationStorage.name,
           key: StorageKeys.notifications.name,
         ) ??

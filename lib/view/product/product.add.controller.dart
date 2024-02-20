@@ -21,7 +21,7 @@ class AddProductController extends GetxController {
   List<(String, int)> uploadedSellerImage = <(String, int)>[];
   List<SelectImageModel> processSellerImage = <SelectImageModel>[];
   // get product data if to edit
-  final Datum? productInfo = Get.arguments;
+  final PortfolioDatum? productInfo = Get.arguments;
   bool hasUpdate = false;
   bool hasData = false;
 
@@ -30,11 +30,11 @@ class AddProductController extends GetxController {
     final localData =
         await AppSettings.getAppState(LocalStateName.addPortfolio);
 
-    Datum? getData;
+    PortfolioDatum? getData;
     if (productInfo != null) {
       getData = productInfo;
     } else {
-      if (localData != null) getData = Datum.fromJson(localData);
+      if (localData != null) getData = PortfolioDatum.fromJson(localData);
     }
 
     if (getData == null) return;

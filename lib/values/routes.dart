@@ -5,12 +5,16 @@ import 'package:katakara_investor/view/admin/broadcast/admin.broadcast.view.dart
 import 'package:katakara_investor/view/admin/category/category.view.dart';
 import 'package:katakara_investor/view/admin/dashboard/admin.dashboard.view.dart';
 import 'package:katakara_investor/view/admin/faq/admin.faq.view.dart';
-import 'package:katakara_investor/view/admin/products/active/admin.product.active.view.dart';
-import 'package:katakara_investor/view/admin/products/active/search.view.dart';
-import 'package:katakara_investor/view/admin/products/add/product.portfolio.add.dart';
-import 'package:katakara_investor/view/admin/products/booked/admin.product.booked.view.dart';
+import 'package:katakara_investor/view/admin/investment/active/admin.product.active.view.dart';
+import 'package:katakara_investor/view/admin/investment/active/search.view.dart';
+import 'package:katakara_investor/view/admin/investment/add/product.investment.add.dart';
+import 'package:katakara_investor/view/admin/investment/booked/admin.product.booked.view.dart';
+import 'package:katakara_investor/view/admin/product/search.view.dart';
+import 'package:katakara_investor/view/admin/product/user.product.details.view.dart';
+import 'package:katakara_investor/view/admin/product/user.product.view.dart';
 import 'package:katakara_investor/view/admin/receipts/admin.receipt.user.view.dart';
-import 'package:katakara_investor/view/home/home.sub/investment/investment.view.dart';
+import 'package:katakara_investor/view/home/home.sub/investment/admin.product.active.view.dart';
+import 'package:katakara_investor/view/home/home.sub/investment/investment.detail.view.dart';
 import 'package:katakara_investor/view/admin/receipts/search.view.dart';
 import 'package:katakara_investor/view/admin/red_flag/admin.redflag.details.dart';
 import 'package:katakara_investor/view/admin/red_flag/admin.redflag.view.dart';
@@ -123,11 +127,11 @@ class AppRoutes {
         page: () => const UserListView(),
       ),
       GetPage(
-          name: '/${RouteName.activeProduct.name}',
+          name: '/${RouteName.investmentAvailable.name}',
           page: () => const ActiveProduct()),
       GetPage(
-          name: '/${RouteName.bookedProduct.name}',
-          page: () => const BookedProduct()),
+          name: '/${RouteName.viewUserPortfolio.name}',
+          page: () => UserProductDetailView()),
       GetPage(
         name: '/${RouteName.broadcast.name}',
         page: () => const Broadcast(),
@@ -187,6 +191,18 @@ class AppRoutes {
       GetPage(
         name: '/${RouteName.adminInvestmentSearch.name}',
         page: () => const AdminInvestmentSearchPage(),
+      ),
+      GetPage(
+        name: '/${RouteName.portfolioSearch.name}',
+        page: () => const UserPortSearchPage(),
+      ),
+      GetPage(
+        name: '/${RouteName.userPortfolio.name}',
+        page: () => const UserProducts(),
+      ),
+      GetPage(
+        name: '/${RouteName.activeInvestmentProduct.name}',
+        page: () => const ActiveInvestmentProduct(),
       ),
     ];
   }

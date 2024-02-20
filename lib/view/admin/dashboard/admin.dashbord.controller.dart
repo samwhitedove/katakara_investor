@@ -17,7 +17,7 @@ class AdminDashboardController extends GetxController {
           Get.toNamed(RouteName.user.name, arguments: UserViewType.all)
     },
     {
-      'title': "Category",
+      'title': "Category Available",
       'icon': Icons.category,
       "value": 200,
       'color': AppColor.primary,
@@ -29,15 +29,15 @@ class AdminDashboardController extends GetxController {
       'icon': Icons.propane,
       "value": 150,
       'color': AppColor.purple,
-      "onTap": () => Get.toNamed(RouteName.activeProduct.name)
+      "onTap": () => Get.toNamed(RouteName.investmentAvailable.name)
     },
-    // {
-    //   'title': "Booked Products",
-    //   'icon': Icons.menu_book_rounded,
-    //   "value": 500,
-    //   'color': AppColor.orange,
-    //   "onTap": () => Get.toNamed(RouteName.bookedProduct.name)
-    // },
+    {
+      'title': "User Uploaded Product",
+      'icon': Icons.menu_book_rounded,
+      "value": 500,
+      'color': AppColor.orange,
+      "onTap": () => Get.toNamed(RouteName.userPortfolio.name)
+    },
     // {
     //   'title': "Blocked Users",
     //   'icon': Icons.person_off_sharp,
@@ -47,14 +47,14 @@ class AdminDashboardController extends GetxController {
     //       Get.toNamed(RouteName.user.name, arguments: UserViewType.block)
     // },
     {
-      'title': "BroadCast",
+      'title': "BroadCast A Message",
       'icon': Icons.screenshot_sharp,
       "value": 500,
       'color': AppColor.brown,
       "onTap": () => Get.toNamed(RouteName.broadcast.name)
     },
     {
-      'title': "Add Product",
+      'title': "Add Investment",
       'icon': Icons.add_shopping_cart_rounded,
       "value": 500,
       'color': AppColor.red,

@@ -51,6 +51,7 @@ class EndPoint {
   static String unlinkUser = '/user/unlink-user-request';
   static String acceptUnlink = '/user/accept-unlink';
   static String fetchMerge = '/user/fetch-merge';
+  static String fetchUserInvestment = '/user/fetch-investment';
   // kfi endpoint
   static String fetchUser({String? type, String? find, bool? block}) =>
       '/console/fetch-user${type == null ? "" : "?type=$type"}${find == null ? "" : "&find=$find"}${block == null ? "" : "&block=$block"}';
@@ -76,4 +77,8 @@ class EndPoint {
   static String updateInvestment = '/console/update-investment';
   static String deleteInvestment = '/console/delete-investment';
   static String fetchInvestment = '/console/fetch-investment';
+  static String fetchUserPortfolio = '/console/fetch-all-product';
+  static String rejectProduct = '/console/reject-product';
+  static String approveProduct = '/console/approve-product';
+  static String publishProduct = '/console/publish-product';
 }

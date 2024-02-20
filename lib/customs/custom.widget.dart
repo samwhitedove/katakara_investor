@@ -940,7 +940,7 @@ class CW {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("name")
+                        const Text("go live")
                             .title(fontSize: 14, color: AppColor.black)
                             .roundCorner(height: 10),
                         const Text('state, lga')
@@ -949,7 +949,7 @@ class CW {
                       ],
                     ),
                     CW.AppSpacer(h: 3),
-                    const Text("status.toString()")
+                    const Text("go live to view status")
                         .subTitle(fontSize: 10, color: AppColor.primary)
                         .roundCorner(
                             height: 20,

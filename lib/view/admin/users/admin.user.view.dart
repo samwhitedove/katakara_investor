@@ -6,6 +6,7 @@ import 'package:katakara_investor/models/admin/model.fetch.user.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/admin/users/admin.user.controller.dart';
 import 'package:katakara_investor/view/view.dart';
+import 'package:katakara_investor/view/widgets/popup.menu.dart';
 
 import '../../../customs/custom.product.type.dart';
 
@@ -47,38 +48,43 @@ class UserListView extends StatelessWidget {
                         ),
                   _.isFetchingAllUser.value
                       ? const SizedBox()
-                      : PopupMenuButton<String>(
-                          icon: const Icon(Icons.sort),
-                          onSelected: _.changeUserType,
-                          itemBuilder: (BuildContext context) {
-                            return <PopupMenuEntry<String>>[
-                              ...List.generate(
-                                _.userListType.length,
-                                (index) => PopupMenuItem<String>(
-                                  textStyle: const TextStyle(
-                                      fontSize: 12, color: AppColor.text),
-                                  value: _.userListType[index],
-                                  child: Row(
-                                    children: [
-                                      Text(_.userListType[index]),
-                                      _.selected == index
-                                          ? const Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 8.0),
-                                              child: CircleAvatar(
-                                                radius: 3,
-                                                backgroundColor:
-                                                    AppColor.primary,
-                                              ),
-                                            )
-                                          : const SizedBox()
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ];
-                          },
-                        ),
+                      : CustomPopUpMenu(
+                          data: _.userListType,
+                          onChange: _.changeUserType,
+                          selected: _.selected)
+
+                  // PopupMenuButton<String>(
+                  //     icon: const Icon(Icons.sort),
+                  //     onSelected: _.changeUserType,
+                  //     itemBuilder: (BuildContext context) {
+                  //       return <PopupMenuEntry<String>>[
+                  //         ...List.generate(
+                  //           _.userListType.length,
+                  //           (index) => PopupMenuItem<String>(
+                  //             textStyle: const TextStyle(
+                  //                 fontSize: 12, color: AppColor.text),
+                  //             value: _.userListType[index],
+                  //             child: Row(
+                  //               children: [
+                  //                 Text(_.userListType[index]),
+                  //                 _.selected == index
+                  //                     ? const Padding(
+                  //                         padding:
+                  //                             EdgeInsets.only(left: 8.0),
+                  //                         child: CircleAvatar(
+                  //                           radius: 3,
+                  //                           backgroundColor:
+                  //                               AppColor.primary,
+                  //                         ),
+                  //                       )
+                  //                     : const SizedBox()
+                  //               ],
+                  //             ),
+                  //           ),
+                  //         )
+                  //       ];
+                  //     },
+                  //   ),
                 ],
               ),
               body: Stack(

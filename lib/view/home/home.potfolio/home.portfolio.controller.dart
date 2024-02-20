@@ -11,8 +11,8 @@ import 'package:katakara_investor/values/values.dart';
 class PortfolioController extends GetxController {
   int currentViewIndex = 0;
   PageController pageController = PageController(initialPage: 0);
-  List<Datum> personalProduct = [];
-  List<Datum> mergeProduct = [];
+  List<PortfolioDatum> personalProduct = [];
+  List<PortfolioDatum> mergeProduct = [];
   final portfolioService = Get.find<PortfolioService>();
   RxBool isFetchingProducts = false.obs;
   RxBool isError = false.obs;

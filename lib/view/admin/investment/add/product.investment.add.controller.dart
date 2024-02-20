@@ -8,82 +8,57 @@ import 'package:katakara_investor/helper/helper.settings.dart';
 import 'package:katakara_investor/models/product/model.category.dart';
 import 'package:katakara_investor/models/product/model.investment.dart';
 import 'package:katakara_investor/models/product/model.select.image.dart';
-import 'package:katakara_investor/models/product/models.fetch.portfolio.response.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';
 import 'package:katakara_investor/services/service.admin.dart';
 import 'package:katakara_investor/services/services.portfolio.dart';
 import 'package:katakara_investor/values/values.dart';
-import 'package:katakara_investor/view/view.dart';
+import 'package:katakara_investor/view/admin/investment/active/admin.investment.controller.dart';
+import 'package:katakara_investor/view/admin/investment/active/model.response.dart';
 
 class AddInvestmentProductController extends GetxController {
   List<(String, int)> uploadedImage = <(String, int)>[];
   List<SelectImageModel> processImage = <SelectImageModel>[];
-  // Seller image data
-  // List<(String, int)> uploadedSellerImage = <(String, int)>[];
-  // List<SelectImageModel> processSellerImage = <SelectImageModel>[];
   // get product data if to edit
-  final Datum? productInfo = Get.arguments;
+  final _ = Get.put(UploadedProductController());
+  final investmentViewController = Get.find<UploadedProductController>();
+  final InvestmentDatum? productInfo = Get.arguments;
+  final List<String> imageToDelete = <String>[];
+
   bool hasUpdate = false;
   bool hasData = false;
 
   setViewForUpdateproduct() async {
     // fetch view from local save data
-    final localData =
-        await AppSettings.getAppState(LocalStateName.addPortfolio);
-
-    Datum? getData;
-    if (productInfo != null) {
-      getData = productInfo;
-    } else {
-      if (localData != null) getData = Datum.fromJson(localData);
-    }
-
-    if (getData == null) return;
-
-    for (var i = 0; i < getData.productImage!.length; i++) {
-      uploadedImage.add((getData.productImage![i], i));
+    if (productInfo == null) return;
+    final productImage = productInfo!.productImage!.split(',').toList()
+      ..removeWhere((element) => element == '');
+    for (var i = 0; i < productImage.length; i++) {
+      uploadedImage.add((productImage[i], i));
       processImage.add(SelectImageModel(
-          id: i,
-          isLoading: false,
-          isUploaded: true,
-          path: getData.productImage![i]));
+          id: i, isLoading: false, isUploaded: true, path: productImage[i]));
     }
-    // for (var i = 0; i < getData.sellerImage!.length; i++) {
-    //   uploadedSellerImage.add((getData.sellerImage![i], i));
-    //   processSellerImage.add(SelectImageModel(
-    //       id: i,
-    //       isLoading: false,
-    //       isUploaded: true,
-    //       path: getData.sellerImage![i]));
-    // }
 
-    category.value = getData.category!;
-    productName!.text = getData.productName!;
-    description!.text = getData.description!;
-    sellerName!.text = getData.amountBuy!;
-    amountSell!.text = getData.amount!;
-    selectedState.value = getData.state!;
-    selectedLga.value = getData.lga!;
+    category.value = productInfo!.category!;
+    productName!.text = productInfo!.productName!;
+    description!.text = productInfo!.description!;
+    sellerName!.text = productInfo!.sellerName!;
+    amountSell!.text = productInfo!.amount!;
+    sellerAddress!.text = productInfo!.sellerAddress!;
+    selectedState.value = productInfo!.state!;
+    selectedLga.value = productInfo!.lga!;
     onChange(init: true);
     update();
   }
 
   cancelUpdate() async {
-    List seller = productInfo!.sellerImage;
-    List? images = productInfo!.productImage!..forEach((element) => element);
-    // for (var item in seller) {
-    //   uploadedSellerImage.removeWhere((element) => element.$1 == item);
-    // }
-    for (var item in images) {
+    for (dynamic item in productInfo!.productImage!.split(',')) {
       uploadedImage.removeWhere((element) => element.$1 == item);
     }
+
+    Get.close(2);
     for (var element in uploadedImage) {
       await portfolioService.deleteImage(pickedImage: element.$1);
     }
-    // for (var element in uploadedSellerImage) {
-    //   await portfolioService.deleteImage(pickedImage: element.$1);
-    // }
-    Get.close(2);
   }
 
   TextEditingController? productName;
@@ -100,7 +75,7 @@ class AddInvestmentProductController extends GetxController {
   RxString category = "".obs; // "productCategory.first.obs";
   final portfolioService = Get.find<PortfolioService>();
   final adminService = Get.find<AdminService>();
-  final portfolioController = Get.find<PortfolioController>();
+  // final portfolioController = Get.find<PortfolioController>();
   List<String> categories = <String>[];
 
   @override
@@ -119,14 +94,16 @@ class AddInvestmentProductController extends GetxController {
     isFetchingCategory.value = true;
     final RequestResponseModel response =
         await portfolioService.fetchProductCategory();
-    log('${response.toJson()} -----------------  response}');
     if (response.success) {
       List data = response.data ?? [];
       if (data.isNotEmpty) {
         for (var element in data) {
           categories.add(Category.fromJson(element).category.toString());
         }
-        category.value = categories.first;
+        // set category from the passed arguements
+        category.value = productInfo != null
+            ? productInfo!.category!.toUpperCase()
+            : categories.first;
         log(categories.toString());
       }
       isFetchingCategory.value = false;
@@ -193,11 +170,6 @@ class AddInvestmentProductController extends GetxController {
     for (var e in uploadedImage) {
       images.add(e.$1);
     }
-
-    // for (var e in uploadedSellerImage) {
-    //   sellerImages.add(e.$1);
-    // }
-
     return [images, sellerImages];
   }
 
@@ -214,7 +186,6 @@ class AddInvestmentProductController extends GetxController {
   uploadProduct() async {
     bool isUpdate = productInfo != null;
     //remove all empty data
-    // uploadedSellerImage.removeWhere((item) => item.$1.isEmpty);
     if (!canUpload.value) {
       HC.snack("Complete the above fields");
     }
@@ -238,15 +209,19 @@ class AddInvestmentProductController extends GetxController {
             product.toJson()..addAll({"sku": productInfo!.sku!}))
         : await adminService.addInvestment(product);
     isUploading.value = false;
-
     update();
     if (response.success) {
-      // if (productInfo != null) hasUpdate = true;
       // loop through images and delete them from local storage.
       _removeImageFromlocal(images);
       HC.snack(response.message, success: response.success);
-      portfolioController.fetchPortfolio();
-      Get.close(productInfo != null ? 2 : 1);
+      Get.close(isUpdate ? 2 : 1);
+      if (isUpdate) await investmentViewController.fetchInvestment();
+      // check if any image was remove during update to properly remove from db
+      if (imageToDelete.isNotEmpty) {
+        for (var k in imageToDelete) {
+          if (k != "") await portfolioService.deleteImage(pickedImage: k);
+        }
+      }
       return;
     }
 
@@ -299,15 +274,17 @@ class AddInvestmentProductController extends GetxController {
     // chose which list to work on depend if its a seller image or a product image
     final image = processImage.where((item) => item.id == index).first;
     final uploadsImg = uploadedImage.where((item) => item.$2 == index).first;
+    // send a delete request
+    if (productInfo != null) {
+      imageToDelete.add(image.path ?? "");
+      return;
+    }
     image.isUploaded = false;
     image.isLoading = true;
     update();
-    // send a delete request
     final RequestResponseModel response =
         await portfolioService.deleteImage(pickedImage: uploadsImg.$1);
     if (response.success) {
-      // if (productInfo != null) hasUpdate = true;
-
       // remove the item from uploaded list of image.
       processImage.removeWhere((item) => item.id == index);
       uploadedImage.removeWhere((item) => item.$2 == index);

@@ -8,7 +8,7 @@ import 'package:katakara_investor/models/services/model.service.response.dart';
 import 'package:katakara_investor/services/service.admin.dart';
 import 'package:katakara_investor/services/services.portfolio.dart';
 import 'package:katakara_investor/values/strings.dart';
-import 'package:katakara_investor/view/admin/products/active/model.response.dart';
+import 'package:katakara_investor/view/admin/investment/active/model.response.dart';
 
 import '../../../../models/receipt/model.fetch.reponse.dart';
 
@@ -29,12 +29,13 @@ class UploadedProductController extends GetxController {
 
   TextEditingController searchController = TextEditingController();
 
-  int selected = 0;
   List<String> fetchCategory = <String>[];
+
+  int selected = 0;
 
   @override
   onInit() async {
-    final fetchCategory = await fetchProductCategory();
+    await fetchProductCategory();
     await fetchInvestment();
     super.onInit();
   }
@@ -64,14 +65,15 @@ class UploadedProductController extends GetxController {
     );
   }
 
-  fetchInvestment() async {
+  fetchInvestment([String? type]) async {
+    log('$type start --- image');
     try {
       isLoading = true;
       update();
-      final RequestResponseModel response = (selected == 0)
+      if (type != null) selected = fetchCategory.indexOf(type);
+      final RequestResponseModel response = type == null
           ? await adminService.fetchInvestment()
-          : await adminService
-              .filterInvestment({"category": fetchCategory[selected]});
+          : await adminService.filterInvestment({"category": type});
       isLoading = false;
       update();
       if (response.success) {
@@ -126,32 +128,5 @@ class UploadedProductController extends GetxController {
       update();
     }
     fetchingMore.value = false;
-  }
-
-  changeUserType(String text) {
-    if (fetchCategory[selected] == text) return;
-    switch (text) {
-      case "All":
-        selected = 0;
-        update();
-        break;
-      case "PENDING":
-        selected = 1;
-        update();
-        break;
-      case "APPROVED":
-        selected = 2;
-        update();
-        break;
-      case "REJECTED":
-        selected = 3;
-        update();
-        break;
-      default:
-        selected = 0;
-        update();
-        break;
-    }
-    fetchInvestment();
   }
 }

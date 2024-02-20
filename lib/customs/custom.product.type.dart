@@ -11,7 +11,7 @@ import 'package:katakara_investor/values/values.dart';
 class ProductTypeCategory extends StatelessWidget {
   ProductTypeCategory(
       {super.key, required this.product, required this.onRefresh});
-  List<Datum> product;
+  List<PortfolioDatum> product;
   Function()? onRefresh;
 
   @override

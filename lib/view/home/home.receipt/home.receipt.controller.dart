@@ -37,7 +37,7 @@ class ReceiptController extends GetxController {
   List<FetchedReceipt>? fetchedReceipt = <FetchedReceipt>[];
   Pagination? pagination;
 
-  int selected = -1;
+  int selected = 0;
 
   saveLocal() {
     update();
@@ -201,11 +201,14 @@ class ReceiptController extends GetxController {
     );
   }
 
-  fetchReceipt({int? limit}) async {
+  fetchReceipt({String? type, int? limit}) async {
     isLoading = true;
     update();
-    final RequestResponseModel response =
-        await receiptService.fetchReceipt(query: {"limit": limit ?? 10});
+    if (type != null) selected = receiptType.indexOf(type);
+    final RequestResponseModel response = type == null || type == "ALL"
+        ? await receiptService.fetchReceipt(query: {"limit": limit ?? 10})
+        : await receiptService
+            .fetchReceipt(query: {"limit": limit ?? 10, 'stat': type});
     isLoading = false;
     update();
     if (response.success) {
@@ -291,7 +294,8 @@ class ReceiptController extends GetxController {
     final RequestResponseModel respnse = await adminService.rejectReceipts(id);
     if (respnse.success) {
       Get.back();
-      await fetchReceipt(limit: fetchedReceipt!.length);
+      await fetchReceipt(
+          limit: fetchedReceipt!.length, type: receiptType[selected]);
       update();
     }
     HC.snack(respnse.message, success: respnse.success);
@@ -304,7 +308,8 @@ class ReceiptController extends GetxController {
     final RequestResponseModel respnse = await adminService.deleteReceipts(id);
     if (respnse.success) {
       Get.back();
-      await fetchReceipt(limit: fetchedReceipt!.length);
+      await fetchReceipt(
+          limit: fetchedReceipt!.length, type: receiptType[selected]);
     }
     HC.snack(respnse.message, success: respnse.success);
     update();
@@ -317,41 +322,17 @@ class ReceiptController extends GetxController {
     final RequestResponseModel respnse = await adminService.approveReceipts(id);
     if (respnse.success) {
       Get.back();
-      await fetchReceipt(limit: fetchedReceipt!.length);
+      await fetchReceipt(
+          limit: fetchedReceipt!.length, type: receiptType[selected]);
       update();
     }
     HC.snack(respnse.message, success: respnse.success);
     isApproving.value = false;
   }
 
-  changeUserType(String text) {
+  changeUserType([String? text]) {
     if (receiptType[selected] == text) return;
-    switch (text) {
-      case "Pending":
-        selected = 0;
-        // pageType = UserViewType.all;
-        // title = "All Users";
-        update();
-        break;
-      case "Approved":
-        selected = 1;
-        // pageType = UserViewType.join;
-        // title = "New Users";
-        update();
-        break;
-      case "Rejected":
-        selected = 2;
-        // pageType = UserViewType.block;
-        // title = "Block Users";
-        update();
-        break;
-      default:
-        selected = -1;
-        // title = "All User";
-        // pageType = UserViewType.all;
-        update();
-        break;
-    }
-    fetchReceipt();
+    selected = receiptType.indexOf(text!.toUpperCase());
+    fetchReceipt(type: text.toUpperCase());
   }
 }

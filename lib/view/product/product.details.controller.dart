@@ -29,7 +29,7 @@ class ProductController extends GetxController {
     super.onClose();
   }
 
-  Datum? product;
+  PortfolioDatum? product;
 
   @override
   void onInit() {

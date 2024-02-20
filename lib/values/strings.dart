@@ -29,10 +29,10 @@ enum RouteName {
   chatScreen,
   admin,
   user,
-  activeProduct,
-  bookedProduct,
+  investmentAvailable,
+  allProducts,
   broadcast,
-  addProduct,
+  viewUserPortfolio,
   viewRedFlag,
   viewRedFlagDetails,
   usersReceipts,
@@ -49,6 +49,9 @@ enum RouteName {
   productCategory,
   investmentView,
   adminInvestmentSearch,
+  userPortfolio,
+  portfolioSearch,
+  activeInvestmentProduct,
 }
 
 enum Al { center, right, left }

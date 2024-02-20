@@ -57,8 +57,8 @@ class HomeKFIController extends GetxController {
   }
 
   RxString errorMessage = ''.obs;
-  List<Datum> kfiProduct = [];
-  Future<List<Datum>> fetchKFIInvestment() async {
+  List<PortfolioDatum> kfiProduct = [];
+  Future<List<PortfolioDatum>> fetchKFIInvestment() async {
     isErrorFetchingMergeProduct.value = false;
     isLoading.value = true;
     Get.put(PortfolioController());

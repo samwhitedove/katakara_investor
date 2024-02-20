@@ -5,17 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/helper/notifications.dart';
+import 'package:katakara_investor/models/receipt/model.fetch.reponse.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';
 import 'package:katakara_investor/services/services.home.dart';
 import 'package:katakara_investor/services/services.auth.dart';
 import 'package:katakara_investor/values/values.dart';
+import 'package:katakara_investor/view/admin/investment/active/model.response.dart';
 import 'package:katakara_investor/view/home/home.dart';
 
 class HomeScreenController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isActive = false.obs;
   RxInt currentIndex = 1.obs;
-  bool showInvest = false;
+  bool hasInvestment = false;
+  bool isFetching = false;
   String? youtubeLink;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final AuthService authService = Get.find<AuthService>();
@@ -37,6 +40,25 @@ class HomeScreenController extends GetxController {
 
   String? deviceToken = "";
 
+  List<InvestmentDatum> recentProduct = [];
+
+  fetchInvestment({int? limit}) async {
+    isFetching = true;
+    update();
+    final RequestResponseModel res = await Get.find<HomeService>()
+        .fetchUserInvestment({"limit": limit ?? 10});
+    isFetching = false;
+    update();
+    if (res.success) {
+      recentProduct =
+          InvestmentResponseDataModel.fromJson(res.data).data!.data!;
+      hasInvestment = true;
+      update();
+      return;
+    }
+    hasInvestment = false;
+  }
+
   goLive() async {
     isLoading.value = true;
     if (!isActive.value && deviceToken!.isEmpty) {
@@ -52,7 +74,7 @@ class HomeScreenController extends GetxController {
                 '';
         Get.find<HomeKFIController>().fetchKFIAccount();
         Get.find<HomeKFIController>().fetchKFIInvestment();
-
+        fetchInvestment(limit: 5);
         authService.fetchUser();
       }
       isLoading.value = false;
@@ -178,32 +200,5 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "label": "Profile"
     },
-  ];
-
-  List<Map<String, dynamic>> recentProduct = [
-    {
-      'productName': "Stabilizer",
-      'state': 'Abuja',
-      'lga': "Shenge",
-      'status': true
-    },
-    {
-      'productName': "Iphone 13pro max",
-      'state': 'Abuja',
-      'lga': "Gwaladwa",
-      'status': false
-    },
-    {
-      'productName': "Sony Tv 32 inch",
-      'state': 'Abuja',
-      'lga': "Abaka",
-      'status': true
-    },
-    {
-      'productName': "Home Theather with DVD player",
-      'state': 'Abuja',
-      'lga': "Gwaladwa",
-      'status': false
-    }
   ];
 }

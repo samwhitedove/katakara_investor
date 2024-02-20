@@ -27,8 +27,9 @@ class UserListController extends GetxController {
     super.onInit();
   }
 
-  changeUserType(text) {
+  changeUserType([String? text]) {
     if (userListType[selected] == text) return;
+    text = text!.capitalize!;
     switch (text) {
       case "All Users":
         selected = 0;
@@ -109,8 +110,6 @@ class UserListController extends GetxController {
       final decode = FetchAllUser.fromJson(responseModel.data);
       fetchedUser = decode.data;
       pagination = decode.pagination!;
-      // log("${pagination} done processing call ------- ------- ---");
-      // log("${fetchedUser['pagination'].toJson()} done processing call --qqq----- ------- ---");
       return;
     }
     HC.snack(responseModel.message, success: responseModel.success);

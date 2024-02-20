@@ -17,6 +17,14 @@ class HomeService extends GetxController {
     return response;
   }
 
+  Future<RequestResponseModel> fetchUserInvestment(
+      Map<String, dynamic> map) async {
+    //TODO change to user url
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: EndPoint.fetchInvestment, method: Methods.get, query: map);
+    return response;
+  }
+
   // RequestResponsModel model = await MyRequestClass.krequest(
   //       endPoint: EndPoint.fetchFaq, method: Methods.get);
 }

@@ -8,7 +8,7 @@ class ShowProducts extends StatelessWidget {
   final Function() refresh;
   final bool isLoading;
   final bool isError;
-  final List<Datum> product;
+  final List<PortfolioDatum> product;
   final String errorMessage;
   final double? height;
   const ShowProducts(

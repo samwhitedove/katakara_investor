@@ -38,7 +38,7 @@ class FetchPortfolioResponse {
 }
 
 class Data {
-  List<Datum>? data;
+  List<PortfolioDatum>? data;
   Pagination? pagination;
 
   Data({
@@ -49,7 +49,8 @@ class Data {
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         data: json["data"] == null
             ? []
-            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+            : List<PortfolioDatum>.from(
+                json["data"]!.map((x) => PortfolioDatum.fromJson(x))),
         pagination: json["pagination"] == null
             ? null
             : Pagination.fromJson(json["pagination"]),
@@ -80,7 +81,7 @@ handleStatus(String status) {
   }
 }
 
-class Datum {
+class PortfolioDatum {
   int? id;
   List? productImage;
   String? productName;
@@ -98,7 +99,7 @@ class Datum {
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  Datum({
+  PortfolioDatum({
     this.id,
     this.productImage,
     this.productName,
@@ -117,7 +118,7 @@ class Datum {
     this.updatedAt,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory PortfolioDatum.fromJson(Map<String, dynamic> json) => PortfolioDatum(
         id: json["id"],
         productImage: json["productImage"].split(","),
         productName: json["productName"],

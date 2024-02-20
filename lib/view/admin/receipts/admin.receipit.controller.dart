@@ -51,11 +51,12 @@ class AdminReceiptController extends GetxController {
         ),
       );
 
-  fetchReceipt() async {
+  fetchReceipt([String? type]) async {
     try {
       isLoading = true;
       update();
-      final RequestResponseModel response = (selected == 0)
+      if (type != null) selected = receiptType.indexOf(type);
+      final RequestResponseModel response = type == null
           ? await adminService.fetchUsersReceipt()
           : await adminService
               .fetchSortUsersReceipt(data: {"type": receiptType[selected]});
@@ -110,32 +111,5 @@ class AdminReceiptController extends GetxController {
       update();
     }
     fetchingMore.value = false;
-  }
-
-  changeUserType(String text) {
-    if (receiptType[selected] == text) return;
-    switch (text) {
-      case "All":
-        selected = 0;
-        update();
-        break;
-      case "PENDING":
-        selected = 1;
-        update();
-        break;
-      case "APPROVED":
-        selected = 2;
-        update();
-        break;
-      case "REJECTED":
-        selected = 3;
-        update();
-        break;
-      default:
-        selected = 0;
-        update();
-        break;
-    }
-    fetchReceipt();
   }
 }

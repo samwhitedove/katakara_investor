@@ -13,7 +13,7 @@ import 'package:katakara_investor/values/values.dart';
 class ProductCard extends StatelessWidget {
   // String? title, amount, image, sku;
   bool isNetwork;
-  Datum productData;
+  PortfolioDatum productData;
   ProductCard({
     super.key,
     this.isNetwork = false,

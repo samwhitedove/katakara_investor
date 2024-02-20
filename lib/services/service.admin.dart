@@ -225,4 +225,58 @@ class AdminService extends GetxController {
     log("unblock user info ------- ${response.message}");
     return response;
   }
+
+  Future<RequestResponseModel> fetchUsersPortfolio(
+      {Map<String, dynamic>? data}) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: EndPoint.fetchUserPortfolio,
+        method: Methods.get,
+        query: data);
+    log("unblock user info ------- ${response.message}");
+    return response;
+  }
+
+  Future<RequestResponseModel> fetchMoreUserPortfolio({String? url}) async {
+    RequestResponseModel response =
+        await MyRequestClass.krequest(endPoint: url!, method: Methods.get);
+    log("unblock user info ------- ${response.message}");
+    return response;
+  }
+
+  Future<RequestResponseModel> approveUsersPortfolio(String data) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: EndPoint.approveProduct,
+        method: Methods.get,
+        query: {"sku": data});
+    log("unblock user info ------- ${response.message}");
+    return response;
+  }
+
+  Future<RequestResponseModel> rejectUsersPortfolio(String data) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: EndPoint.rejectProduct,
+        method: Methods.get,
+        query: {"sku": data});
+    log("unblock user info ------- ${response.message}");
+    return response;
+  }
+
+  Future<RequestResponseModel> publishUsersPortfolio(String data) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: EndPoint.publishProduct,
+        method: Methods.get,
+        query: {"sku": data});
+    log("unblock user info ------- ${response.message}");
+    return response;
+  }
+
+  Future<RequestResponseModel> searchPortfolio(
+      Map<String, dynamic>? data) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: EndPoint.fetchUserPortfolio,
+        method: Methods.get,
+        query: data);
+    log("make admin user info ------- ${response.message}");
+    return response;
+  }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,13 +9,13 @@ import 'package:katakara_investor/customs/customs.dart';
 import 'package:katakara_investor/extensions/extensions.dart';
 import 'package:katakara_investor/helper/helper.function.dart';
 import 'package:katakara_investor/models/receipt/model.fetch.reponse.dart';
-import 'package:katakara_investor/values/colors.dart';
 import 'package:katakara_investor/values/strings.dart';
-import 'package:katakara_investor/view/admin/products/active/admin.investment.controller.dart';
-import 'package:katakara_investor/view/admin/products/active/model.response.dart';
+import 'package:katakara_investor/view/admin/investment/active/admin.investment.controller.dart';
+import 'package:katakara_investor/view/admin/investment/active/model.response.dart';
+import 'package:katakara_investor/view/widgets/popup.menu.dart';
 
-class ActiveProduct extends StatelessWidget {
-  const ActiveProduct({super.key});
+class ActiveInvestmentProduct extends StatelessWidget {
+  const ActiveInvestmentProduct({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,40 +46,17 @@ class ActiveProduct extends StatelessWidget {
                         children: [
                           Row(children: [
                             Text(_.pagination!.total.toString()),
-                            PopupMenuButton<String>(
-                              icon: const Icon(Icons.sort),
-                              onSelected: _.changeUserType,
-                              itemBuilder: (BuildContext context) {
-                                return <PopupMenuEntry<String>>[
-                                  ...List.generate(
-                                    receiptType.length,
-                                    (index) => PopupMenuItem<String>(
-                                      textStyle: const TextStyle(
-                                          fontSize: 12, color: AppColor.text),
-                                      value: receiptType[index],
-                                      child: Row(
-                                        children: [
-                                          Text(_.fetchCategory[index]),
-                                          _.selected == index
-                                              ? const Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 8.0),
-                                                  child: CircleAvatar(
-                                                    radius: 3,
-                                                    backgroundColor:
-                                                        AppColor.primary,
-                                                  ),
-                                                )
-                                              : const SizedBox()
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ];
-                              },
-                            ),
+                            CustomPopUpMenu(
+                                key: UniqueKey(),
+                                data: _.fetchCategory,
+                                selected: _.selected,
+                                onChange: _.fetchInvestment),
                           ]),
-                          Text(_.fetchCategory[_.selected]).subTitle(),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text(_.fetchCategory[_.selected]).subTitle(),
+                          ),
                         ],
                       ),
                 title: 'Investments',
@@ -130,6 +109,8 @@ class ActiveProduct extends StatelessWidget {
 
 investmentDataView(int index, List<InvestmentDatum> fetchedInvestment,
     Function(String) handleStatusView, Function(int) investmentView) {
+  final product = fetchedInvestment[index].productImage!.split(',')
+    ..removeWhere((element) => element == '');
   return ListTile(
     onTap: () => investmentView(index),
     contentPadding:
@@ -138,8 +119,7 @@ investmentDataView(int index, List<InvestmentDatum> fetchedInvestment,
     leading: SizedBox(
       height: 50,
       width: 50,
-      child: CachedNetworkImage(
-          imageUrl: fetchedInvestment[index].productImage!.split(',')[0]),
+      child: CachedNetworkImage(imageUrl: product[0]),
     ),
     subtitle: Text(fetchedInvestment[index].description!).subTitle(
       lines: 2,

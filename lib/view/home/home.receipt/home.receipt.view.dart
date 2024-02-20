@@ -8,6 +8,7 @@ import 'package:katakara_investor/models/receipt/model.fetch.reponse.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/home/home.dart';
 import 'package:katakara_investor/view/home/home.receipt/home.receipt.create.dart';
+import 'package:katakara_investor/view/widgets/popup.menu.dart';
 
 class ReceiptScreen extends StatefulWidget {
   const ReceiptScreen({super.key});
@@ -26,69 +27,85 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
         return CW.baseStackWidget(
           isLoading: _.isLoading,
           appBar: PreferredSize(
-              preferredSize: Size(double.infinity, HC.spaceVertical(100)),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CW.AppSpacer(h: 60),
-                    _.isLoading
-                        ? const SizedBox()
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CW.backButton(),
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () => Get.toNamed(
-                                      RouteName.userReceiptSearch.name,
-                                      arguments: Get.arguments,
-                                    ),
-                                    child: const Icon(Icons.search),
-                                  ),
-                                  PopupMenuButton<String>(
-                                    icon: const Icon(Icons.sort),
-                                    onSelected: _.changeUserType,
-                                    itemBuilder: (BuildContext context) {
-                                      return <PopupMenuEntry<String>>[
-                                        ...List.generate(
-                                          receiptType.length,
-                                          (index) => PopupMenuItem<String>(
-                                            textStyle: const TextStyle(
-                                                fontSize: 12,
-                                                color: AppColor.text),
-                                            value: receiptType[index],
-                                            child: Row(
-                                              children: [
-                                                Text(receiptType[index]),
-                                                _.selected == index
-                                                    ? const Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 8.0),
-                                                        child: CircleAvatar(
-                                                          radius: 3,
-                                                          backgroundColor:
-                                                              AppColor.primary,
-                                                        ),
-                                                      )
-                                                    : const SizedBox()
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                      ];
-                                    },
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                  ],
+              preferredSize: Size(double.infinity, HC.spaceVertical(120)),
+              child: CW.AppBr(
+                leading: CW.backButton(),
+                title: const Text("Receipts").title(fontSize: 20),
+                trailing: GestureDetector(
+                  onTap: () => Get.toNamed(
+                    RouteName.userReceiptSearch.name,
+                    arguments: Get.arguments,
+                  ),
+                  child: const Icon(Icons.search),
                 ),
-              )),
+              )
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              // child: Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: [
+              //     CW.AppSpacer(h: 60),
+              //     _.isLoading
+              //         ? const SizedBox()
+              //         : Row(
+              //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //             children: [
+              //               CW.backButton(),
+              //               Row(
+              //                 children: [
+              // GestureDetector(
+              //   onTap: () => Get.toNamed(
+              //     RouteName.userReceiptSearch.name,
+              //     arguments: Get.arguments,
+              //   ),
+              //   child: const Icon(Icons.search),
+              // ),
+              //                   // CustomPopUpMenu(
+              //                   //     data: receiptType,
+              //                   //     onChange: _.changeUserType,
+              //                   //     selected: _.selected)
+              //                   // PopupMenuButton<String>(
+              //                   //   icon: const Icon(Icons.sort),
+              //                   //   onSelected: _.changeUserType,
+              //                   //   itemBuilder: (BuildContext context) {
+              //                   //     return <PopupMenuEntry<String>>[
+              //                   //       ...List.generate(
+              //                   //         receiptType.length,
+              //                   //         (index) => PopupMenuItem<String>(
+              //                   //           textStyle: const TextStyle(
+              //                   //               fontSize: 12,
+              //                   //               color: AppColor.text),
+              //                   //           value: receiptType[index],
+              //                   //           child: Row(
+              //                   //             children: [
+              //                   //               Text(receiptType[index]),
+              //                   //               _.selected == index
+              //                   //                   ? const Padding(
+              //                   //                       padding:
+              //                   //                           EdgeInsets.only(
+              //                   //                               left: 8.0),
+              //                   //                       child: CircleAvatar(
+              //                   //                         radius: 3,
+              //                   //                         backgroundColor:
+              //                   //                             AppColor.primary,
+              //                   //                       ),
+              //                   //                     )
+              //                   //                   : const SizedBox()
+              //                   //             ],
+              //                   //           ),
+              //                   //         ),
+              //                   //       )
+              //                   //     ];
+              //                   //   },
+              //                   // ),
+              //                 ],
+              //               )
+              //             ],
+              //           ),
+              //   ],
+              // ),
+              // ),
+              ),
           // scroll: const NeverScrollableScrollPhysics(),
           floatingActionButton: _.fetchedReceipt!.isNotEmpty
               ? CW

@@ -7,7 +7,7 @@ import 'package:katakara_investor/customs/custom.upload.card.dart';
 import 'package:katakara_investor/customs/custom.widget.dart';
 import 'package:katakara_investor/extensions/extensions.dart';
 import 'package:katakara_investor/values/values.dart';
-import 'package:katakara_investor/view/admin/products/add/product.add.controller.dart';
+import 'package:katakara_investor/view/admin/investment/add/product.investment.add.controller.dart';
 
 class AddInvestmentProduct extends StatelessWidget {
   const AddInvestmentProduct({super.key});
@@ -38,7 +38,10 @@ class AddInvestmentProduct extends StatelessWidget {
                     }
                     Get.back();
                   }).align(Al.left),
-                  const Text(tAddProduct).title(),
+                  Text(_.productInfo == null
+                          ? tAddInvestment
+                          : tUpdateInvestment)
+                      .title(),
                   const SizedBox(width: 25),
                 ],
               ),
@@ -220,7 +223,11 @@ class AddInvestmentProduct extends StatelessWidget {
                     .subTitle(),
               ),
               CW.button(
-                  onPress: provider.uploadProduct, text: "Update product"),
+                  onPress: () {
+                    Get.back();
+                    provider.uploadProduct();
+                  },
+                  text: "Update product"),
               CW.button(
                   onPress: provider.cancelUpdate,
                   text: "Cancel Update",

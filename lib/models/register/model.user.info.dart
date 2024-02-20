@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final userDataModel = userDataModelFromJson(jsonString);
-
 import 'dart:convert';
 
 UserDataModel userDataModelFromJson(String str) =>
@@ -34,11 +30,12 @@ class UserDataModel {
   String? token;
   String? refreshToken;
   String? uuid;
+  int? mergeCount;
   dynamic fcmToken;
-  String? investorSignature;
+  dynamic investorSignature;
   bool? isLive;
   bool? isBlock;
-  bool? isAdmin;
+  String? role;
   bool? isMerge;
 
   UserDataModel({
@@ -66,11 +63,12 @@ class UserDataModel {
     this.token,
     this.refreshToken,
     this.uuid,
+    this.mergeCount,
     this.fcmToken,
     this.investorSignature,
     this.isLive,
     this.isBlock,
-    this.isAdmin,
+    this.role,
     this.isMerge,
   });
 
@@ -84,9 +82,7 @@ class UserDataModel {
         email: json["email"],
         fullName: json["fullName"],
         phoneNumber: json["phoneNumber"],
-        phoneNumber2:
-            json["phoneNumber2"] == "null" ? "" : json["phoneNumber2"],
-        // phoneNumber2: json["phoneNumber2"],
+        phoneNumber2: json["phoneNumber2"],
         accountName: json["accountName"],
         accountNumber: json["accountNumber"],
         profileImageUrl: json["profileImageUrl"],
@@ -99,8 +95,6 @@ class UserDataModel {
         companyName: json["companyName"],
         bankName: json["bankName"],
         govId: json["govId"],
-        // ownVehicle: json["ownVehicle"],
-
         ownVehicle: json["ownVehicle"].runtimeType == bool
             ? json["ownVehicle"]
                 ? "Yes"
@@ -110,11 +104,12 @@ class UserDataModel {
         token: json["token"],
         refreshToken: json["refreshToken"],
         uuid: json["uuid"],
+        mergeCount: json["mergeCount"],
         fcmToken: json["fcmToken"],
         investorSignature: json["investorSignature"],
         isLive: json["isLive"],
         isBlock: json["isBlock"],
-        isAdmin: json["isAdmin"],
+        role: json["role"],
         isMerge: json["isMerge"],
       );
 
@@ -143,11 +138,12 @@ class UserDataModel {
         "token": token,
         "refreshToken": refreshToken,
         "uuid": uuid,
+        "mergeCount": mergeCount,
         "fcmToken": fcmToken,
         "investorSignature": investorSignature,
         "isLive": isLive,
         "isBlock": isBlock,
-        "isAdmin": isAdmin,
+        "role": role,
         "isMerge": isMerge,
       };
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom.widget.dart';
 import 'package:katakara_investor/extensions/extensions.dart';
-import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/models/receipt/model.receipt.item.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/home/home.dart';
@@ -75,7 +74,7 @@ class CreateReceiptView extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Total')
+                  const Text(tTotal)
                       .title(fontSize: 14, color: AppColor.text)
                       .paddingAll(20),
                   Text("$tNaira ${_.total.toString().formatMoney}")
@@ -173,11 +172,12 @@ class CreateReceiptView extends StatelessWidget {
     return Get.bottomSheet(
       isDismissible: false,
       Container(
-        height: HC.spaceVertical(240),
+        // height: HC.spaceVertical(240),
         color: AppColor.white,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -207,41 +207,44 @@ class CreateReceiptView extends StatelessWidget {
     return Get.bottomSheet(
       isDismissible: false,
       Container(
-        height: HC.spaceVertical(412),
+        // height: HC.spaceVertical(412),
         color: AppColor.white,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("Customer Info")
-                      .title(fontSize: 14, color: AppColor.black),
-                  const Icon(Icons.close).toButton(onTap: Get.back)
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: CW.textField(
-                    label: "Customer Name",
-                    fontSize: 14,
-                    controller: _.customerName,
-                    onChangeValue: () {}),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: CW.textField(
-                    label: "Address",
-                    controller: _.customerAddress,
-                    lines: 5,
-                    fontSize: 14,
-                    maxLength: 250,
-                    onChangeValue: () {}),
-              ),
-              CW.AppSpacer(h: 10),
-              CW.button(onPress: _.saveLocal, text: tSave)
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Customer Info")
+                        .title(fontSize: 14, color: AppColor.black),
+                    const Icon(Icons.close).toButton(onTap: Get.back)
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: CW.textField(
+                      label: "Customer Name",
+                      fontSize: 14,
+                      controller: _.customerName,
+                      onChangeValue: () {}),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: CW.textField(
+                      label: "Address",
+                      controller: _.customerAddress,
+                      lines: 5,
+                      fontSize: 14,
+                      maxLength: 250,
+                      onChangeValue: () {}),
+                ),
+                CW.AppSpacer(h: 10),
+                CW.button(onPress: _.saveLocal, text: tSave)
+              ],
+            ),
           ),
         ),
       ),
@@ -254,11 +257,12 @@ class CreateReceiptView extends StatelessWidget {
       SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Container(
-          height: HC.spaceVertical(800),
+          // height: HC.spaceVertical(800),
           color: AppColor.white,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -331,7 +335,6 @@ class CreateReceiptView extends StatelessWidget {
                       controller: _.description,
                       onChangeValue: () {}),
                 ),
-                // CW.AppSpacer(h: 10),
                 CW.button(
                     onPress: () => _.saveItem(index: index, isEdit: isEdit),
                     text: tSave)
@@ -345,6 +348,7 @@ class CreateReceiptView extends StatelessWidget {
 
   displayItemSaved(ReceiptController _, ReceiptItemData data, int index) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

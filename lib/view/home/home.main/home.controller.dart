@@ -5,17 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/helper/notifications.dart';
+import 'package:katakara_investor/models/receipt/model.fetch.reponse.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';
 import 'package:katakara_investor/services/services.home.dart';
 import 'package:katakara_investor/services/services.auth.dart';
 import 'package:katakara_investor/values/values.dart';
+import 'package:katakara_investor/view/admin/investment/active/model.response.dart';
 import 'package:katakara_investor/view/home/home.dart';
 
 class HomeScreenController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isActive = false.obs;
   RxInt currentIndex = 1.obs;
-  bool showInvest = false;
+  bool hasInvestment = false;
+  bool isFetching = false;
   String? youtubeLink;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final AuthService authService = Get.find<AuthService>();
@@ -35,31 +38,48 @@ class HomeScreenController extends GetxController {
     Get.put(HomeKFIController());
   }
 
+  String? deviceToken = "";
+
+  List<InvestmentDatum> recentProduct = [];
+
+  fetchInvestment({int? limit}) async {
+    isFetching = true;
+    update();
+    final RequestResponseModel res = await Get.find<HomeService>()
+        .fetchUserInvestment({"limit": limit ?? 10});
+    isFetching = false;
+    update();
+    if (res.success) {
+      recentProduct =
+          InvestmentResponseDataModel.fromJson(res.data).data!.data!;
+      hasInvestment = true;
+      update();
+      return;
+    }
+    hasInvestment = false;
+  }
+
   goLive() async {
     isLoading.value = true;
-    String? deviceToken = "";
-    if (!isActive.value) {
+    if (!isActive.value && deviceToken!.isEmpty) {
       deviceToken = await HC.initFCM().getToken();
       log('$deviceToken ---------- device token ');
     }
-    final RequestResponsModel response = await authService
+    final RequestResponseModel response = await authService
         .goLive({"status": !isActive.value, "fcmToken": deviceToken});
     if (response.success) {
-      await Get.find<PortfolioController>().fetchPortfolio();
-      await Get.find<HomeKFIController>().fetchKFIAccount();
-      await Get.find<HomeKFIController>().fetchKFIInvestment();
       if ((!isActive.value) == true) {
-        RequestResponsModel youtube =
-            await Get.find<HomeService>().fetchYoutube();
+        youtubeLink =
+            (await Get.find<HomeService>().fetchYoutube()).data.first['link'] ??
+                '';
+        Get.find<HomeKFIController>().fetchKFIAccount();
+        Get.find<HomeKFIController>().fetchKFIInvestment();
+        fetchInvestment(limit: 5);
         authService.fetchUser();
-
-        if (youtube.success) {
-          youtubeLink =
-              (youtube.data as List).isNotEmpty ? youtube.data['link'] : '';
-        }
       }
       isLoading.value = false;
       isActive.toggle();
+      update();
       HC.snack(response.message, success: response.success);
       return;
     }
@@ -67,36 +87,21 @@ class HomeScreenController extends GetxController {
     isLoading.value = false;
   }
 
-  List<Map<String, dynamic>> videoData = [
-    // {
-    //   "color": AppColor.blue,
-    //   "onTap": () {
-    //     log("Hellie1");
-    //   },
-    //   "label": "About Us"
-    // },
-    {
-      "color": AppColor.primary,
-      "onTap": () {
-        log("Hellie1");
-      },
-      "label": "About Katakara Investment"
-    },
-    // {
-    //   "color": AppColor.lightRed,
-    //   "onTap": () {
-    //     log("Hellie1");
-    //   },
-    //   "label": "How to Advertise"
-    // },
-    // {
-    //   "color": AppColor.orange,
-    //   "onTap": () {
-    //     log("Hellie1");
-    //   },
-    //   "label": "Invite a friend"
-    // }
-  ];
+  get videoData => [
+        {
+          "color": AppColor.primary,
+          "onTap": () async {
+            if (youtubeLink == null || youtubeLink!.isEmpty) {
+              youtubeLink = (await Get.find<HomeService>().fetchYoutube())
+                  .data
+                  .first['link'];
+              if (youtubeLink!.isEmpty) return;
+            }
+            Get.toNamed(RouteName.youtube.name, arguments: youtubeLink);
+          },
+          "label": "About Katakara Investment"
+        },
+      ];
 
   List<Map<String, dynamic>> menuItemHeader = [
     {
@@ -104,7 +109,7 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "onTap": () {
         Get.back();
-        Get.toNamed(AppRoutes.name(RouteName.portfolio));
+        Get.toNamed(RouteName.portfolio.name);
       },
       "label": "Portfolio"
     },
@@ -113,7 +118,7 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "onTap": () {
         Get.back();
-        Get.toNamed(AppRoutes.name(RouteName.receipt));
+        Get.toNamed(RouteName.receipt.name);
       },
       "label": "Receipt"
     },
@@ -125,7 +130,7 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "onTap": () {
         Get.back();
-        Get.toNamed(AppRoutes.name(RouteName.notifications));
+        Get.toNamed(RouteName.notifications.name);
       },
       "label": "Notification"
     },
@@ -134,19 +139,19 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "onTap": () {
         Get.back();
-        Get.toNamed(AppRoutes.name(RouteName.financial));
+        Get.toNamed(RouteName.financial.name);
       },
       "label": "Financial capacity"
     },
-    {
-      'image': Assets.assetsSvgCalculator,
-      "isSelected": false.obs,
-      "onTap": () {
-        Get.back();
-        Get.toNamed(AppRoutes.name(RouteName.calculator));
-      },
-      "label": "Investment Calculator"
-    },
+    // {
+    //   'image': Assets.assetsSvgCalculator,
+    //   "isSelected": false.obs,
+    //   "onTap": () {
+    //     Get.back();
+    //     Get.toNamed(RouteName.calculator.name);
+    //   },
+    //   "label": "Investment Calculator"
+    // },
   ];
 
   List<Map<String, dynamic>> menuItemFooter = [
@@ -155,7 +160,7 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "onTap": () {
         Get.back();
-        Get.toNamed(AppRoutes.name(RouteName.faq));
+        Get.toNamed(RouteName.faq.name);
       },
       "label": "FAQ"
     },
@@ -164,7 +169,7 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "onTap": () {
         Get.back();
-        Get.toNamed(AppRoutes.name(RouteName.redFlag));
+        Get.toNamed(RouteName.redFlag.name);
       },
       "label": "Red flag"
     },
@@ -195,32 +200,5 @@ class HomeScreenController extends GetxController {
       "isSelected": false.obs,
       "label": "Profile"
     },
-  ];
-
-  List<Map<String, dynamic>> recentProduct = [
-    {
-      'productName': "Stabilizer",
-      'state': 'Abuja',
-      'lga': "Shenge",
-      'status': true
-    },
-    {
-      'productName': "Iphone 13pro max",
-      'state': 'Abuja',
-      'lga': "Gwaladwa",
-      'status': false
-    },
-    {
-      'productName': "Sony Tv 32 inch",
-      'state': 'Abuja',
-      'lga': "Abaka",
-      'status': true
-    },
-    {
-      'productName': "Home Theather with DVD player",
-      'state': 'Abuja',
-      'lga': "Gwaladwa",
-      'status': false
-    }
   ];
 }

@@ -21,13 +21,14 @@ class EndPoint {
   // portfolio
   static String updatePortfolio = '/user/update-product';
   static String fetchPortfolio = '/user/fetch-portfolio';
+  static String fetchCategory = '/user/fetch-category';
   static String fetchPortfolioWithSearch(String type, int limit) =>
       '/user/fetch-portfolio?type=$type&limit=$limit';
   static String deletePortfolio(String sku) => '/user/delete-product?sku=$sku';
   static String addPortfolio = '/user/add-portfolio';
   // red flag
   static String createRedFlag = '/user/red-flag';
-  static String fetchRedFlad = '/user/fetch-flag';
+  // static String fetchRedFlad = '/user/fetch-flag';
   // KFI
   static String inviteKFI = '/user/invite-user';
   static String acceptKFIInvite = '/user/accept-invite';
@@ -50,4 +51,34 @@ class EndPoint {
   static String unlinkUser = '/user/unlink-user-request';
   static String acceptUnlink = '/user/accept-unlink';
   static String fetchMerge = '/user/fetch-merge';
+  static String fetchUserInvestment = '/user/fetch-investment';
+  // kfi endpoint
+  static String fetchUser({String? type, String? find, bool? block}) =>
+      '/console/fetch-user${type == null ? "" : "?type=$type"}${find == null ? "" : "&find=$find"}${block == null ? "" : "&block=$block"}';
+  // block and unblock user admin
+  static String blockUser(int id) => '/console/block-user?id=$id';
+  static String unblockUser(int id) => '/console/unblock-user?id=$id';
+  // admin faq
+  static String addFaq = '/console/add-faq';
+  static String updateFaq = '/console/update-faq';
+  static String deleteFaq(int id) => '/console/delete-faq?id=$id';
+  static String deleteRedFlag(int id) => '/console/delete-red-flag?id=$id';
+  static String fetchRedFlag = '/console/fetch-red-flag';
+  static String fetchUsersReceipt = '/console/fetch-receipt';
+  static String deleteReceipt(int id) => '/console/delete-receipt?id=$id';
+  static String approveReceipt(int id) => '/console/approve-receipt?id=$id';
+  static String rejectReceipt(int id) => '/console/decline-receipt?id=$id';
+  static String makeAdmin = '/console/make-admin';
+  static String addYoutube = '/console/add-yotube';
+  static String addCategory = '/console/add-category';
+  static String updateCategory = '/console/update-category';
+  static String deleteCategory = '/console/delete-category';
+  static String addInvestment = '/console/add-investment';
+  static String updateInvestment = '/console/update-investment';
+  static String deleteInvestment = '/console/delete-investment';
+  static String fetchInvestment = '/console/fetch-investment';
+  static String fetchUserPortfolio = '/console/fetch-all-product';
+  static String rejectProduct = '/console/reject-product';
+  static String approveProduct = '/console/approve-product';
+  static String publishProduct = '/console/publish-product';
 }

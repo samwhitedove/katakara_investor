@@ -9,7 +9,7 @@ import 'package:katakara_investor/services/service.http.dart';
 import 'package:katakara_investor/values/values.dart';
 
 class ProfileService extends GetxController {
-  Future<RequestResponsModel> updateImagesAndDocs(
+  Future<RequestResponseModel> updateImagesAndDocs(
       {dynamic controller,
       required File pickedImage,
       required String fieldToUpdate,
@@ -17,7 +17,7 @@ class ProfileService extends GetxController {
       shouldUpdateLocal = true}) async {
     final String mimitype =
         pickedImage.path.split('/').last.split('.').last.toLowerCase();
-    RequestResponsModel response = await MyRequestClass.uploadImage(
+    RequestResponseModel response = await MyRequestClass.uploadImage(
         filePath: pickedImage,
         fileType: mimitype == 'pdf' ? ImageType.PDF : ImageType.IMAGE,
         controller: controller);
@@ -37,11 +37,11 @@ class ProfileService extends GetxController {
     return response;
   }
 
-  Future<RequestResponsModel> deleteImage(
+  Future<RequestResponseModel> deleteImage(
       {String? url,
       required String fieldToUpdate,
       bool updateInfo = true}) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+    RequestResponseModel response = await MyRequestClass.krequest(
       endPoint: EndPoint.deleteImage,
       method: Methods.delete,
       body: {"url": url},
@@ -54,9 +54,9 @@ class ProfileService extends GetxController {
     return response;
   }
 
-  Future<RequestResponsModel> updateUserInformation(
+  Future<RequestResponseModel> updateUserInformation(
       {required Map<String, dynamic> data}) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+    RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.updateProfile, body: data, method: Methods.patch);
     log("Updating user info ------- ${response.message}");
     if (data.containsKey('ownVehicle')) {
@@ -66,9 +66,9 @@ class ProfileService extends GetxController {
     return response;
   }
 
-  Future<RequestResponsModel> changePassword(
+  Future<RequestResponseModel> changePassword(
       {required Map<String, dynamic> data}) async {
-    RequestResponsModel response = await MyRequestClass.krequest(
+    RequestResponseModel response = await MyRequestClass.krequest(
       endPoint: EndPoint.changeUserPassword,
       body: data,
       method: Methods.patch,

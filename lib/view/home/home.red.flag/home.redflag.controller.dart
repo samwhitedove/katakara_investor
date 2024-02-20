@@ -23,16 +23,17 @@ class RegFlagController extends GetxController {
     if (hasValidValue.value) {
       isLoading.value = true;
       update();
-      RequestResponsModel response = await MyRequestClass.krequest(
+      RequestResponseModel response = await MyRequestClass.krequest(
           endPoint: EndPoint.createRedFlag,
           body: {
             "title": "Red flag",
             "subject": subject.text,
             "message": summary.text
           },
-          method: Methods.put);
+          method: Methods.post);
       if (response.success) {
         isLoading.value = false;
+        Get.back();
         HC.snack(response.message, success: response.success);
         update();
         return;

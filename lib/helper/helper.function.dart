@@ -2,12 +2,15 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart' as dio;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:katakara_investor/customs/custom.widget.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';
 import 'package:katakara_investor/services/services.auth.dart';
 
@@ -15,7 +18,7 @@ import '../values/values.dart';
 
 class HC {
   static final HC _singleton = HC._internal();
-  static dynamic _fcm = null;
+  static dynamic _fcm;
 
   factory HC() {
     return _singleton;
@@ -23,11 +26,19 @@ class HC {
 
   HC._internal();
 
-  static Future<RequestResponsModel> mockFailedResponse() async {
+  static Future<RequestResponseModel> mockFailedResponse() async {
     return await Get.find<AuthService>().mockFailedResponse();
   }
 
-  static Future<RequestResponsModel> mockSuccesResponse(dynamic data) async {
+  static mockUnathorizedResponse() async {
+    await Future.delayed(CW.onesSec);
+    return dio.DioException.badResponse(
+        statusCode: 401,
+        requestOptions: dio.RequestOptions(),
+        response: dio.Response(requestOptions: dio.RequestOptions()));
+  }
+
+  static Future<RequestResponseModel> mockSuccesResponse(dynamic data) async {
     return await Get.find<AuthService>().mockSuccessResponse(data: data);
   }
 
@@ -201,5 +212,39 @@ class HC {
     if (_fcm != null) return _fcm;
     _fcm = FirebaseMessaging.instance;
     return _fcm;
+  }
+
+  static String formatDate(DateTime date, {bool formatSimple = false}) {
+    if (formatSimple) {
+      return '${DateFormat.yMd().format(date)} - ${DateFormat.jm().format(date)}';
+    }
+    return '${DateFormat.yMMMEd().format(date)} - ${DateFormat.jm().format(date)}';
+  }
+
+  static String formartValue(dynamic value) {
+    log(value.toString());
+    log(value.runtimeType.toString());
+    if (value.runtimeType == bool) return value ? "Yes" : "No";
+    if (value.runtimeType == int) return value.toString();
+    if (value.runtimeType == Null) return "Unavailable";
+    if (value.toString().contains('-')) {
+      final parseDate = DateTime.tryParse(value.toString());
+      if (parseDate == null) return value;
+      return HC.formatDate(parseDate);
+    }
+    return value.toString();
+  }
+
+  static Color handleStatusView(String status) {
+    switch (status) {
+      case "PENDING":
+        return AppColor.grey;
+      case "APPROVED":
+        return AppColor.primary;
+      case "REJECTED":
+        return AppColor.red;
+      default:
+        return AppColor.grey;
+    }
   }
 }

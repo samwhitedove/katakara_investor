@@ -64,10 +64,13 @@ extension ExtendWidget on Widget {
   }
 
   Container simpleRoundCorner(
-      {double height = 40, double width = 40, Color? bgColor}) {
+      {double height = 40,
+      double? radius = 40,
+      double width = 40,
+      Color? bgColor}) {
     return Container(
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(8), color: bgColor),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(radius ?? 8), color: bgColor),
       height: HC.spaceVertical(height),
       width: HC.spaceHorizontal(width),
       child: this,
@@ -95,7 +98,7 @@ extension ExtendWidget on Widget {
   }) {
     return Container(
       width: width,
-      height: height,
+      height: height == 0 ? null : height,
       padding: padding,
       margin: margin,
       decoration: BoxDecoration(

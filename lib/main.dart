@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -25,7 +24,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 void main() async {
-  notification.awesome_notification();
+  notification.awesomeNotification();
   WidgetsFlutterBinding.ensureInitialized();
   final appLifecycleObserver = AppLifecycleObserver();
   WidgetsBinding.instance.addObserver(appLifecycleObserver);
@@ -52,16 +51,6 @@ void main() async {
       systemNavigationBarColor: AppColor.primary,
       statusBarIconBrightness: Brightness.dark));
 
-  if (kDebugMode) {
-    try {
-      // FirebaseFirestore.instance.useFirestoreEmulator('10.0.2.2', 8080);
-      // await FirebaseAuth.instance.useAuthEmulator('10.0.2.2', 9099);
-    } catch (e) {
-      // ignore: avoid_print
-      print(e);
-    }
-  }
-
   runApp(const MyApp());
 }
 
@@ -77,15 +66,16 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     AwesomeNotifications().setListeners(
-        onActionReceivedMethod: NotificationController.onActionReceivedMethod,
-        onNotificationCreatedMethod:
-            NotificationController.onNotificationCreatedMethod,
-        onNotificationDisplayedMethod:
-            NotificationController.onNotificationDisplayedMethod,
-        onDismissActionReceivedMethod:
-            NotificationController.onDismissActionReceivedMethod);
+      onActionReceivedMethod: NotificationController.onActionReceivedMethod,
+      onNotificationCreatedMethod:
+          NotificationController.onNotificationCreatedMethod,
+      onNotificationDisplayedMethod:
+          NotificationController.onNotificationDisplayedMethod,
+      onDismissActionReceivedMethod:
+          NotificationController.onDismissActionReceivedMethod,
+    );
 
-    accept_permission();
+    acceptPermission();
   }
 
   @override
@@ -94,14 +84,14 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Katakara Investor',
       theme: lightTheme,
-      unknownRoute: AppRoutes.routes.first,
+      darkTheme: darkTheme,
       getPages: AppRoutes.routes,
       initialBinding: AllBindings(),
       initialRoute: Config.isNew!
-          ? AppRoutes.name(RouteName.welcome)
+          ? RouteName.welcome.name
           : AppSettings.isLogin ?? false
-              ? AppRoutes.name(RouteName.home)
-              : AppRoutes.name(RouteName.login),
+              ? RouteName.home.name
+              : RouteName.login.name,
     );
   }
 }

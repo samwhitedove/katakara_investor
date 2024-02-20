@@ -29,24 +29,46 @@ enum RouteName {
   chatScreen,
   admin,
   user,
-  activeProduct,
-  bookedProduct,
+  investmentAvailable,
+  allProducts,
   broadcast,
-  addProduct,
+  viewUserPortfolio,
   viewRedFlag,
+  viewRedFlagDetails,
   usersReceipts,
-  addReceipts,
+  adminViewReceipts,
   addFaq,
   notifications,
+  youtube,
+  search,
+  viewInformationCard,
+  adminReceiptSearch,
+  userReceiptSearch,
+  youtubeUrl,
+  addInvestment,
+  productCategory,
+  investmentView,
+  adminInvestmentSearch,
+  userPortfolio,
+  portfolioSearch,
+  activeInvestmentProduct,
 }
 
 enum Al { center, right, left }
 
-enum StorageNames { settingsStorage, configStorage, imageStorage, appState }
+enum SearchPageType { users }
 
-enum LocalStateName { addPortfolio }
+enum StorageNames {
+  settingsStorage,
+  configStorage,
+  notificationStorage,
+  imageStorage,
+  appState
+}
 
-enum StorageKeys { isNewUser, uploadUrls }
+enum LocalStateName { addPortfolio, addInvestment }
+
+enum StorageKeys { isNewUser, uploadUrls, notifications, unReadNotification }
 
 enum IdType { government, letterHeaded, cac, profleImage }
 
@@ -57,6 +79,12 @@ enum SettingsKey { user, isLogin }
 enum CropType { square, ratio3x2, original, ratio4x3, ratio16x9 }
 
 UserDataModel userData = UserDataModel();
+
+enum Roles { SUPER_ADMIN, ADMIN, USER }
+
+enum NewProductStatus { APPROVED, PENDING, REJECTED }
+
+List<String> receiptType = <String>["All", "PENDING", "APPROVED", "REJECTED"];
 
 List<String> productCategory = [
   "-- Select Category --",

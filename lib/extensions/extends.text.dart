@@ -21,7 +21,11 @@ extension ExtendString on Text {
   }
 
   Text subTitle(
-      {Color? color, double? fontSize = 12, lines = 2, TextAlign? align}) {
+      {Color? color,
+      double? fontSize = 12,
+      lines = 2,
+      TextAlign? align,
+      bool bold = false}) {
     return Text(
       data!,
       softWrap: true,
@@ -32,7 +36,7 @@ extension ExtendString on Text {
         fontFamily: 'Inter',
         fontSize: fontSize,
         overflow: TextOverflow.ellipsis,
-        fontWeight: FontWeight.w400,
+        fontWeight: bold ? FontWeight.w700 : FontWeight.w400,
         color: color ?? AppColor.subTitle,
       ),
     );

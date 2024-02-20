@@ -22,9 +22,9 @@ class UserSecurity extends StatelessWidget {
               CW.AppSpacer(h: 70),
               CW.backButton(onTap: Get.back),
               CW.AppSpacer(h: 30),
-              Text(tSecurity).title(),
+              const Text(tSecurity).title(),
               CW.AppSpacer(h: 10),
-              Text(tChangePassword).subTitle(),
+              const Text(tChangePassword).subTitle(),
               CW.AppSpacer(h: 20),
               CW.textField(
                   label: tOlPassword,

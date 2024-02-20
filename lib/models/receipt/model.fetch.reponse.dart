@@ -13,7 +13,7 @@ String fetchReceiptResponseDataToJson(FetchReceiptResponseData data) =>
 class FetchReceiptResponseData {
   String? message;
   int? statusCode;
-  Data? data;
+  ReceiptData? data;
   bool? success;
 
   FetchReceiptResponseData({
@@ -27,7 +27,7 @@ class FetchReceiptResponseData {
       FetchReceiptResponseData(
         message: json["message"],
         statusCode: json["statusCode"],
-        data: json["data"] == null ? null : Data.fromJson(json["data"]),
+        data: json["data"] == null ? null : ReceiptData.fromJson(json["data"]),
         success: json["success"],
       );
 
@@ -39,62 +39,62 @@ class FetchReceiptResponseData {
       };
 }
 
-class Data {
-  List<Fetched>? fetched;
+class ReceiptData {
+  List<FetchedReceipt>? data;
   Pagination? pagination;
 
-  Data({
-    this.fetched,
+  ReceiptData({
+    this.data,
     this.pagination,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-        fetched: json["fetched"] == null
+  factory ReceiptData.fromJson(Map<String, dynamic> json) => ReceiptData(
+        data: json["data"] == null
             ? []
-            : List<Fetched>.from(
-                json["fetched"]!.map((x) => Fetched.fromJson(x))),
+            : List<FetchedReceipt>.from(
+                json["data"]!.map((x) => FetchedReceipt.fromJson(x))),
         pagination: json["pagination"] == null
             ? null
             : Pagination.fromJson(json["pagination"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "fetched": fetched == null
+        "data": data == null
             ? []
-            : List<dynamic>.from(fetched!.map((x) => x.toJson())),
+            : List<dynamic>.from(data!.map((x) => x.toJson())),
         "pagination": pagination?.toJson(),
       };
 }
 
-class Fetched {
+class FetchedReceipt {
   int? id;
   String? customerName;
   String? customerAddress;
   String? totalAmount;
-  bool? isApproved;
+  String? status;
   String? receiptCode;
   DateTime? createdAt;
   DateTime? updatedAt;
   List<ReceiptProductInfo>? receiptProductInfo;
 
-  Fetched({
+  FetchedReceipt({
     this.id,
     this.customerName,
     this.customerAddress,
     this.totalAmount,
-    this.isApproved,
+    this.status,
     this.receiptCode,
     this.createdAt,
     this.updatedAt,
     this.receiptProductInfo,
   });
 
-  factory Fetched.fromJson(Map<String, dynamic> json) => Fetched(
+  factory FetchedReceipt.fromJson(Map<String, dynamic> json) => FetchedReceipt(
         id: json["id"],
         customerName: json["customerName"],
         customerAddress: json["customerAddress"],
         totalAmount: json["totalAmount"],
-        isApproved: json["isApproved"],
+        status: json["status"],
         receiptCode: json["receiptCode"],
         createdAt: json["createdAt"] == null
             ? null
@@ -113,7 +113,7 @@ class Fetched {
         "customerName": customerName,
         "customerAddress": customerAddress,
         "totalAmount": totalAmount,
-        "isApproved": isApproved,
+        "status": status,
         "receiptCode": receiptCode,
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),
@@ -169,7 +169,7 @@ class ReceiptProductInfo {
 }
 
 class Pagination {
-  int? count;
+  int? total;
   int? totalPage;
   int? perPage;
   int? currentPageItemCount;
@@ -178,7 +178,7 @@ class Pagination {
   dynamic nextPage;
 
   Pagination({
-    this.count,
+    this.total,
     this.totalPage,
     this.perPage,
     this.currentPageItemCount,
@@ -188,7 +188,7 @@ class Pagination {
   });
 
   factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
-        count: json["count"],
+        total: json["total"] ?? json['count'],
         totalPage: json["totalPage"],
         perPage: json["perPage"],
         currentPageItemCount: json["currentPageItemCount"],
@@ -198,7 +198,7 @@ class Pagination {
       );
 
   Map<String, dynamic> toJson() => {
-        "count": count,
+        "total": total,
         "totalPage": totalPage,
         "perPage": perPage,
         "currentPageItemCount": currentPageItemCount,

@@ -1,19 +1,117 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
+import 'package:katakara_investor/helper/helper.dart';
+import 'package:katakara_investor/models/admin/model.fetch.user.dart';
+import 'package:katakara_investor/models/receipt/model.fetch.reponse.dart';
+import 'package:katakara_investor/models/services/model.service.response.dart';
+import 'package:katakara_investor/services/service.admin.dart';
 
 enum UserViewType { all, block, join }
 
 class UserListController extends GetxController {
-  final UserViewType pageType = Get.arguments;
-  String setTitle() {
-    switch (pageType) {
-      case UserViewType.all:
-        return "All Users";
-      case UserViewType.join:
-        return "New Users";
-      case UserViewType.block:
-        return "Block Users";
+  late UserViewType pageType = Get.arguments;
+  final AdminService adminService = Get.find<AdminService>();
+  String? title;
+  int selected = 0;
+
+  final List<String> userListType = <String>[
+    'All Users',
+    'New Users',
+    'Block Users'
+  ];
+
+  @override
+  void onInit() {
+    changeUserType('all');
+    super.onInit();
+  }
+
+  changeUserType([String? text]) {
+    if (userListType[selected] == text) return;
+    text = text!.capitalize!;
+    switch (text) {
+      case "All Users":
+        selected = 0;
+        pageType = UserViewType.all;
+        title = "All Users";
+        // update();
+        break;
+      case "New Users":
+        selected = 1;
+        pageType = UserViewType.join;
+        title = "New Users";
+        // update();
+        break;
+      case "Block Users":
+        selected = 2;
+        pageType = UserViewType.block;
+        title = "Block Users";
+        // update();
+        break;
       default:
-        return "Un-Categorized User";
+        selected = 0;
+        title = "All User";
+        pageType = UserViewType.all;
+        update();
+        break;
     }
+    fetchAllAppUser(pageType);
+  }
+
+  RxBool isFetchingAllUser = false.obs;
+  RxBool isFetchingMoreUser = false.obs;
+  List<FetchedUser>? fetchedUser = <FetchedUser>[];
+  Pagination? pagination;
+  // Map<String, dynamic> fetchedUser = <String, dynamic>{
+  //   "pagination": <Pagination>{},
+  //   "users": <FetchedUser>[]
+  // };
+
+  fetchMoreData(UserViewType type) async {
+    String? page = pagination?.nextPage;
+    if (page == null) return;
+    isFetchingMoreUser(true);
+    update();
+    final RequestResponseModel responseModel =
+        await adminService.fetchMoreUser(page);
+    isFetchingMoreUser(false);
+    update();
+    if (responseModel.success) {
+      final decode = FetchAllUser.fromJson(responseModel.data);
+      for (var element in decode.data!) {
+        fetchedUser!.add(element);
+      }
+      pagination = decode.pagination!;
+      return;
+    }
+    HC.snack(responseModel.message, success: responseModel.success);
+  }
+
+  fetchAllAppUser(UserViewType type) async {
+    isFetchingAllUser(true);
+    update();
+    RequestResponseModel? responseModel;
+    switch (type) {
+      case UserViewType.all:
+        responseModel = await adminService.fetchAllUser();
+        break;
+      case UserViewType.block:
+        responseModel = await adminService.fetchAllBlockedUser();
+        break;
+      case UserViewType.join:
+        responseModel = await adminService.fetchAllTodayUser();
+        break;
+      default:
+    }
+    isFetchingAllUser(false);
+    update();
+    if (responseModel!.success) {
+      final decode = FetchAllUser.fromJson(responseModel.data);
+      fetchedUser = decode.data;
+      pagination = decode.pagination!;
+      return;
+    }
+    HC.snack(responseModel.message, success: responseModel.success);
   }
 }

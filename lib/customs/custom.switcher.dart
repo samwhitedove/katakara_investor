@@ -29,7 +29,7 @@ class CustomSwitcher extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            width: Get.width * (width ?? .22),
+            width: Get.width * (width ?? .2), //22
             height: height ?? 30,
             decoration: BoxDecoration(
               color: fgColor ?? AppColor.grey,
@@ -54,7 +54,7 @@ class CustomSwitcher extends StatelessWidget {
           ),
           AnimatedContainer(
             duration: CW.halfSec,
-            width: Get.width * (value! ? width ?? .218 : .076),
+            width: Get.width * (value! ? width ?? .200 : .070), //.218 : .076),
             height: height ?? 30,
             decoration: BoxDecoration(
                 color: bgColor ?? (value! ? AppColor.primary : AppColor.grey),

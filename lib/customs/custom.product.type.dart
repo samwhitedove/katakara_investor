@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom.product.card.dart';
@@ -8,90 +6,98 @@ import 'package:katakara_investor/extensions/extensions.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/models/product/models.fetch.portfolio.response.dart';
 import 'package:katakara_investor/values/values.dart';
-import 'package:katakara_investor/view/home/home.dart';
 
 // ignore: must_be_immutable
 class ProductTypeCategory extends StatelessWidget {
   ProductTypeCategory(
       {super.key, required this.product, required this.onRefresh});
-  List<Datum> product;
+  List<PortfolioDatum> product;
   Function()? onRefresh;
-  // final _ = Get.put(PortfolioController());
 
   @override
   Widget build(BuildContext context) {
     return product.isEmpty
         ? Center(child: NoDataScreen(oncall: onRefresh))
-        : SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Wrap(
-              spacing: 4,
-              runSpacing: 10,
-              children: List.generate(
-                product.length,
-                (index) => Stack(
-                  children: [
-                    Container(
-                      width: HC.spaceHorizontal(118),
-                      margin: const EdgeInsets.all(3),
-                      child: ProductCard(
-                        isNetwork: true,
-                        productData: product[index],
+        : RefreshIndicator(
+            onRefresh: () => onRefresh?.call(),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Wrap(
+                spacing: 4,
+                runSpacing: 10,
+                children: List.generate(
+                  product.length,
+                  (index) => Stack(
+                    children: [
+                      Container(
+                        width: HC.spaceHorizontal(118),
+                        margin: const EdgeInsets.all(3),
+                        child: ProductCard(
+                          isNetwork: true,
+                          productData: product[index],
+                        ),
                       ),
-                    ),
-                    Visibility(
-                      visible: !product[index].isApproved!,
-                      child: const Text("Pending")
-                          .subTitle(fontSize: 10, color: AppColor.white)
-                          .paddingAll(4)
-                          .simpleRoundCorner(
-                            width: HC.spaceHorizontal(67),
-                            height: HC.spaceHorizontal(30),
-                            bgColor: AppColor.subTitle,
-                          ),
-                    ),
-                    Positioned(
-                      right: 0,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Visibility(
-                            visible: product[index].isApproved!,
-                            child: const Text("Approved")
-                                .subTitle(fontSize: 10, color: AppColor.white)
-                                .paddingAll(4)
-                                .simpleRoundCorner(
-                                  width: HC.spaceHorizontal(77),
-                                  height: HC.spaceHorizontal(30),
-                                  bgColor: AppColor.primary,
-                                ),
-                          ),
-                          CW.AppSpacer(h: 2),
-                          Visibility(
-                            visible: product[index].isMerge!,
-                            child: const Text("KFI")
-                                .subTitle(fontSize: 10, color: AppColor.white)
-                                .paddingAll(4)
-                                .simpleRoundCorner(
-                                  width: HC.spaceHorizontal(34),
-                                  height: HC.spaceHorizontal(28),
-                                  bgColor: AppColor.orange,
-                                ),
-                          ),
-                        ],
+                      Visibility(
+                        visible:
+                            product[index].status!.$1 == ProductStatus.PENDING,
+                        child: Text(product[index].status!.$2)
+                            .subTitle(fontSize: 10, color: AppColor.white)
+                            .paddingAll(4)
+                            .simpleRoundCorner(
+                              width: HC.spaceHorizontal(67),
+                              height: HC.spaceHorizontal(30),
+                              bgColor: product[index].status!.$1 ==
+                                      ProductStatus.PENDING
+                                  ? AppColor.subTitle
+                                  : AppColor.red,
+                            ),
                       ),
-                    )
-                  ],
+                      Positioned(
+                        right: 0,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Visibility(
+                              visible: product[index].status!.$1 ==
+                                  ProductStatus.ACTIVE,
+                              child: Text(product[index].status!.$2)
+                                  .subTitle(fontSize: 10, color: AppColor.white)
+                                  .paddingAll(4)
+                                  .simpleRoundCorner(
+                                    width: HC.spaceHorizontal(77),
+                                    height: HC.spaceHorizontal(30),
+                                    bgColor: AppColor.primary,
+                                  ),
+                            ),
+                            CW.AppSpacer(h: 2),
+                            Visibility(
+                              visible: product[index].isMerge!,
+                              child: const Text("KFI")
+                                  .subTitle(fontSize: 10, color: AppColor.white)
+                                  .paddingAll(4)
+                                  .simpleRoundCorner(
+                                    width: HC.spaceHorizontal(34),
+                                    height: HC.spaceHorizontal(28),
+                                    bgColor: AppColor.orange,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ).marginSymmetric(horizontal: 15),
+              ).marginSymmetric(horizontal: 15),
+            ),
           );
   }
 }
 
+// ignore: must_be_immutable
 class NoDataScreen extends StatelessWidget {
   Function()? oncall;
-  NoDataScreen({super.key, required this.oncall});
+  String? message;
+  NoDataScreen({super.key, required this.oncall, this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -101,11 +107,14 @@ class NoDataScreen extends StatelessWidget {
           await oncall?.call();
           return true as Future;
         },
-        child: Column(
-          children: [
-            Image.asset(Assets.assetsImagesNoData, scale: 4),
-            const Text("No Data Found").subTitle(),
-          ],
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Image.asset(Assets.assetsImagesNoData, scale: 4),
+              Text(message ?? "No Data Found").subTitle(),
+            ],
+          ),
         ),
       ),
     );

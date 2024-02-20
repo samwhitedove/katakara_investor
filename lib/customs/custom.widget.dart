@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -119,13 +121,16 @@ class CW {
                 .title(fontSize: 14, color: AppColor.text)
                 .addPaddingVertical(size: 15),
             ...List.generate(
-                data.length,
-                (index) => CW
-                    .button(
-                        onPress: data[index]['onTap'],
-                        color: data[index]['color'],
-                        text: data[index]['label'])
-                    .marginSymmetric(horizontal: 20))
+              data.length,
+              //TODO
+              (index) => Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: CW.button(
+                    onPress: data[index]['onTap'],
+                    color: data[index]['color'],
+                    text: data[index]['label']),
+              ).marginSymmetric(horizontal: 20),
+            )
           ],
         ),
       ),
@@ -244,6 +249,7 @@ class CW {
     IconData? icon,
     required String? label,
     required dynamic value,
+    bool isLoading = false,
     required Function(String) onChange,
     required List<String> data,
   }) {
@@ -259,31 +265,41 @@ class CW {
           Container(
             height: 50,
             decoration: decoration,
-            // width: Get.width * .8,
+            width: isLoading ? Get.width : null,
             padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: DropdownButton<String>(
-              menuMaxHeight: Get.height * .5,
-              value: value,
-              onChanged: (value) => onChange(value!),
-              items: data.map((value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: SizedBox(
-                    child: Text(
-                      value.toString(),
+            child: isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    )).align(Al.right).paddingOnly(right: 10)
+                : DropdownButton<String>(
+                    menuMaxHeight: Get.height * .5,
+                    value: value,
+                    onChanged: (value) => onChange(value!),
+                    items: data.map((value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: SizedBox(
+                          child: Text(
+                            value.toString(),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    isExpanded: true,
+                    isDense: false,
+                    icon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Icon(
+                        icon ?? Icons.keyboard_arrow_down_sharp,
+                        size: iconSize,
+                        color: iconColor,
+                      ),
                     ),
+                    underline: const SizedBox(),
                   ),
-                );
-              }).toList(),
-              isExpanded: true,
-              isDense: false,
-              icon: Icon(
-                icon ?? Icons.keyboard_arrow_down_sharp,
-                size: iconSize,
-                color: iconColor,
-              ),
-              underline: const SizedBox(),
-            ),
           ),
         ],
       ),
@@ -317,15 +333,18 @@ class CW {
                   ),
                 )
               : Center(
-                  child: child ??
-                      Text(
-                        text!,
-                        textScaleFactor: 1,
-                        style: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
+                  child: FittedBox(
+                    child: child ??
+                        Text(
+                          text!,
+                          // ignore: deprecated_member_use
+                          textScaleFactor: 1,
+                          style: const TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
+                  ),
                 ),
         ),
       ),
@@ -344,6 +363,8 @@ class CW {
     bool? numberOnly,
     int maxLength = 50,
     int lines = 1,
+    Widget? prefix,
+    Widget? suffix,
     BorderRadius? radius,
     required TextEditingController controller,
     TextInputType inputType = TextInputType.text,
@@ -417,6 +438,8 @@ class CW {
                   fontFamily: 'Inter',
                   fontWeight: bold ? FontWeight.w700 : FontWeight.normal),
               decoration: InputDecoration(
+                suffixIcon: suffix,
+                prefixIcon: prefix,
                 border: InputBorder.none,
                 hintText: hint ?? 'Enter $label',
                 hintStyle: const TextStyle(color: AppColor.iconInactive),
@@ -502,17 +525,27 @@ class CW {
       double size = 15,
       String title = tAddProduct,
       required List<Widget> children,
+      ScrollPhysics? scroll,
+      FloatingActionButton? fButton,
+      Widget? others,
       Function()? onTap}) {
     return Scaffold(
+      floatingActionButton: fButton,
       body: column(
+        scroll: scroll,
         children: [
           CW.AppSpacer(h: topPadding),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CW.backButton(onTap: onTap).align(Al.left),
-              Text(title).title(),
-              const SizedBox(width: 25),
+              Row(
+                children: [
+                  CW.backButton(onTap: onTap).align(Al.left),
+                  CW.AppSpacer(w: 15),
+                  Text(title).title(fontSize: 20),
+                ],
+              ),
+              others ?? const SizedBox(width: 25),
             ],
           ),
           ...children
@@ -522,7 +555,8 @@ class CW {
   }
 
   static Padding column(
-      {double size = 15,
+      {bool maxAlign = false,
+      double size = 15,
       required List<Widget> children,
       ScrollPhysics? scroll}) {
     return Padding(
@@ -530,10 +564,62 @@ class CW {
       child: SingleChildScrollView(
         physics: scroll ?? const BouncingScrollPhysics(),
         child: Column(
+          mainAxisSize: maxAlign ? MainAxisSize.max : MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: children,
         ),
+      ),
+    );
+  }
+
+  static Obx CircleLoader({
+    RxBool? show,
+    double size = 20,
+  }) {
+    return Obx(
+      () => Visibility(
+        visible: show?.value ?? false,
+        child: Padding(
+          padding: EdgeInsets.only(top: Get.height * .35),
+          child: Center(
+            child: SizedBox(
+              height: size,
+              width: size,
+              child: const CircularProgressIndicator(
+                strokeWidth: 1,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  static Padding AppBr({
+    Widget? title,
+    Widget? trailing,
+    Widget? leading,
+    double? top = 50,
+    double? right = 20,
+    double? left = 20,
+    double? bottom = 10,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(
+          top: top!, right: right!, left: left!, bottom: bottom!),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              leading ?? backButton(),
+              AppSpacer(w: 15),
+              title ?? const SizedBox(),
+            ],
+          ),
+          trailing ?? const SizedBox()
+        ],
       ),
     );
   }
@@ -574,7 +660,7 @@ class CW {
     required List<Widget> children,
     MainAxisAlignment mainAlignment = MainAxisAlignment.start,
     CrossAxisAlignment crossAlignment = CrossAxisAlignment.start,
-    AppBar? appBar,
+    PreferredSizeWidget? appBar,
     Key? key,
     Widget? drawer,
     ScrollPhysics? scroll,
@@ -854,7 +940,7 @@ class CW {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("name")
+                        const Text("go live")
                             .title(fontSize: 14, color: AppColor.black)
                             .roundCorner(height: 10),
                         const Text('state, lga')
@@ -863,7 +949,7 @@ class CW {
                       ],
                     ),
                     CW.AppSpacer(h: 3),
-                    const Text("status.toString()")
+                    const Text("go live to view status")
                         .subTitle(fontSize: 10, color: AppColor.primary)
                         .roundCorner(
                             height: 20,

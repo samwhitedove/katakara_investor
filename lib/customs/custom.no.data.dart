@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:katakara_investor/extensions/extensions.dart';
 import 'package:katakara_investor/values/values.dart';
 
+// ignore: must_be_immutable
 class NoDataFound extends StatelessWidget {
   Widget? icon;
   String? text;

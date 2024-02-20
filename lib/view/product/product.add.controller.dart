@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/helper/helper.settings.dart';
+import 'package:katakara_investor/models/product/model.category.dart';
 import 'package:katakara_investor/models/product/model.select.image.dart';
 import 'package:katakara_investor/models/product/model.upload.product.dart';
 import 'package:katakara_investor/models/product/models.fetch.portfolio.response.dart';
@@ -20,7 +21,7 @@ class AddProductController extends GetxController {
   List<(String, int)> uploadedSellerImage = <(String, int)>[];
   List<SelectImageModel> processSellerImage = <SelectImageModel>[];
   // get product data if to edit
-  final Datum? productInfo = Get.arguments;
+  final PortfolioDatum? productInfo = Get.arguments;
   bool hasUpdate = false;
   bool hasData = false;
 
@@ -29,11 +30,11 @@ class AddProductController extends GetxController {
     final localData =
         await AppSettings.getAppState(LocalStateName.addPortfolio);
 
-    Datum? getData;
+    PortfolioDatum? getData;
     if (productInfo != null) {
       getData = productInfo;
     } else {
-      if (localData != null) getData = Datum.fromJson(localData);
+      if (localData != null) getData = PortfolioDatum.fromJson(localData);
     }
 
     if (getData == null) return;
@@ -66,27 +67,66 @@ class AddProductController extends GetxController {
     update();
   }
 
+  cancelUpdate() async {
+    List seller = productInfo!.sellerImage;
+    List? images = productInfo!.productImage!..forEach((element) => element);
+    for (var item in seller) {
+      uploadedSellerImage.removeWhere((element) => element.$1 == item);
+    }
+    for (var item in images!) {
+      uploadedImage.removeWhere((element) => element.$1 == item);
+    }
+    for (var element in uploadedImage) {
+      await portfolioService.deleteImage(pickedImage: element.$1);
+    }
+    for (var element in uploadedSellerImage) {
+      await portfolioService.deleteImage(pickedImage: element.$1);
+    }
+    Get.close(2);
+  }
+
   TextEditingController? productName;
   TextEditingController? description;
   TextEditingController? amountSell;
   TextEditingController? amountBuy;
   RxBool canUpload = false.obs;
   RxBool isUploading = false.obs;
+  RxBool isFetchingCategory = false.obs;
 
   RxString selectedState = stateAndLga.keys.first.obs;
   RxString selectedLga = stateAndLga.values.first.first.obs;
-  RxString category = productCategory.first.obs;
+  RxString category = "".obs; // "productCategory.first.obs";
   final portfolioService = Get.find<PortfolioService>();
   final portfolioController = Get.find<PortfolioController>();
+  List<String> categories = <String>[];
 
   @override
   onInit() {
     super.onInit();
+    fetchProductCategory();
     productName = TextEditingController();
     amountSell = TextEditingController();
     amountBuy = TextEditingController();
     description = TextEditingController();
     setViewForUpdateproduct();
+  }
+
+  fetchProductCategory() async {
+    isFetchingCategory.value = true;
+    final RequestResponseModel response =
+        await portfolioService.fetchProductCategory();
+    log('${response.toJson()} -----------------  response}');
+    if (response.success) {
+      List data = response.data ?? [];
+      if (data.isNotEmpty) {
+        for (var element in data) {
+          categories.add(Category.fromJson(element).category.toString());
+        }
+        category.value = categories.first;
+        log(categories.toString());
+      }
+      isFetchingCategory.value = false;
+    }
   }
 
   onChange({bool init = false}) {
@@ -186,7 +226,7 @@ class AddProductController extends GetxController {
       sellerImage: images[1],
       productName: productName!.text,
     );
-    final RequestResponsModel response = isUpdate
+    final RequestResponseModel response = isUpdate
         ? await portfolioService.updateProductPortfolio(
             product.toJson()..addAll({"sku": productInfo!.sku!}))
         : await portfolioService.addProductToPortfolio(product);
@@ -231,7 +271,7 @@ class AddProductController extends GetxController {
       // get the current image position from the selected process for upload
       final SelectImageModel data =
           isChooseProcess.where((item) => item.id == index).first;
-      final RequestResponsModel response = await portfolioService
+      final RequestResponseModel response = await portfolioService
           .uploadProductImage(pickedImage: File(imagePath));
       data.isLoading = false;
       update();
@@ -263,7 +303,7 @@ class AddProductController extends GetxController {
     image.isLoading = true;
     update();
     // send a delete request
-    final RequestResponsModel response =
+    final RequestResponseModel response =
         await portfolioService.deleteImage(pickedImage: uploadsImg.$1);
     if (response.success) {
       // if (productInfo != null) hasUpdate = true;

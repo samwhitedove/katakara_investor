@@ -76,13 +76,20 @@ class FinancialScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: CW.button(onPress: save, text: "Save"),
+              child: Obx(
+                () => CW.button(
+                  onPress: save,
+                  text: "Save",
+                  isLoading: isSaving.value,
+                ),
+              ),
             ),
+            CW.AppSpacer(h: 40),
           ],
         ).roundCorner(
           bgColor: AppColor.primaryLight,
           width: Get.width,
-          height: HC.spaceVertical(450),
+          height: 0,
           borderColor: AppColor.primaryLight,
         ),
       ],
@@ -94,7 +101,7 @@ class FinancialScreen extends StatelessWidget {
   save() async {
     final profileService = Get.find<ProfileService>();
     isSaving.value = true;
-    RequestResponsModel response = await profileService.updateUserInformation(
+    RequestResponseModel response = await profileService.updateUserInformation(
         data: {"financialCapacity": selectedValue.value});
     isSaving.value = false;
     if (response.success) selected.value = selectedValue.value;

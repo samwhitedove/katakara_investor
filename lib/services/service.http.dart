@@ -1,8 +1,13 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers, constant_identifier_names
+
 import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
+import 'package:get_storage/get_storage.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:katakara_investor/customs/custom.widget.dart';
+import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/helper/helper.settings.dart';
 import 'package:katakara_investor/services/services.auth.dart';
 import 'package:katakara_investor/services/service.endpoints.dart';
@@ -22,58 +27,68 @@ class MyRequestClass {
     receiveTimeout: const Duration(seconds: 30),
   );
 
-  static bool hasTryRefresh = false;
+  static getx.RxBool hasTryRefresh = false.obs;
 
   static cancelAllConnection() {
     cancelToken?.cancel();
   }
 
-  static InterceptorsWrapper _interceptor(Map<String, dynamic> data) {
-    log(data.toString());
+  static InterceptorsWrapper _interceptor() {
     return InterceptorsWrapper(
       onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
         log("HEADER ::- ${_dio!.options.headers}");
         log("QUERY ::- ${_dio!.options.queryParameters}");
-        log("REQUEST ::- $data");
+        log("REQUEST DATA::- ${options.data}");
         log("BODY ::- ${options.data}");
         return handler.next(options);
       },
       onResponse: (Response response, ResponseInterceptorHandler handler) {
-        // Do something with response data.
         return handler.next(response);
       },
       onError: (DioException e, ErrorInterceptorHandler handler) async {
-        // Do something with response error.
-
-        if (e.response?.statusCode == 401 && hasTryRefresh != true) {
-          hasTryRefresh = true;
-          log("$e --------------- 401 error recalling for refresh token error ------------");
-          final response =
-              await getx.Get.find<AuthService>().refreshAuthToken();
-          if (!response.success) {
-            final _ = getx.Get.lazyPut(() => ProfileController());
-            return getx.Get.find<ProfileController>().clearData();
-          } else {
-            userData.token = response.data['token'];
-            userData.refreshToken = response.data['refreshToken'];
-            AppSettings.updateLocalUserData(userData.toJson());
-          }
-
-          krequest(
-            endPoint: data['endPoint'],
-            method: (data['method'] as Methods),
-            query: data['query'],
-            body: data['body'],
-          );
+        if (e.response?.statusCode == 401 && !hasTryRefresh.value) {
+          await _refreshTokenAndRetry(e, handler);
+        } else {
+          return handler.next(e);
         }
-        if (hasTryRefresh) {
-          hasTryRefresh = false;
-          if (getx.Get.currentRoute == '/login') {
-            return getx.Get.offAllNamed(AppRoutes.name(RouteName.login));
-          }
-        }
-        return handler.next(e);
       },
+    );
+  }
+
+  static Future<void> _refreshTokenAndRetry(
+      DioException e, ErrorInterceptorHandler handler) async {
+    hasTryRefresh.value = true;
+    log("$e --------------- 401 error recalling for refresh token error ------------");
+
+    final response = await AuthService().refreshAuthToken();
+
+    if (response.success) {
+      _updateToken(response.data['token'], response.data['refreshToken']);
+      return await _retryOriginalRequest(e.requestOptions);
+    }
+    return await _handleTokenRefreshFailure();
+  }
+
+  static void _updateToken(String token, String refreshToken) {
+    userData.token = token;
+    userData.refreshToken = refreshToken;
+    AppSettings.updateLocalUserData(userData.toJson());
+  }
+
+  static Future<void> _handleTokenRefreshFailure() async {
+    final _ = getx.Get.lazyPut(() => ProfileController());
+    await getx.Get.find<ProfileController>().clearData();
+  }
+
+  static Future<void> _retryOriginalRequest(
+      RequestOptions requestOptions) async {
+    await _dio!.request(
+      requestOptions.path,
+      data: requestOptions.data,
+      options: Options(
+        method: requestOptions.method,
+        headers: requestOptions.headers,
+      ),
     );
   }
 
@@ -83,7 +98,7 @@ class MyRequestClass {
     Map<String, dynamic>? body,
     Map<String, dynamic>? query,
   }) async {
-    log(endPoint);
+    log('$endPoint query: $query body: $body ------- endpoint');
     try {
       final headers = {
         "Content-Type": "application/json",
@@ -91,6 +106,8 @@ class MyRequestClass {
       };
 
       _dio = Dio(_dioOption..headers = headers);
+
+      log('${_dio!.options.extra.entries} ------- options');
 
       // preparing the request for interceptor
       final Map<String, dynamic> _request = {
@@ -105,9 +122,7 @@ class MyRequestClass {
       if (_request['query'] == null) _request.remove('query');
 
       // Adding inteceptor
-      _dio!.interceptors.add(
-        _interceptor(_request),
-      );
+      _dio!.interceptors.add(_interceptor());
 
       Response? response;
       switch (method) {
@@ -130,24 +145,25 @@ class MyRequestClass {
           throw 'Invalid request method';
       }
 
-      RequestResponsModel resp = RequestResponsModel.fromJson(response!.data);
-      log(resp.toJson().toString());
+      RequestResponseModel resp = RequestResponseModel.fromJson(response!.data);
+      // log(resp.toJson().toString());
+
       if (resp.statusCode == 500) {
-        return RequestResponsModel(
+        return RequestResponseModel(
             message: "Cannot process data at the moment", success: false);
       }
-
+      log("${response.statusCode} $endPoint -----request success");
       return resp;
     } catch (e) {
       getx.GetUtils.printFunction("error", e, "error");
       if (e is DioException) {
-        return handleDioError(e);
+        return handleDioError(e, endPoint);
       }
-      return RequestResponsModel(message: e.toString());
+      return RequestResponseModel(message: e.toString());
     }
   }
 
-  static Future<RequestResponsModel> uploadImage({
+  static Future<RequestResponseModel> uploadImage({
     required File filePath,
     // required UploadType imageUploadType,
     dynamic controller,
@@ -189,7 +205,7 @@ class MyRequestClass {
       );
       if (controller != null) controller.uploadProgress(0.0);
 
-      RequestResponsModel resp = RequestResponsModel.fromJson(response?.data);
+      RequestResponseModel resp = RequestResponseModel.fromJson(response?.data);
 
       if (resp.success) {
         AppSettings.addUploadedImageUrlToStorage(value: resp.data);
@@ -200,68 +216,61 @@ class MyRequestClass {
       log(e.toString());
       log('$e--------- 2 2 2 2');
       if (e is DioException) {
-        return handleDioError(e);
+        return handleDioError(e, "File Uplaod endpoint");
       }
-      return RequestResponsModel(message: e.toString(), success: false);
+      return RequestResponseModel(message: e.toString(), success: false);
     }
   }
 
-  static RequestResponsModel handleDioError(DioException error) {
+  static RequestResponseModel handleDioError(DioException error, String end) {
     log('--------------- its dio error ${error.type}');
+    log('--------------- its dio error ${error.message}');
+    log('--------------- its dio error ${end}');
     if (error.type == DioExceptionType.connectionTimeout) {
-      // return RequestResponsModel(message: error.message, success: false);
-      log('Send timeout error: ${error.message}');
-      return RequestResponsModel(
+      return RequestResponseModel(
         message: "Server connection timeout, please try again",
         statusCode: error.response?.data?['statusCode'],
         success: error.response?.data?['success'] ?? false,
       );
     } else if (error.type == DioExceptionType.sendTimeout) {
       // Handle send timeout error
-      log('Send timeout error: ${error.message}');
-      return RequestResponsModel(
+      return RequestResponseModel(
           message: "Server not responding, please try again");
     } else if (error.type == DioExceptionType.receiveTimeout) {
       // Handle receive timeout error
-      log('Receive timeout error: ${error.message}');
-      return RequestResponsModel(
+      return RequestResponseModel(
         message: "Server timeout, please try again",
         statusCode: error.response?.data?['statusCode'],
         success: error.response?.data?['success'] ?? false,
       );
     } else if (error.type == DioExceptionType.unknown) {
-      log('Response unknown error: ${error.message}');
       log('Response unknown status code: ${error.response?.statusCode}');
       log('Response unknown data: ${error.response?.data}');
-      if (error.response?.statusCode == 401 && hasTryRefresh == false) {
-        return RequestResponsModel(message: "Checking ...", success: true);
+      log('$end throw the errors ------------------ endpoint error');
+      if (error.response?.statusCode == 401 && hasTryRefresh.value == false) {
+        return RequestResponseModel(message: "Checking ...", success: true);
       }
-      return RequestResponsModel(
-          message: "Unknown Server error, please try again");
-    } else if (error.type == DioExceptionType.unknown) {
-      log('Response unknown error: ${error.message}');
-      log('Response unknown status code: ${error.response?.statusCode}');
-      log('Response unknown data: ${error.response?.data}');
-      return RequestResponsModel(
+      return RequestResponseModel(
           message: "Unknown Server error, please try again");
     } else if (error.type == DioExceptionType.badResponse) {
       // Handle response error
-      log('Response bad request error: ${error.message}');
       log('Response bad request status code: ${error.response?.statusCode}');
       log('Response bad request data: ${error.response?.data}');
-      return RequestResponsModel(
+      return RequestResponseModel(
         message: error.response?.data?['message'],
         statusCode: error.response?.data?['statusCode'],
         success: error.response?.data?['success'] ?? false,
       );
     } else if (error.type == DioExceptionType.cancel) {
       // Handle request cancellation
-      log('Request cancelled: ${error.message}');
-      return RequestResponsModel(message: error.message);
+      return RequestResponseModel(message: error.message);
+    } else if (error.type == DioExceptionType.connectionError) {
+      // Handle request cancellation
+      return RequestResponseModel(
+          message: "Error in connection, check internet");
     } else {
       // Handle other Dio errors
-      log('Other Dio error: ${error.message}');
-      return RequestResponsModel(message: error.message);
+      return RequestResponseModel(message: error.message);
     }
   }
 }

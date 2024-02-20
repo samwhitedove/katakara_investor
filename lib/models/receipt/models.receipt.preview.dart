@@ -20,6 +20,10 @@ class ReceiptPreviewData {
   String? totalAmount;
   String? date;
   String? receiptId;
+  bool? canShare;
+  bool? isAdmin;
+  int? id;
+  String? status;
 
   ReceiptPreviewData({
     this.title,
@@ -29,6 +33,10 @@ class ReceiptPreviewData {
     this.totalAmount,
     this.date,
     this.receiptId,
+    this.canShare,
+    this.isAdmin,
+    this.id,
+    this.status,
   });
 
   factory ReceiptPreviewData.fromJson(Map<String, dynamic> json) =>
@@ -43,7 +51,13 @@ class ReceiptPreviewData {
         totalAmount: json["totalAmount"],
         date: json["date"],
         receiptId: json["receiptId"],
+        canShare: json["canShare"],
+        isAdmin: json["isAdmin"],
+        id: json["id"],
+        status: json["status"],
       );
+
+  get receiptProductInfo => null;
 
   Map<String, dynamic> toJson() => {
         "title": title,
@@ -55,5 +69,9 @@ class ReceiptPreviewData {
         "totalAmount": totalAmount,
         "date": date,
         "receiptId": receiptId,
+        "canShare": receiptId,
+        "isAdmin": receiptId,
+        "id": receiptId,
+        "status": receiptId,
       };
 }

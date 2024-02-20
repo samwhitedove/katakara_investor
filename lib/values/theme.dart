@@ -4,6 +4,13 @@ import 'package:katakara_investor/values/colors.dart';
 ThemeData lightTheme = ThemeData(
   primaryColor: AppColor.primary,
   primarySwatch: swatch,
+  useMaterial3: false,
+);
+
+ThemeData darkTheme = ThemeData(
+  primaryColor: AppColor.primary,
+  primarySwatch: swatch,
+  useMaterial3: false,
 );
 
 const swatch = MaterialColor(

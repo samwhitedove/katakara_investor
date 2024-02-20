@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom.widget.dart';
 import 'package:katakara_investor/extensions/extensions.dart';
+import 'package:katakara_investor/services/service.notification.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/home/home.dart';
 
@@ -75,10 +76,30 @@ class AppDrawer extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
-            child: SvgPicture.asset(
-              data['image'],
-              // ignore: deprecated_member_use
-              color: AppColor.black,
+            child: Stack(
+              children: [
+                SvgPicture.asset(
+                  data['image'],
+                  // ignore: deprecated_member_use
+                  color: AppColor.black,
+                ),
+                Positioned(
+                  right: 0,
+                  child: Visibility(
+                    visible:
+                        NotificationLocalStorageService.notificationCount > 0 &&
+                            data['label'] == 'Notification',
+                    child: CircleAvatar(
+                      backgroundColor: AppColor.red,
+                      radius: 7,
+                      child: Text(NotificationLocalStorageService
+                              .notificationCount
+                              .toString())
+                          .subTitle(fontSize: 8, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Text(data['label']).label(color: AppColor.black, fontSize: 14)

@@ -15,7 +15,7 @@ class AppSettings {
         key: SettingsKey.user.name);
     if (userInfo != null) {
       userData = UserDataModel.fromJson(userInfo);
-      log("user info::  $userInfo");
+      // log("user info::  $userInfo");
       isLogin = await AppStorage.readData(
             storageName: StorageNames.settingsStorage.name,
             key: SettingsKey.isLogin.name,

@@ -43,8 +43,7 @@ class LoginScreen extends StatelessWidget {
                       onChangeValue: _.onChange),
                   CW.AppSpacer(h: 8),
                   const Text(tForgetPasswordQ).textButton(
-                      onTap: () => Get.toNamed(
-                          AppRoutes.name(RouteName.forgotPassword))),
+                      onTap: () => Get.toNamed(RouteName.forgotPassword.name)),
                   CW.AppSpacer(h: 48),
                   Obx(() => CW.button(
                       onPress: _.canLogin.value ? _.login : null,
@@ -60,7 +59,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ).align(Al.center).toButton(
                         onTap: () => Get.toNamed(
-                          AppRoutes.name(RouteName.register),
+                          RouteName.register.name,
                         ),
                       ),
                 ],

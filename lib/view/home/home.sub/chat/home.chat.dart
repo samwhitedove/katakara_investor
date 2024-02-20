@@ -44,10 +44,11 @@ class InboxPageScreen extends StatelessWidget {
                           Assets.assetsSvgChatActive,
                           colorFilter: ColorFilter.mode(
                               AppColor.greyLigth, BlendMode.modulate),
-                          height: 100,
-                          width: 100,
+                          height: 50,
+                          width: 50,
                         ),
-                        const Text("No Chat")
+                        CW.AppSpacer(h: 30),
+                        const Text("Coming soon")
                             .title(fontSize: 16, color: AppColor.greyLigth)
                       ],
                     ),

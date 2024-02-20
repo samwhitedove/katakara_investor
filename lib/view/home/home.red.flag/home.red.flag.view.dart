@@ -30,9 +30,9 @@ class RedFlagScreen extends StatelessWidget {
                       CW.AppSpacer(h: 60),
                       CW.backButton(),
                       CW.AppSpacer(h: 20),
-                      Text(tRedFlag).title(),
+                      const Text(tRedFlag).title(),
                       CW.AppSpacer(h: 5),
-                      Text(tReport).subTitle(),
+                      const Text(tReport).subTitle(),
                       CW.AppSpacer(h: 30),
                       CW.textField(
                         label: tSubject,

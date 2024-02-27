@@ -7,12 +7,14 @@ class Category {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? category;
+  String? categoryImage;
 
   Category({
     this.id,
     this.createdAt,
     this.updatedAt,
     this.category,
+    this.categoryImage,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
@@ -24,6 +26,7 @@ class Category {
             ? null
             : DateTime.parse(json["updatedAt"]),
         category: json["category"],
+        categoryImage: json["categoryImage"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -31,5 +34,6 @@ class Category {
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),
         "category": category,
+        "categoryImage": categoryImage,
       };
 }

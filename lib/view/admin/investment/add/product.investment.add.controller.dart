@@ -19,8 +19,8 @@ class AddInvestmentProductController extends GetxController {
   List<(String, int)> uploadedImage = <(String, int)>[];
   List<SelectImageModel> processImage = <SelectImageModel>[];
   // get product data if to edit
-  final _ = Get.put(UploadedProductController());
-  final investmentViewController = Get.find<UploadedProductController>();
+  final _ = Get.put(AdminInvestmentActiveController());
+  final investmentViewController = Get.find<AdminInvestmentActiveController>();
   final InvestmentDatum? productInfo = Get.arguments;
   final List<String> imageToDelete = <String>[];
 
@@ -271,12 +271,16 @@ class AddInvestmentProductController extends GetxController {
   }
 
   deleteUploadedImage(index, isSeller) async {
+    log("startign remove");
     // chose which list to work on depend if its a seller image or a product image
     final image = processImage.where((item) => item.id == index).first;
     final uploadsImg = uploadedImage.where((item) => item.$2 == index).first;
     // send a delete request
     if (productInfo != null) {
       imageToDelete.add(image.path ?? "");
+      processImage.removeWhere((item) => item.path == image.path);
+      uploadedImage.removeWhere((item) => item.$2 == uploadsImg.$2);
+      update();
       return;
     }
     image.isUploaded = false;

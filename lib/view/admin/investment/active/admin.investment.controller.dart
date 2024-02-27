@@ -12,7 +12,7 @@ import 'package:katakara_investor/view/admin/investment/active/model.response.da
 
 import '../../../../models/receipt/model.fetch.reponse.dart';
 
-class UploadedProductController extends GetxController {
+class AdminInvestmentActiveController extends GetxController {
   bool isLoading = false;
   RxBool fetchingMore = false.obs;
   RxBool isFetching = false.obs;
@@ -30,6 +30,7 @@ class UploadedProductController extends GetxController {
   TextEditingController searchController = TextEditingController();
 
   List<String> fetchCategory = <String>[];
+  RxBool isDeletingInvestment = false.obs;
 
   int selected = 0;
 
@@ -71,12 +72,14 @@ class UploadedProductController extends GetxController {
       isLoading = true;
       update();
       if (type != null) selected = fetchCategory.indexOf(type);
-      final RequestResponseModel response = type == null
+      final RequestResponseModel response = type == null || type == "All"
           ? await adminService.fetchInvestment()
           : await adminService.filterInvestment({"category": type});
       isLoading = false;
       update();
       if (response.success) {
+        log('${response.data} ---------------- datat');
+        fetchedInvestment!.clear();
         final data = InvestmentResponseDataModel.fromJson(response.toJson());
         fetchedInvestment = data.data!.data!;
         pagination = data.data!.pagination;
@@ -84,6 +87,21 @@ class UploadedProductController extends GetxController {
       }
     } catch (e) {
       log('$e ---------------- datat');
+    }
+  }
+
+  deleteInvestment(String sku) async {
+    isDeletingInvestment.value = true;
+    update();
+    final RequestResponseModel response =
+        await adminService.deleteInvestment({"sku": sku});
+    isDeletingInvestment.value = false;
+    update();
+    HC.snack(response.message, success: response.success);
+    if (response.success) {
+      Get.back();
+      await fetchInvestment(fetchCategory[selected]);
+      update();
     }
   }
 
@@ -101,6 +119,7 @@ class UploadedProductController extends GetxController {
       isFetching(false);
       update();
       if (response.success) {
+        searchedInvestment!.clear();
         final data = InvestmentResponseDataModel.fromJson(response.toJson());
         if (data.data!.data!.isNotEmpty) hasSearch(true);
         searchedInvestment = data.data!.data!;

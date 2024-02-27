@@ -600,7 +600,7 @@ class CW {
     Widget? title,
     Widget? trailing,
     Widget? leading,
-    double? top = 50,
+    double? top = 40,
     double? right = 20,
     double? left = 20,
     double? bottom = 10,

@@ -22,7 +22,7 @@ class CustomPopUpMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
-      icon: const Icon(Icons.sort),
+      icon: const Icon(Icons.menu),
       onSelected: changeType,
       constraints: BoxConstraints(maxHeight: Get.height * .3),
       itemBuilder: (BuildContext context) {

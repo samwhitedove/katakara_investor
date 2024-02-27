@@ -189,7 +189,8 @@ class AdminService extends GetxController {
     return response;
   }
 
-  Future<RequestResponseModel> deleteInvestment(Map<String, int> data) async {
+  Future<RequestResponseModel> deleteInvestment(
+      Map<String, String> data) async {
     RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.deleteInvestment, method: Methods.get, query: data);
     log("make admin user info ------- ${response.message}");

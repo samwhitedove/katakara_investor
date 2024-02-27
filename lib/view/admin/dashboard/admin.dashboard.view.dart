@@ -45,7 +45,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                       crossAxisCount: 2, // Number of columns
                       mainAxisSpacing: 16.0, // Spacing between rows
                       crossAxisSpacing: 16.0, // Spacing between columns
-                      childAspectRatio: 1.5,
+                      childAspectRatio: 1.4,
                     ),
                     itemCount: _.data.length, // Number of grid items
                     itemBuilder: (BuildContext context, int index) {

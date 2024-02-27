@@ -12,8 +12,8 @@ class AdminInvestmentSearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<UploadedProductController>(
-      init: UploadedProductController(),
+    return GetBuilder<AdminInvestmentActiveController>(
+      init: AdminInvestmentActiveController(),
       initState: (_) {},
       builder: (_) {
         return Scaffold(

@@ -40,6 +40,7 @@ class CustomListViewWithFetchMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      padding: EdgeInsets.zero,
       shrinkWrap: true,
       controller: _scrollController,
       itemCount: count,

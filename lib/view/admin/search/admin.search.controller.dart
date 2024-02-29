@@ -22,7 +22,7 @@ class AppSearchController extends GetxController {
     switch (args) {
       case UserViewType.all:
         return "User";
-      case UserViewType.block:
+      case UserViewType.blocked:
         return "Block";
       default:
         return "";
@@ -35,7 +35,7 @@ class AppSearchController extends GetxController {
   searchUser() async {
     isFetching(true);
     HC.hideKeyBoard();
-    await fetchSearchedUser(args == UserViewType.block);
+    await fetchSearchedUser(args == UserViewType.blocked);
     hasSearch(true);
     isFetching(false);
   }

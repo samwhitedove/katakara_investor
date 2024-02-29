@@ -149,3 +149,5 @@ const String tAddYou = "Add Youtube";
 const String tLinkExample = "https://example-youtube.com";
 const String tAddCategory = "Add Category";
 const String tProductCategory = "All Product Category";
+const String tExpenditureAmount = "Expenditure Amount(Logistics or Repair)";
+const String tExpenditureDescription = "Expenditure Description";

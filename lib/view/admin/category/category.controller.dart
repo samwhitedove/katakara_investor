@@ -1,7 +1,9 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/models/product/model.category.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';
@@ -28,7 +30,8 @@ class AddCategoryController extends GetxController {
   }
 
   checkInput() {
-    isGood.value = category!.text.isNotEmpty;
+    isGood.value =
+        category!.text.isNotEmpty && selectedCategoryImage.value.isNotEmpty;
   }
 
   fetchCategory() async {
@@ -54,9 +57,11 @@ class AddCategoryController extends GetxController {
 
   deleteCategory(int index) async {
     isFetching.value = true;
+    update();
     final cat =
         await adminService.deleteCategory({"id": categories[index].id!});
     isFetching.value = false;
+    update();
     if (cat.success) {
       HC.snack(cat.message, success: cat.success);
       fetchCategory();
@@ -64,17 +69,35 @@ class AddCategoryController extends GetxController {
     HC.snack(cat.message, success: cat.success);
   }
 
+  RxString selectedCategoryImage = ''.obs;
+  File? selectedFile;
+
+  selectCategoryImage() async {
+    final image = await HC.pickAndCheckImage(ImageSource.gallery);
+    log(image.toString());
+    // {'hasImage': true, 'image': image, 'mime': mimitype}
+    final supported = ["jpeg", 'png', 'jpg'];
+    if (image['hasImage'] && supported.contains(image['mime'])) {
+      selectedCategoryImage.value = image['image'].path;
+      selectedFile = image['image'];
+      checkInput();
+    } else {
+      HC.snack("Invalid image or no image selected");
+    }
+  }
+
   save() async {
     HC.hideKeyBoard();
-    isLoading.value = true;
+    isFetching.value = true;
     update();
-    final RequestResponseModel save =
-        await adminService.addCategory({'category': category!.text});
-    isLoading.value = false;
+    final RequestResponseModel save = await adminService
+        .addCategory({'category': category!.text}, selectedFile);
+    isFetching.value = false;
+    log('${save.toJson()} ---------- atfer --------');
     update();
+    Get.back();
     if (save.success) {
       fetchCategory();
-      Get.back();
       category!.clear();
     }
     HC.snack(save.message, success: save.success);
@@ -86,12 +109,14 @@ class AddCategoryController extends GetxController {
     isLoading.value = true;
     update();
     final RequestResponseModel updates = await adminService.updateCategory(
-        {'category': category!.text, "id": categories[index].id!});
+        {'category': category!.text, "id": categories[index].id.toString()},
+        selectedFile);
     isLoading.value = false;
     update();
+    Get.back();
     if (updates.success) {
       fetchCategory();
-      Get.back();
+
       category!.clear();
     }
 

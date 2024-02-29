@@ -13,7 +13,7 @@ String fetchReceiptResponseDataToJson(FetchReceiptResponseData data) =>
 class FetchReceiptResponseData {
   String? message;
   int? statusCode;
-  ReceiptData? data;
+  Data? data;
   bool? success;
 
   FetchReceiptResponseData({
@@ -27,7 +27,7 @@ class FetchReceiptResponseData {
       FetchReceiptResponseData(
         message: json["message"],
         statusCode: json["statusCode"],
-        data: json["data"] == null ? null : ReceiptData.fromJson(json["data"]),
+        data: json["data"] == null ? null : Data.fromJson(json["data"]),
         success: json["success"],
       );
 
@@ -39,16 +39,16 @@ class FetchReceiptResponseData {
       };
 }
 
-class ReceiptData {
+class Data {
   List<FetchedReceipt>? data;
   Pagination? pagination;
 
-  ReceiptData({
+  Data({
     this.data,
     this.pagination,
   });
 
-  factory ReceiptData.fromJson(Map<String, dynamic> json) => ReceiptData(
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
         data: json["data"] == null
             ? []
             : List<FetchedReceipt>.from(
@@ -75,6 +75,7 @@ class FetchedReceipt {
   String? receiptCode;
   DateTime? createdAt;
   DateTime? updatedAt;
+  User? user;
   List<ReceiptProductInfo>? receiptProductInfo;
 
   FetchedReceipt({
@@ -86,6 +87,7 @@ class FetchedReceipt {
     this.receiptCode,
     this.createdAt,
     this.updatedAt,
+    this.user,
     this.receiptProductInfo,
   });
 
@@ -102,6 +104,7 @@ class FetchedReceipt {
         updatedAt: json["updatedAt"] == null
             ? null
             : DateTime.parse(json["updatedAt"]),
+        user: json["user"] == null ? null : User.fromJson(json["user"]),
         receiptProductInfo: json["receiptProductInfo"] == null
             ? []
             : List<ReceiptProductInfo>.from(json["receiptProductInfo"]!
@@ -117,6 +120,7 @@ class FetchedReceipt {
         "receiptCode": receiptCode,
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),
+        "user": user?.toJson(),
         "receiptProductInfo": receiptProductInfo == null
             ? []
             : List<dynamic>.from(receiptProductInfo!.map((x) => x.toJson())),
@@ -168,6 +172,129 @@ class ReceiptProductInfo {
       };
 }
 
+class User {
+  int? id;
+  DateTime? createdAt;
+  DateTime? updateAt;
+  String? email;
+  String? fullName;
+  String? phoneNumber;
+  String? phoneNumber2;
+  String? accountName;
+  String? accountNumber;
+  dynamic profileImageUrl;
+  dynamic cacUrl;
+  dynamic governmentIdImageUrl;
+  dynamic letterHeadImageUrl;
+  String? address;
+  String? state;
+  String? lga;
+  String? companyName;
+  String? bankName;
+  dynamic govId;
+  bool? ownVehicle;
+  String? financialCapacity;
+  String? uuid;
+  int? mergeCount;
+  bool? isLive;
+  bool? isBlock;
+  String? role;
+  bool? isMerge;
+
+  User({
+    this.id,
+    this.createdAt,
+    this.updateAt,
+    this.email,
+    this.fullName,
+    this.phoneNumber,
+    this.phoneNumber2,
+    this.accountName,
+    this.accountNumber,
+    this.profileImageUrl,
+    this.cacUrl,
+    this.governmentIdImageUrl,
+    this.letterHeadImageUrl,
+    this.address,
+    this.state,
+    this.lga,
+    this.companyName,
+    this.bankName,
+    this.govId,
+    this.ownVehicle,
+    this.financialCapacity,
+    this.uuid,
+    this.mergeCount,
+    this.isLive,
+    this.isBlock,
+    this.role,
+    this.isMerge,
+  });
+
+  factory User.fromJson(Map<String, dynamic> json) => User(
+        id: json["id"],
+        createdAt: json["createdAt"] == null
+            ? null
+            : DateTime.parse(json["createdAt"]),
+        updateAt:
+            json["updateAt"] == null ? null : DateTime.parse(json["updateAt"]),
+        email: json["email"],
+        fullName: json["fullName"],
+        phoneNumber: json["phoneNumber"],
+        phoneNumber2: json["phoneNumber2"],
+        accountName: json["accountName"],
+        accountNumber: json["accountNumber"],
+        profileImageUrl: json["profileImageUrl"],
+        cacUrl: json["cacUrl"],
+        governmentIdImageUrl: json["governmentIdImageUrl"],
+        letterHeadImageUrl: json["letterHeadImageUrl"],
+        address: json["address"],
+        state: json["state"],
+        lga: json["lga"],
+        companyName: json["companyName"],
+        bankName: json["bankName"],
+        govId: json["govId"],
+        ownVehicle: json["ownVehicle"],
+        financialCapacity: json["financialCapacity"],
+        uuid: json["uuid"],
+        mergeCount: json["mergeCount"],
+        isLive: json["isLive"],
+        isBlock: json["isBlock"],
+        role: json["role"],
+        isMerge: json["isMerge"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "createdAt": createdAt?.toIso8601String(),
+        "updateAt": updateAt?.toIso8601String(),
+        "email": email,
+        "fullName": fullName,
+        "phoneNumber": phoneNumber,
+        "phoneNumber2": phoneNumber2,
+        "accountName": accountName,
+        "accountNumber": accountNumber,
+        "profileImageUrl": profileImageUrl,
+        "cacUrl": cacUrl,
+        "governmentIdImageUrl": governmentIdImageUrl,
+        "letterHeadImageUrl": letterHeadImageUrl,
+        "address": address,
+        "state": state,
+        "lga": lga,
+        "companyName": companyName,
+        "bankName": bankName,
+        "govId": govId,
+        "ownVehicle": ownVehicle,
+        "financialCapacity": financialCapacity,
+        "uuid": uuid,
+        "mergeCount": mergeCount,
+        "isLive": isLive,
+        "isBlock": isBlock,
+        "role": role,
+        "isMerge": isMerge,
+      };
+}
+
 class Pagination {
   int? total;
   int? totalPage;
@@ -175,7 +302,7 @@ class Pagination {
   int? currentPageItemCount;
   int? currentPage;
   dynamic previousPage;
-  dynamic nextPage;
+  String? nextPage;
 
   Pagination({
     this.total,
@@ -188,7 +315,7 @@ class Pagination {
   });
 
   factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
-        total: json["total"] ?? json['count'],
+        total: json["total"],
         totalPage: json["totalPage"],
         perPage: json["perPage"],
         currentPageItemCount: json["currentPageItemCount"],

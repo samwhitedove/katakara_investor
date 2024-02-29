@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:katakara_investor/models/product/model.investment.dart';
@@ -25,6 +26,13 @@ class AdminService extends GetxController {
   Future<RequestResponseModel> fetchAllTodayUser() async {
     RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.fetchUser(type: 'today'), method: Methods.get);
+    log("Updating user info ------- ${response.message}");
+    return response;
+  }
+
+  Future<RequestResponseModel> fetchAllAdminUser() async {
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: EndPoint.fetchUser(type: 'admins'), method: Methods.get);
     log("Updating user info ------- ${response.message}");
     return response;
   }
@@ -87,9 +95,17 @@ class AdminService extends GetxController {
     return response;
   }
 
-  Future<RequestResponseModel> fetchRedFlag() async {
+  Future<RequestResponseModel> fetchRedFlag(
+      {Map<String, dynamic>? query}) async {
     RequestResponseModel response = await MyRequestClass.krequest(
-        endPoint: EndPoint.fetchRedFlag, method: Methods.get);
+        endPoint: EndPoint.fetchRedFlag, method: Methods.get, query: query);
+    log("unblock user info ------- ${response.message}");
+    return response;
+  }
+
+  Future<RequestResponseModel> fetchMoreRedFlag(String url) async {
+    RequestResponseModel response =
+        await MyRequestClass.krequest(endPoint: url, method: Methods.get);
     log("unblock user info ------- ${response.message}");
     return response;
   }
@@ -151,9 +167,14 @@ class AdminService extends GetxController {
     return response;
   }
 
-  Future<RequestResponseModel> addCategory(Map<String, String> data) async {
-    RequestResponseModel response = await MyRequestClass.krequest(
-        endPoint: EndPoint.addCategory, method: Methods.post, body: data);
+  Future<RequestResponseModel> addCategory(
+      Map<String, String> data, File? filePath) async {
+    RequestResponseModel response =
+        await MyRequestClass.krequestWithImagePayload(
+            endPoint: EndPoint.addCategory,
+            method: Methods.post,
+            body: data,
+            filePath: filePath);
     log("make admin user info ------- ${response.message}");
     return response;
   }
@@ -165,9 +186,14 @@ class AdminService extends GetxController {
     return response;
   }
 
-  Future<RequestResponseModel> updateCategory(Map<String, dynamic> data) async {
-    RequestResponseModel response = await MyRequestClass.krequest(
-        endPoint: EndPoint.updateCategory, method: Methods.post, body: data);
+  Future<RequestResponseModel> updateCategory(
+      Map<String, String> data, File? filePath) async {
+    RequestResponseModel response =
+        await MyRequestClass.krequestWithImagePayload(
+            endPoint: EndPoint.updateCategory,
+            method: Methods.post,
+            body: data,
+            filePath: filePath);
     log("make admin user info ------- ${response.message}");
     return response;
   }
@@ -191,6 +217,13 @@ class AdminService extends GetxController {
 
   Future<RequestResponseModel> deleteInvestment(
       Map<String, String> data) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: EndPoint.deleteInvestment, method: Methods.get, query: data);
+    log("make admin user info ------- ${response.message}");
+    return response;
+  }
+
+  Future<RequestResponseModel> deleteProduct(Map<String, String> data) async {
     RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.deleteInvestment, method: Methods.get, query: data);
     log("make admin user info ------- ${response.message}");
@@ -244,20 +277,27 @@ class AdminService extends GetxController {
     return response;
   }
 
-  Future<RequestResponseModel> approveUsersPortfolio(String data) async {
+  Future<RequestResponseModel> setCommission(Map<String, dynamic> query) async {
     RequestResponseModel response = await MyRequestClass.krequest(
-        endPoint: EndPoint.approveProduct,
-        method: Methods.get,
-        query: {"sku": data});
+        endPoint: EndPoint.setCommission, method: Methods.get, query: query);
     log("unblock user info ------- ${response.message}");
     return response;
   }
 
-  Future<RequestResponseModel> rejectUsersPortfolio(String data) async {
+  Future<RequestResponseModel> approveUsersPortfolio(
+      Map<String, dynamic> data) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: EndPoint.approveProduct, method: Methods.get, query: data);
+    log("unblock user info ------- ${response.message}");
+    return response;
+  }
+
+  Future<RequestResponseModel> rejectUsersPortfolio(
+      String data, String reason) async {
     RequestResponseModel response = await MyRequestClass.krequest(
         endPoint: EndPoint.rejectProduct,
         method: Methods.get,
-        query: {"sku": data});
+        query: {"sku": data, "reason": reason});
     log("unblock user info ------- ${response.message}");
     return response;
   }

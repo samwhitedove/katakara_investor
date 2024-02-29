@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom.widget.dart';
@@ -31,6 +33,7 @@ class InvestmentProductView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log(productInfo.toJson().toString());
     return GetBuilder<AdminInvestmentActiveController>(
       builder: (_) {
         return Stack(

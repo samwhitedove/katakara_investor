@@ -19,7 +19,7 @@ class HomeScreenController extends GetxController {
   RxInt currentIndex = 1.obs;
   bool hasInvestment = false;
   bool isFetching = false;
-  String? youtubeLink;
+  String? youtubeLink = '';
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final AuthService authService = Get.find<AuthService>();
 
@@ -50,8 +50,7 @@ class HomeScreenController extends GetxController {
     isFetching = false;
     update();
     if (res.success) {
-      recentProduct =
-          InvestmentResponseDataModel.fromJson(res.data).data!.data!;
+      recentProduct = InvestmentData.fromJson(res.data).data!;
       hasInvestment = true;
       update();
       return;
@@ -69,9 +68,9 @@ class HomeScreenController extends GetxController {
         .goLive({"status": !isActive.value, "fcmToken": deviceToken});
     if (response.success) {
       if ((!isActive.value) == true) {
-        youtubeLink =
-            (await Get.find<HomeService>().fetchYoutube()).data.first['link'] ??
-                '';
+        final link =
+            (await Get.find<HomeService>().fetchYoutube()).data as List;
+        if (link.isNotEmpty) youtubeLink = link.first['link'];
         Get.find<HomeKFIController>().fetchKFIAccount();
         Get.find<HomeKFIController>().fetchKFIInvestment();
         fetchInvestment(limit: 5);

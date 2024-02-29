@@ -6,6 +6,8 @@ import 'dart:convert';
 
 import 'package:katakara_investor/models/receipt/model.receipt.item.dart';
 
+import 'model.fetch.reponse.dart';
+
 ReceiptPreviewData receiptPreviewDataFromJson(String str) =>
     ReceiptPreviewData.fromJson(json.decode(str));
 
@@ -23,21 +25,22 @@ class ReceiptPreviewData {
   bool? canShare;
   bool? isAdmin;
   int? id;
+  User? user;
   String? status;
 
-  ReceiptPreviewData({
-    this.title,
-    this.customerName,
-    this.customerAddress,
-    this.productInfo,
-    this.totalAmount,
-    this.date,
-    this.receiptId,
-    this.canShare,
-    this.isAdmin,
-    this.id,
-    this.status,
-  });
+  ReceiptPreviewData(
+      {this.title,
+      this.customerName,
+      this.customerAddress,
+      this.productInfo,
+      this.totalAmount,
+      this.date,
+      this.receiptId,
+      this.canShare,
+      this.isAdmin,
+      this.id,
+      this.status,
+      this.user});
 
   factory ReceiptPreviewData.fromJson(Map<String, dynamic> json) =>
       ReceiptPreviewData(
@@ -55,6 +58,7 @@ class ReceiptPreviewData {
         isAdmin: json["isAdmin"],
         id: json["id"],
         status: json["status"],
+        user: json["user"],
       );
 
   get receiptProductInfo => null;
@@ -72,6 +76,7 @@ class ReceiptPreviewData {
         "canShare": receiptId,
         "isAdmin": receiptId,
         "id": receiptId,
+        "user": user,
         "status": receiptId,
       };
 }

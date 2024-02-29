@@ -43,8 +43,7 @@ class AdminInvestmentActiveController extends GetxController {
 
   fetchProductCategory() async {
     isLoading = true;
-    final RequestResponseModel response =
-        await portfolioService.fetchProductCategory();
+    final response = await portfolioService.fetchProductCategory();
     if (response.success) {
       fetchCategory.clear();
       List data = response.data ?? [];
@@ -71,22 +70,24 @@ class AdminInvestmentActiveController extends GetxController {
     try {
       isLoading = true;
       update();
-      if (type != null) selected = fetchCategory.indexOf(type);
-      final RequestResponseModel response = type == null || type == "All"
+      if (type != null) {
+        selected = fetchCategory.indexWhere((i) => i.toUpperCase() == type);
+      }
+      final response = type == null || type == "ALL"
           ? await adminService.fetchInvestment()
           : await adminService.filterInvestment({"category": type});
       isLoading = false;
       update();
       if (response.success) {
-        log('${response.data} ---------------- datat');
-        fetchedInvestment!.clear();
-        final data = InvestmentResponseDataModel.fromJson(response.toJson());
-        fetchedInvestment = data.data!.data!;
-        pagination = data.data!.pagination;
+        fetchedInvestment?.clear();
+
+        final data = InvestmentData.fromJson(response.data);
+        fetchedInvestment = data.data!;
+        pagination = data.pagination;
         update();
       }
     } catch (e) {
-      log('$e ---------------- datat');
+      log('$e ---------------- datat error');
     }
   }
 
@@ -107,9 +108,8 @@ class AdminInvestmentActiveController extends GetxController {
 
   searchReceipt() async {
     try {
-      isFetching(true);
       HC.hideKeyBoard();
-
+      isFetching(true);
       update();
       final RequestResponseModel response = searchController.text
               .startsWith("IST")
@@ -120,10 +120,10 @@ class AdminInvestmentActiveController extends GetxController {
       update();
       if (response.success) {
         searchedInvestment!.clear();
-        final data = InvestmentResponseDataModel.fromJson(response.toJson());
-        if (data.data!.data!.isNotEmpty) hasSearch(true);
-        searchedInvestment = data.data!.data!;
-        searchInvestmentPagination = data.data!.pagination;
+        final data = InvestmentData.fromJson(response.toJson());
+        if (data.data!.isNotEmpty) hasSearch(true);
+        searchedInvestment = data.data!;
+        searchInvestmentPagination = data.pagination;
         update();
       }
     } catch (e) {
@@ -137,13 +137,20 @@ class AdminInvestmentActiveController extends GetxController {
     final RequestResponseModel response =
         await adminService.fetchMoreInvestment(url: pagination!.nextPage);
     if (response.success) {
+      final data = InvestmentData.fromJson(response.data);
+      // fetchedInvestment = data.data!;
+      fetchedInvestment!.addAll(data.data!);
+      pagination = data.pagination;
+      update();
+    }
+    if (response.success) {
       log(response.data.toString());
-      final data = InvestmentResponseDataModel.fromJson(response.toJson());
-      for (var element in data.data!.data!) {
+      final data = InvestmentData.fromJson(response.toJson());
+      for (var element in data.data!) {
         fetchedInvestment!.add(element);
       }
-      log(data.data!.pagination.toString());
-      pagination = data.data!.pagination!;
+      log(data.pagination.toString());
+      pagination = data.pagination!;
       update();
     }
     fetchingMore.value = false;

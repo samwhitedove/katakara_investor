@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,6 +18,7 @@ class ViewInformationCard extends StatelessWidget {
       init: ViewCardInformationController(),
       initState: (_) {},
       builder: (_) {
+        log("${_.user} -------------- data");
         return Scaffold(
           body: Obx(
             () => Stack(
@@ -68,14 +71,14 @@ class ViewInformationCard extends StatelessWidget {
                                               _.isTaskAdmin.value
                                           ? AppColor.greyLigth
                                           : _.action[
-                                              _.user!.role == Roles.USER.name
+                                              _.user?.role == Roles.USER.name
                                                   ? 1
                                                   : 0]['color'] as Color,
                                       onPress: _.isTaskBlock.value ||
                                               _.isTaskAdmin.value
                                           ? null
                                           : () => _.adminAction[
-                                              _.user!.role! == Roles.USER.name
+                                              _.user?.role == Roles.USER.name
                                                   ? 1
                                                   : 0]['onTap'](),
                                       text: '',
@@ -87,7 +90,7 @@ class ViewInformationCard extends StatelessWidget {
                                             padding: const EdgeInsets.only(
                                                 right: 8.0),
                                             child: Icon(_.adminAction[
-                                                _.user!.role == Roles.USER.name
+                                                _.user?.role == Roles.USER.name
                                                     ? 1
                                                     : 0]['icon'] as IconData?),
                                           ),
@@ -147,8 +150,6 @@ class ViewInformationCard extends StatelessWidget {
                         ),
                       ),
                       Expanded(
-                        // color: AppColor.black,
-                        // height: Get.height * .57,
                         child: ListView.builder(
                           controller: _.scrollController,
                           physics: const BouncingScrollPhysics(),
@@ -176,20 +177,12 @@ class ViewInformationCard extends StatelessWidget {
                                         ),
                                       ),
                                       trailing: _.handleTrailing(index),
-                                      // onTap: _.data[index] == "Merge"
-                                      //     ? () => _.handleClick(index)
-                                      //     : null,
                                     ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                // CW.pageWithAppBar(
-                //   scroll: const NeverScrollableScrollPhysics(),
-                //   title: "",
-                //   children: [],
-                // ),
                 CW.LoadingOverlay(_.isLoading.value),
               ],
             ),

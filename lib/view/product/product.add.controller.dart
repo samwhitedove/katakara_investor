@@ -60,7 +60,7 @@ class AddProductController extends GetxController {
     productName!.text = getData.productName!;
     description!.text = getData.description!;
     amountBuy!.text = getData.amountBuy!;
-    amountSell!.text = getData.amount!;
+    // amountSell!.text = getData.amount!;
     selectedState.value = getData.state!;
     selectedLga.value = getData.lga!;
     onChange(init: true);
@@ -87,8 +87,10 @@ class AddProductController extends GetxController {
 
   TextEditingController? productName;
   TextEditingController? description;
-  TextEditingController? amountSell;
+  // TextEditingController? amountSell;
   TextEditingController? amountBuy;
+  TextEditingController? expenditureAmount;
+  TextEditingController? expenditureDescription;
   RxBool canUpload = false.obs;
   RxBool isUploading = false.obs;
   RxBool isFetchingCategory = false.obs;
@@ -105,9 +107,11 @@ class AddProductController extends GetxController {
     super.onInit();
     fetchProductCategory();
     productName = TextEditingController();
-    amountSell = TextEditingController();
+    // amountSell = TextEditingController();
     amountBuy = TextEditingController();
     description = TextEditingController();
+    expenditureAmount = TextEditingController();
+    expenditureDescription = TextEditingController();
     setViewForUpdateproduct();
   }
 
@@ -133,7 +137,7 @@ class AddProductController extends GetxController {
     if (productInfo != null && init == false) hasUpdate = true;
     canUpload.value = productName!.text.trim().isNotEmpty &&
         amountBuy!.text.trim().isNotEmpty &&
-        amountSell!.text.trim().isNotEmpty &&
+        // amountSell!.text.trim().isNotEmpty &&
         description!.text.trim().isNotEmpty &&
         selectedState.value != stateAndLga.keys.first &&
         selectedLga.value != stateAndLga.values.first.first &&
@@ -141,7 +145,7 @@ class AddProductController extends GetxController {
         uploadedImage.isNotEmpty;
     hasData = productName!.text.trim().isNotEmpty ||
         amountBuy!.text.trim().isNotEmpty ||
-        amountSell!.text.trim().isNotEmpty ||
+        // amountSell!.text.trim().isNotEmpty ||
         description!.text.trim().isNotEmpty ||
         selectedState.value != stateAndLga.keys.first ||
         selectedLga.value != stateAndLga.values.first.first ||
@@ -174,7 +178,9 @@ class AddProductController extends GetxController {
   @override
   onClose() {
     productName?.dispose();
-    amountSell?.dispose();
+    // amountSell?.dispose();
+    expenditureAmount?.dispose();
+    expenditureDescription?.dispose();
     amountBuy?.dispose();
     description?.dispose();
     super.onClose();
@@ -216,8 +222,10 @@ class AddProductController extends GetxController {
 
     final images = _loopThroughImages();
     final product = UploadProductModel(
-      amount: amountSell!.text,
+      // amount: amountSell!.text,
       description: description!.text,
+      expenditureAmount: expenditureAmount!.text,
+      expenditureDescription: expenditureDescription!.text,
       category: category.value,
       amountBuy: amountBuy!.text,
       lga: selectedLga.value,
@@ -226,6 +234,8 @@ class AddProductController extends GetxController {
       sellerImage: images[1],
       productName: productName!.text,
     );
+
+    log('${product.toJson()} ------------------- ');
     final RequestResponseModel response = isUpdate
         ? await portfolioService.updateProductPortfolio(
             product.toJson()..addAll({"sku": productInfo!.sku!}))
@@ -336,7 +346,9 @@ class AddProductController extends GetxController {
   saveAddProductToLocal() {
     final images = _loopThroughImages();
     final data = UploadProductModel(
-      amount: amountSell!.text,
+      // amount: amountSell!.text,
+      expenditureAmount: expenditureAmount!.text,
+      expenditureDescription: expenditureDescription!.text,
       description: description!.text,
       category: category.value,
       amountBuy: amountBuy!.text,

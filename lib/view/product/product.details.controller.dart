@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom.modal.dart';
-import 'package:katakara_investor/customs/custom.widget.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/models/product/models.fetch.portfolio.response.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';

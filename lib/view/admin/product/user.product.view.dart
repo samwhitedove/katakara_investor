@@ -55,6 +55,7 @@ class UserProducts extends StatelessWidget {
                                 const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Text(_.productStatus[_.selected]).subTitle(),
                           ),
+                          CW.AppSpacer(h: 20),
                         ],
                       ),
                 title: 'Products',
@@ -84,8 +85,8 @@ class UserProducts extends StatelessWidget {
                   Visibility(
                       visible: _.isLoading == false &&
                           _.fetchedPortfolio!.isNotEmpty,
-                      child: SizedBox(
-                        height: Get.height * .9,
+                      child: Expanded(
+                        // height: Get.height * .9,
                         child: CustomListViewWithFetchMore(
                             pagination: _.pagination,
                             count: _.fetchedPortfolio!.length,

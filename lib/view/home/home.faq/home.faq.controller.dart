@@ -16,7 +16,7 @@ class FaqController extends GetxController {
     if (fromAdmin != null) {
       return Get.toNamed(RouteName.addFaq.name, arguments: incoming);
     }
-    data[index]['isView'] = incoming['isView'];
+    data[index]['isView'] = !incoming['isView'];
     update();
   }
 

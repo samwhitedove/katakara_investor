@@ -14,17 +14,18 @@ class RedFlagDetails extends StatelessWidget {
       init: RedFlagController(),
       initState: (_) {},
       builder: (_) {
-        return Stack(
+        return CW.pageWithAppBar(
+          others: const CircleAvatar(
+            backgroundColor: AppColor.red,
+            child: Icon(
+              Icons.delete,
+              color: AppColor.white,
+            ),
+          ).toButton(onTap: _.handleDelete),
+          title: tRedFlag,
           children: [
-            CW.pageWithAppBar(
-              others: const CircleAvatar(
-                backgroundColor: AppColor.red,
-                child: Icon(
-                  Icons.delete,
-                  color: AppColor.white,
-                ),
-              ).toButton(onTap: _.handleDelete),
-              title: tRedFlag,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CW.AppSpacer(h: 30),
                 DisplayData("Title", _.selectedData!.title.toString().trim()),
@@ -34,7 +35,6 @@ class RedFlagDetails extends StatelessWidget {
                     "Message", _.selectedData!.message.toString().trim()),
               ],
             ),
-            CW.LoadingOverlay(_.isLoading),
           ],
         );
       },

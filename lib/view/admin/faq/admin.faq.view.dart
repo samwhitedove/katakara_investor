@@ -16,71 +16,78 @@ class AddFAQScreen extends StatelessWidget {
       initState: (_) {},
       builder: (_) {
         return CW.pageWithAppBar(title: tNewFaq, children: [
-          CW.AppSpacer(h: 30),
-          const Text(tFaq).title(),
-          CW.AppSpacer(h: 10),
-          const Text(tAddFaq).subTitle(),
-          CW.AppSpacer(h: 20),
-          CW.textField(
-            label: tQuestion,
-            lines: 5,
-            controller: _.question,
-            onChangeValue: _.checkFields,
-          ),
-          CW.AppSpacer(h: 30),
-          CW.textField(
-            lines: 5,
-            label: tAnswewr,
-            controller: _.answer,
-            onChangeValue: _.checkFields,
-          ),
-          CW.AppSpacer(h: 40),
-          Column(
-            children: [
-              Visibility(
-                visible: _.args == null,
-                child: CW.button(
-                    onPress: _.isGoodInput ? _.save : null,
-                    text: tSave,
-                    isLoading: _.isLoading),
-              ),
-              Visibility(
-                visible: _.args != null,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CW
-                        .button(
-                            onPress:
-                                _.isGoodInput && !(_.isUpdating || _.isDeleting)
-                                    ? _.handleDelete
-                                    : null,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CW.AppSpacer(h: 30),
+                  const Text(tAddFaq).subTitle(),
+                  CW.AppSpacer(h: 20),
+                  CW.textField(
+                    label: tQuestion,
+                    lines: 5,
+                    controller: _.question,
+                    onChangeValue: _.checkFields,
+                  ),
+                  CW.AppSpacer(h: 30),
+                  CW.textField(
+                    lines: 5,
+                    label: tAnswewr,
+                    controller: _.answer,
+                    onChangeValue: _.checkFields,
+                  ),
+                  CW.AppSpacer(h: 40),
+                  Column(
+                    children: [
+                      Visibility(
+                        visible: _.args == null,
+                        child: CW.button(
+                            onPress: _.isGoodInput ? _.save : null,
                             text: tSave,
-                            child: const Text(tDelete)
-                                .subTitle(color: AppColor.white, fontSize: 12),
-                            color: _.isUpdating || _.isDeleting
-                                ? AppColor.greyLigth
-                                : AppColor.red,
-                            isLoading: _.isDeleting)
-                        .halfWidth(width: .4),
-                    CW
-                        .button(
-                            onPress:
-                                _.isGoodInput && !(_.isUpdating || _.isDeleting)
-                                    ? _.updateFaq
-                                    : null,
-                            color: _.isUpdating || _.isDeleting
-                                ? AppColor.greyLigth
-                                : AppColor.primary,
-                            text: tSave,
-                            child: const Text(tUpdate)
-                                .title(color: AppColor.white, fontSize: 12),
-                            isLoading: _.isUpdating)
-                        .halfWidth(width: .4),
-                  ],
-                ),
+                            isLoading: _.isLoading),
+                      ),
+                      Visibility(
+                        visible: _.args != null,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            CW
+                                .button(
+                                    onPress: _.isGoodInput &&
+                                            !(_.isUpdating || _.isDeleting)
+                                        ? _.handleDelete
+                                        : null,
+                                    text: tSave,
+                                    child: const Text(tDelete).subTitle(
+                                        color: AppColor.white, fontSize: 12),
+                                    color: _.isUpdating || _.isDeleting
+                                        ? AppColor.greyLigth
+                                        : AppColor.red,
+                                    isLoading: _.isDeleting)
+                                .halfWidth(width: .4),
+                            CW
+                                .button(
+                                    onPress: _.isGoodInput &&
+                                            !(_.isUpdating || _.isDeleting)
+                                        ? _.updateFaq
+                                        : null,
+                                    color: _.isUpdating || _.isDeleting
+                                        ? AppColor.greyLigth
+                                        : AppColor.primary,
+                                    text: tSave,
+                                    child: const Text(tUpdate).title(
+                                        color: AppColor.white, fontSize: 12),
+                                    isLoading: _.isUpdating)
+                                .halfWidth(width: .4),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                ],
               ),
-            ],
+            ),
           )
         ]);
       },

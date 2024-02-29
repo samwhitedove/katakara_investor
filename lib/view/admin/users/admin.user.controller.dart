@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/models/admin/model.fetch.user.dart';
@@ -7,7 +5,7 @@ import 'package:katakara_investor/models/receipt/model.fetch.reponse.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';
 import 'package:katakara_investor/services/service.admin.dart';
 
-enum UserViewType { all, block, join }
+enum UserViewType { all, today, blocked, admins }
 
 class UserListController extends GetxController {
   late UserViewType pageType = Get.arguments;
@@ -18,7 +16,8 @@ class UserListController extends GetxController {
   final List<String> userListType = <String>[
     'All Users',
     'New Users',
-    'Block Users'
+    'Block Users',
+    'All Admin',
   ];
 
   @override
@@ -39,14 +38,20 @@ class UserListController extends GetxController {
         break;
       case "New Users":
         selected = 1;
-        pageType = UserViewType.join;
+        pageType = UserViewType.today;
         title = "New Users";
         // update();
         break;
       case "Block Users":
         selected = 2;
-        pageType = UserViewType.block;
+        pageType = UserViewType.blocked;
         title = "Block Users";
+        // update();
+        break;
+      case 'All Admin':
+        selected = 3;
+        pageType = UserViewType.admins;
+        title = "Admin Users";
         // update();
         break;
       default:
@@ -96,17 +101,21 @@ class UserListController extends GetxController {
       case UserViewType.all:
         responseModel = await adminService.fetchAllUser();
         break;
-      case UserViewType.block:
+      case UserViewType.blocked:
         responseModel = await adminService.fetchAllBlockedUser();
         break;
-      case UserViewType.join:
+      case UserViewType.today:
         responseModel = await adminService.fetchAllTodayUser();
         break;
+      case UserViewType.admins:
+        responseModel = await adminService.fetchAllAdminUser();
+        break;
       default:
+        responseModel = await adminService.fetchAllUser();
     }
     isFetchingAllUser(false);
     update();
-    if (responseModel!.success) {
+    if (responseModel.success) {
       final decode = FetchAllUser.fromJson(responseModel.data);
       fetchedUser = decode.data;
       pagination = decode.pagination!;

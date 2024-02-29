@@ -16,6 +16,12 @@ class UserProductsController extends GetxController {
   RxBool isFetching = false.obs;
   RxBool hasSearch = false.obs;
 
+  RxBool hasCommission = false.obs;
+  RxBool hasReason = false.obs;
+  TextEditingController commission = TextEditingController();
+  TextEditingController amount = TextEditingController();
+  TextEditingController reason = TextEditingController();
+
   List<PortfolioDatum>? searchedPortfolio = <PortfolioDatum>[];
   Pagination? searchPortfolioPagination;
 
@@ -31,9 +37,10 @@ class UserProductsController extends GetxController {
 
   List<String> productStatus = <String>[
     "PENDING",
+    "ACTIVE",
     "REJECTED",
     "PUBLISHED",
-    "APPROVED",
+    "UNKNOWN",
   ];
 
   int selected = 0;
@@ -53,16 +60,19 @@ class UserProductsController extends GetxController {
   }
 
   fetchPortfolio([String? type]) async {
-    log('$type start --- image');
     try {
       isLoading = true;
       update();
-      if (type != null) selected = productStatus.indexOf(type);
+      // if (type != null) selected = productStatus.indexOf(type);
+      if (type != null) {
+        selected = productStatus.indexWhere((i) => i.toUpperCase() == type);
+      }
       final RequestResponseModel response = type == null
           ? await adminService.fetchUsersPortfolio()
-          : await adminService.fetchUsersPortfolio(data: {"category": type});
+          : await adminService.fetchUsersPortfolio(data: {"status": type});
       isLoading = false;
       update();
+      log('${response.data} start --- image');
       if (response.success) {
         final data = FetchPortfolioResponse.fromJson(response.toJson());
         fetchedPortfolio = data.data!.data!;
@@ -119,28 +129,74 @@ class UserProductsController extends GetxController {
       case "REJECTED":
         isLoading = true;
         update();
-        final status =
-            await adminService.rejectUsersPortfolio(selectedProduct!.sku!);
+        final status = await adminService.rejectUsersPortfolio(
+            selectedProduct!.sku!, reason.text);
         HC.snack(status.message, success: status.success);
-        break;
+        isLoading = false;
+        update();
+        return status.success;
       case "PUBLISHED":
         isLoading = true;
         update();
         final status =
             await adminService.publishUsersPortfolio(selectedProduct!.sku!);
         HC.snack(status.message, success: status.success);
-        break;
-      case "APPROVED":
+        isLoading = false;
+        update();
+        return status.success;
+      case "ACTIVE":
         isLoading = true;
         update();
-        final status =
-            await adminService.approveUsersPortfolio(selectedProduct!.sku!);
+        final status = await adminService
+            .approveUsersPortfolio({"sku": selectedProduct!.sku!});
         HC.snack(status.message, success: status.success);
-        break;
+        isLoading = false;
+        update();
+        return status.success;
       default:
-        break;
+        HC.snack("Cannot update staus as $action", success: false);
+        isLoading = false;
+        update();
+        return false;
+    }
+  }
+
+  checkCommission() {
+    hasCommission.value =
+        commission.text.trim().isNotEmpty && commission.text.trim().isNotEmpty;
+  }
+  // checkReason() {
+  //   hasCommission.value =
+  //       commission.text.trim().isNotEmpty && commission.text.trim().isNotEmpty;
+  // }
+
+  addCommission() async {
+    isLoading = true;
+    Get.back();
+    update();
+    final status = await adminService.setCommission({
+      "sku": selectedProduct?.sku,
+      "commission": commission.text,
+      "amount": amount.text
+    });
+    isLoading = false;
+    update();
+    HC.snack(status.message, success: status.success);
+    return status.success;
+  }
+
+  deleteProduct() async {
+    isLoading = true;
+    Get.back();
+    update();
+    final status =
+        await adminService.deleteProduct({"sku": selectedProduct!.sku!});
+    if (status.success) {
+      fetchedPortfolio!.removeWhere((element) => element == selectedProduct);
     }
     isLoading = false;
     update();
+    HC.snack(status.message, success: status.success);
+    return status.success;
   }
 }

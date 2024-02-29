@@ -105,8 +105,8 @@ class AdminViewUserReceipt extends StatelessWidget {
                   Visibility(
                       visible:
                           _.isLoading == false && _.fetchedReceipt!.isNotEmpty,
-                      child: SizedBox(
-                        height: Get.height * .9,
+                      child: Expanded(
+                        // height: Get.height * .9,
                         child: CustomListViewWithFetchMore(
                             pagination: _.pagination,
                             count: _.fetchedReceipt!.length,
@@ -116,55 +116,7 @@ class AdminViewUserReceipt extends StatelessWidget {
                             handleStatusView: HC.handleStatusView,
                             previewData: _.viewReceipt,
                             child: recieptChildDataView),
-                      )
-
-                      // ListView.builder(
-                      //   shrinkWrap: true,
-                      //   itemCount: _.fetchedReceipt!.length,
-                      //   itemBuilder: (context, index) => Card(
-                      //     margin: const EdgeInsets.symmetric(vertical: 4),
-                      //     child: Padding(
-                      //       padding: const EdgeInsets.all(8.0),
-                      //       child: Column(
-                      //         children: [
-                      //           Row(
-                      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //             children: [
-                      //               Text(_.fetchedReceipt![index].receiptCode!)
-                      //                   .title(fontSize: 12),
-                      //               Container(
-                      //                 constraints:
-                      //                     BoxConstraints(minWidth: Get.width * .4),
-                      //                 child:
-                      //                     Text(_.fetchedReceipt![index].customerName!)
-                      //                         .title(
-                      //                             lines: 1,
-                      //                             fontSize: 12,
-                      //                             color: AppColor.black)
-                      //                         .align(Al.right),
-                      //               ),
-                      //             ],
-                      //           ),
-                      //           Row(
-                      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //             children: [
-                      //               Text("Created on ${_.fetchedReceipt![index].createdAt!.toString().split(" ")[0]}")
-                      //                   .subTitle(fontSize: 10),
-                      //               Padding(
-                      //                 padding:
-                      //                     const EdgeInsets.symmetric(vertical: 4.0),
-                      //                 child: Text(
-                      //                         '$tNaira ${_.fetchedReceipt![index].totalAmount!.formatMoney}')
-                      //                     .subTitle(fontSize: 10),
-                      //               ),
-                      //             ],
-                      //           ),
-                      //         ],
-                      //       ),
-                      //     ),
-                      //   ).toButton(onTap: () => _.viewReceipt(index)),
-                      // ),
-                      ),
+                      )),
                 ]),
             CW.LoadingOverlay(_.isLoading),
           ],

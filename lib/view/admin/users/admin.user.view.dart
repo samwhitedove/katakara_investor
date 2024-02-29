@@ -51,8 +51,8 @@ class UserListView extends StatelessWidget {
                       : CustomPopUpMenu(
                           data: _.userListType,
                           onChange: _.changeUserType,
-                          selected: _.selected)
-
+                          selected: _.selected,
+                        )
                   // PopupMenuButton<String>(
                   //     icon: const Icon(Icons.sort),
                   //     onSelected: _.changeUserType,
@@ -109,27 +109,6 @@ class UserListView extends StatelessWidget {
                                   fetchingMore: _.isFetchingMoreUser,
                                   type: _.pageType,
                                   fetchedata: _.fetchedUser!),
-                          // : ListView.builder(
-                          //     itemCount: _.fetchedUser!.length,
-                          // itemBuilder: (context, index) =>  _
-                          //             .fetchedUser![index].id ==
-                          //         userData.id
-                          //     ? const SizedBox()
-                          //         : UserOverviewListTile(
-                          //             fullName:
-                          //                 _.fetchedUser![index].fullName!,
-                          //             phone: _
-                          //                 .fetchedUser![index].phoneNumber!,
-                          //             lga: _.fetchedUser![index].lga!,
-                          //             state: _.fetchedUser![index].state!,
-                          //             image: _.fetchedUser![index]
-                          //                 .profileImageUrl,
-                          //             onTap: () => Get.toNamed(
-                          //               RouteName.viewInformationCard.name,
-                          //               arguments: _.fetchedUser![index],
-                          //             ),
-                          //           ),
-                          //   ),
                         )
                       ],
                     ),

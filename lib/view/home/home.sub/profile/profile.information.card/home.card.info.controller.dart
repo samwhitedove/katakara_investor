@@ -8,7 +8,6 @@ import 'package:katakara_investor/extensions/extensions.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/models/admin/model.fetch.user.dart';
 import 'package:katakara_investor/values/values.dart';
-import 'package:katakara_investor/view/product/product.full.image.dart';
 import 'package:katakara_investor/view/widgets/bottom.sheet.dart';
 
 import '../../../../../models/services/model.service.response.dart';

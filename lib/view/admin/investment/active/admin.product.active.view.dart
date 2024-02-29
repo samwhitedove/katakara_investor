@@ -23,7 +23,7 @@ class ActiveProduct extends StatelessWidget {
       init: AdminInvestmentActiveController(),
       initState: (_) {},
       builder: (_) {
-        log('-----------------rebuildng. ----------------');
+        log('-----------------rebuildng. ${_.fetchCategory}--- ${_.selected}---------------');
         return Stack(
           children: [
             CW.pageWithAppBar(
@@ -48,10 +48,11 @@ class ActiveProduct extends StatelessWidget {
                           Row(children: [
                             Text(_.pagination!.total.toString()),
                             CustomPopUpMenu(
-                                key: UniqueKey(),
-                                data: _.fetchCategory,
-                                selected: _.selected,
-                                onChange: _.fetchInvestment),
+                              key: UniqueKey(),
+                              data: _.fetchCategory,
+                              selected: _.selected,
+                              onChange: _.fetchInvestment,
+                            ),
                             // PopupMenuButton<String>(
                             //   icon: const Icon(Icons.sort),
                             //   onSelected: _.changeUserType,
@@ -119,8 +120,7 @@ class ActiveProduct extends StatelessWidget {
                   Visibility(
                       visible: _.isLoading == false &&
                           _.fetchedInvestment!.isNotEmpty,
-                      child: SizedBox(
-                        height: Get.height * .9,
+                      child: Expanded(
                         child: CustomListViewWithFetchMore(
                             pagination: _.pagination,
                             count: _.fetchedInvestment!.length,
@@ -142,6 +142,7 @@ class ActiveProduct extends StatelessWidget {
 
 investmentDataView(int index, List<InvestmentDatum> fetchedInvestment,
     Function(String) handleStatusView, Function(int) investmentView) {
+  log('$index number ---------------- index --------');
   final product = fetchedInvestment[index].productImage!.split(',')
     ..removeWhere((element) => element == '');
   return ListTile(

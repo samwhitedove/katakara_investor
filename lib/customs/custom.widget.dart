@@ -531,25 +531,28 @@ class CW {
       Function()? onTap}) {
     return Scaffold(
       floatingActionButton: fButton,
-      body: column(
-        scroll: scroll,
-        children: [
-          CW.AppSpacer(h: topPadding),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  CW.backButton(onTap: onTap).align(Al.left),
-                  CW.AppSpacer(w: 15),
-                  Text(title).title(fontSize: 20),
-                ],
-              ),
-              others ?? const SizedBox(width: 25),
-            ],
-          ),
-          ...children
-        ],
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: size),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CW.AppSpacer(h: topPadding),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    CW.backButton(onTap: onTap).align(Al.left),
+                    CW.AppSpacer(w: 15),
+                    Text(title).title(fontSize: 20),
+                  ],
+                ),
+                others ?? const SizedBox(width: 25),
+              ],
+            ),
+            ...children
+          ],
+        ),
       ),
     );
   }
@@ -601,8 +604,8 @@ class CW {
     Widget? trailing,
     Widget? leading,
     double? top = 40,
-    double? right = 20,
-    double? left = 20,
+    double? right = 15,
+    double? left = 15,
     double? bottom = 10,
   }) {
     return Padding(

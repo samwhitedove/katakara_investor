@@ -3,11 +3,9 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart' as getx;
-import 'package:get_storage/get_storage.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:katakara_investor/customs/custom.widget.dart';
-import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/helper/helper.settings.dart';
 import 'package:katakara_investor/services/services.auth.dart';
 import 'package:katakara_investor/services/service.endpoints.dart';
@@ -17,7 +15,9 @@ import 'package:katakara_investor/view/view.dart';
 import '../models/services/model.service.response.dart';
 
 class MyRequestClass {
-  static const String _baseUrl = "https://investor.mykatakara.com/api/v1";
+  static const String _baseUrl = kDebugMode
+      ? "http://192.168.0.177:3000/api/v1"
+      : "https://investor.mykatakara.com/api/v1";
   static CancelToken? cancelToken;
   static Dio? _dio;
 
@@ -160,6 +160,58 @@ class MyRequestClass {
         return handleDioError(e, endPoint);
       }
       return RequestResponseModel(message: e.toString());
+    }
+  }
+
+  static Future<RequestResponseModel> krequestWithImagePayload({
+    required String endPoint,
+    required Methods method,
+    Map<String, String>? body,
+    File? filePath,
+    ImageType fileType = ImageType.IMAGE,
+  }) async {
+    final headers = {
+      "Content-Type": "multipart/form-data",
+      'authorization': "Bearer ${userData.token}"
+    };
+
+    _dioOption.receiveTimeout = const Duration(seconds: 300);
+    _dio = Dio(_dioOption..headers = headers);
+    dynamic image;
+    if (filePath != null) {
+      image = await MultipartFile.fromFile(
+        filePath.path,
+        contentType: fileType == ImageType.IMAGE
+            ? MediaType('image', 'png')
+            : MediaType('application', 'pdf'),
+      );
+    }
+
+    try {
+      var formData = FormData();
+      // formData.fields.add(MapEntry('path', imageUploadType.name));
+      if (image != null) formData.files.add(MapEntry('image', image));
+      body?.forEach((key, value) => formData.fields.add(MapEntry(key, value)));
+
+      final response = await _dio?.post(
+        endPoint,
+        data: formData,
+        onSendProgress: (count, total) {
+          log('$count --- $total');
+        },
+      );
+
+      RequestResponseModel resp = RequestResponseModel.fromJson(response?.data);
+      log('$resp ------ innnwe reponse');
+
+      return resp;
+    } catch (e) {
+      log(e.toString());
+      log('$e--------- 2 2 2 2');
+      if (e is DioException) {
+        return handleDioError(e, "File Uplaod endpoint");
+      }
+      return RequestResponseModel(message: e.toString(), success: false);
     }
   }
 

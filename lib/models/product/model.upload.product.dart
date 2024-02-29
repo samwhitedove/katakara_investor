@@ -17,8 +17,10 @@ class UploadProductModel {
   String? lga;
   String? description;
   String? amountBuy;
-  String? amount;
+  // String? amount;
   String? category;
+  String? expenditureAmount;
+  String? expenditureDescription;
   List<String>? sellerImage;
 
   UploadProductModel({
@@ -27,8 +29,10 @@ class UploadProductModel {
     this.state,
     this.lga,
     this.description,
-    this.amount,
+    // this.amount,
     this.category,
+    this.expenditureAmount,
+    this.expenditureDescription,
     this.amountBuy,
     this.sellerImage,
   });
@@ -42,8 +46,10 @@ class UploadProductModel {
         state: json["state"],
         lga: json["lga"],
         description: json["description"],
-        amount: json["amount"],
+        // amount: json["amount"],
         category: json["category"],
+        expenditureAmount: json["expenditureAmount"],
+        expenditureDescription: json["expenditureDescription"],
         amountBuy: json["amountBuy"],
         sellerImage: json["sellerImage"],
       );
@@ -56,9 +62,11 @@ class UploadProductModel {
         "state": state,
         "lga": lga,
         "category": category,
+        "expenditureAmount": expenditureAmount,
+        "expenditureDescription": expenditureDescription,
         "amountBuy": amountBuy,
         "description": description,
-        "amount": amount,
+        // "amount": amount,
         "sellerImage": sellerImage,
       };
 }

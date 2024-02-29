@@ -91,7 +91,11 @@ class PortfolioDatum {
   String? category;
   String? amount;
   String? sku;
+  String? expenditureDescription;
+  String? comission;
+  String? expenditureAmount;
   dynamic amountBuy;
+  dynamic rejectionReason;
   dynamic sellerImage;
   (ProductStatus, String)? status;
   bool? isPublished;
@@ -111,9 +115,13 @@ class PortfolioDatum {
     this.sku,
     this.status,
     this.amountBuy,
+    this.rejectionReason,
     this.sellerImage,
     this.isPublished,
     this.isMerge,
+    this.expenditureDescription,
+    this.comission,
+    this.expenditureAmount,
     this.createdAt,
     this.updatedAt,
   });
@@ -133,6 +141,10 @@ class PortfolioDatum {
         sellerImage: json["sellerImage"].split(","),
         isPublished: json["isPublished"],
         isMerge: json["isMerge"],
+        rejectionReason: json["rejectionReason"],
+        expenditureDescription: json["expenditureDescription"],
+        comission: json["comission"],
+        expenditureAmount: json["expenditureAmount"],
         createdAt: json["createdAt"] == null
             ? null
             : DateTime.parse(json["createdAt"]),
@@ -151,7 +163,11 @@ class PortfolioDatum {
         "category": category,
         "amount": amount,
         "sku": sku,
+        "rejectionReason": rejectionReason,
         "status": status,
+        "expenditureDescription": expenditureDescription,
+        "comission": comission,
+        "expenditureAmount": expenditureAmount,
         "amountBuy": amountBuy,
         "sellerImage": sellerImage,
         "isPublished": isPublished,
@@ -160,43 +176,3 @@ class PortfolioDatum {
         "updatedAt": updatedAt?.toIso8601String(),
       };
 }
-
-// class Pagination {
-//   int? total;
-//   int? totalPage;
-//   int? perPage;
-//   int? currentPageItemCount;
-//   int? currentPage;
-//   dynamic previousPage;
-//   String? nextPage;
-
-//   Pagination({
-//     this.total,
-//     this.totalPage,
-//     this.perPage,
-//     this.currentPageItemCount,
-//     this.currentPage,
-//     this.previousPage,
-//     this.nextPage,
-//   });
-
-//   factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
-//         total: json["total"],
-//         totalPage: json["totalPage"],
-//         perPage: json["perPage"],
-//         currentPageItemCount: json["currentPageItemCount"],
-//         currentPage: json["currentPage"],
-//         previousPage: json["previousPage"],
-//         nextPage: json["nextPage"],
-//       );
-
-//   Map<String, dynamic> toJson() => {
-//         "total": total,
-//         "totalPage": totalPage,
-//         "perPage": perPage,
-//         "currentPageItemCount": currentPageItemCount,
-//         "currentPage": currentPage,
-//         "previousPage": previousPage,
-//         "nextPage": nextPage,
-//       };
-// }

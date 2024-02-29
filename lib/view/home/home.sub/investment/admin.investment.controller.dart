@@ -77,9 +77,9 @@ class UploadedProductController extends GetxController {
       isLoading = false;
       update();
       if (response.success) {
-        final data = InvestmentResponseDataModel.fromJson(response.toJson());
-        fetchedInvestment = data.data!.data!;
-        pagination = data.data!.pagination;
+        final data = InvestmentData.fromJson(response.toJson());
+        fetchedInvestment = data.data!;
+        pagination = data.pagination;
         update();
       }
     } catch (e) {
@@ -101,10 +101,10 @@ class UploadedProductController extends GetxController {
       isFetching(false);
       update();
       if (response.success) {
-        final data = InvestmentResponseDataModel.fromJson(response.toJson());
-        if (data.data!.data!.isNotEmpty) hasSearch(true);
-        searchedInvestment = data.data!.data!;
-        searchInvestmentPagination = data.data!.pagination;
+        final data = InvestmentData.fromJson(response.toJson());
+        if (data.data!.isNotEmpty) hasSearch(true);
+        searchedInvestment = data.data!;
+        searchInvestmentPagination = data.pagination;
         update();
       }
     } catch (e) {
@@ -119,12 +119,12 @@ class UploadedProductController extends GetxController {
         await adminService.fetchMoreInvestment(url: pagination!.nextPage);
     if (response.success) {
       log(response.data.toString());
-      final data = InvestmentResponseDataModel.fromJson(response.toJson());
-      for (var element in data.data!.data!) {
+      final data = InvestmentData.fromJson(response.toJson());
+      for (var element in data.data!) {
         fetchedInvestment!.add(element);
       }
-      log(data.data!.pagination.toString());
-      pagination = data.data!.pagination!;
+      log(data.pagination.toString());
+      pagination = data.pagination!;
       update();
     }
     fetchingMore.value = false;

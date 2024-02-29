@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,29 +29,12 @@ class AddCategoryScreen extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               _.category!.clear();
+              _.selectedCategoryImage.value = "";
               Get.bottomSheet(
                 Container(
-                  color: AppColor.white,
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CW.AppSpacer(h: 0),
-                      CW.textField(
-                        lines: 1,
-                        label: tCategory,
-                        controller: _.category!,
-                        hint: 'Phones',
-                        onChangeValue: _.checkInput,
-                      ),
-                      CW.AppSpacer(h: 10),
-                      Obx(() => CW.button(
-                          onPress: _.isGood.value ? _.save : null,
-                          text: tSave,
-                          isLoading: _.isLoading.value))
-                    ],
-                  ),
-                ),
+                    color: AppColor.white,
+                    padding: const EdgeInsets.all(8.0),
+                    child: fullDisplayCategorySaveAndUpdate(_, true)),
               );
             },
             child: const Icon(Icons.add),
@@ -70,58 +56,60 @@ class AddCategoryScreen extends StatelessWidget {
                                 padding: EdgeInsets.zero,
                                 itemCount: _.categories.length,
                                 itemBuilder: (context, index) => ListTile(
-                                  onTap: () {
-                                    _.category!.text =
-                                        _.categories[index].category!;
-                                    Get.bottomSheet(
-                                      Container(
-                                        color: AppColor.white,
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            CW.AppSpacer(h: 0),
-                                            CW.textField(
-                                              lines: 1,
-                                              label: tCategory,
-                                              controller: _.category!,
-                                              hint: 'Phones',
-                                              onChangeValue: _.checkInput,
-                                            ),
-                                            CW.AppSpacer(h: 10),
-                                            Obx(() => CW.button(
-                                                onPress: _.isGood.value
-                                                    ? () => _.updateCat(index)
-                                                    : null,
-                                                text: tSave,
-                                                isLoading: _.isLoading.value))
-                                          ],
+                                    onTap: () {
+                                      _.category!.text =
+                                          _.categories[index].category!;
+                                      _.selectedCategoryImage.value =
+                                          _.categories[index].categoryImage!;
+                                      Get.bottomSheet(
+                                        Container(
+                                          color: AppColor.white,
+                                          padding: const EdgeInsets.all(8.0),
+                                          child:
+                                              fullDisplayCategorySaveAndUpdate(
+                                                  _, false,
+                                                  index: index),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                  leading: !_.categories[index].categoryImage!
-                                          .startsWith("https://")
-                                      ? const Icon(Icons.image)
-                                      : CachedNetworkImage(
-                                          height: 50,
-                                          width: 50,
-                                          imageUrl: _.categories[index]
-                                              .categoryImage!),
-                                  contentPadding:
-                                      const EdgeInsets.symmetric(vertical: 0),
-                                  title: Text(_.categories[index].category!),
-                                  trailing: InkWell(
-                                    onTap: () => warningModal(
-                                        title: const Text("Are you sure?"),
-                                        onSubmit: () =>
-                                            _.deleteCategory(index)),
-                                    child: const Icon(
-                                      Icons.delete,
-                                      color: AppColor.red,
+                                      );
+                                    },
+                                    leading: !_.categories[index].categoryImage!
+                                            .startsWith("http")
+                                        ? const Icon(Icons.image)
+                                        : CachedNetworkImage(
+                                            height: 30,
+                                            width: 30,
+                                            imageUrl: _.categories[index]
+                                                .categoryImage!),
+                                    contentPadding:
+                                        const EdgeInsets.symmetric(vertical: 0),
+                                    title: Text(_.categories[index].category!),
+                                    trailing: IconButton(
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: AppColor.red,
+                                        ),
+                                        onPressed: () => warningModal(
+                                            title: const Text("Are you sure?"),
+                                            onSubmit: () =>
+                                                _.deleteCategory(index)))
+
+                                    //  InkWell(
+                                    //   onTap: () => warningModal(
+                                    //       title: const Text("Are you sure?"),
+                                    //       onSubmit: () =>
+                                    //           _.deleteCategory(index)),
+                                    //   child: Ink(
+                                    //     child: CircleAvatar(
+                                    //       backgroundColor:
+                                    //           AppColor.white.withOpacity(.2),
+                                    //       child: Icon(
+                                    //         Icons.delete,
+                                    //         color: AppColor.red,
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     ),
-                                  ),
-                                ),
                               ),
                   ),
                 ],
@@ -129,21 +117,63 @@ class AddCategoryScreen extends StatelessWidget {
             )
           ],
         );
-
-        // CW.baseStackWidget(
-        //   children: [
-
-        //     Obx(
-        //       () => Scaffold(
-        //         body: Column(
-        //           children: [
-        //              ],
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // );
       },
+    );
+  }
+
+  displayCategoryImage(AddCategoryController _) {
+    print(_.selectedCategoryImage.value.startsWith("http").toString());
+    return Obx(
+      () => SizedBox(
+        height: 50,
+        width: 50,
+        child: _.selectedCategoryImage.value.startsWith("http")
+            ? CachedNetworkImage(
+                height: 30,
+                width: 30,
+                imageUrl: _.selectedCategoryImage.value,
+              )
+            : _.selectedCategoryImage.value.startsWith("/")
+                ? Image.file(File(_.selectedCategoryImage.value))
+                : const Icon(Icons.image),
+      ),
+    );
+  }
+
+  fullDisplayCategorySaveAndUpdate(AddCategoryController _, bool save,
+      {int? index}) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CW.AppSpacer(h: 0),
+        GestureDetector(
+          onTap: _.selectCategoryImage,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Select category image")
+                  .subTitle(color: AppColor.black, fontSize: 14),
+              displayCategoryImage(_)
+            ],
+          ),
+        ),
+        CW.textField(
+          lines: 1,
+          label: tCategory,
+          controller: _.category!,
+          hint: 'Phones',
+          onChangeValue: _.checkInput,
+        ),
+        CW.AppSpacer(h: 10),
+        Obx(() => CW.button(
+            onPress: _.isGood.value
+                ? save
+                    ? _.save
+                    : () => _.updateCat(index!)
+                : null,
+            text: save ? tSave : "Update",
+            isLoading: _.isLoading.value))
+      ],
     );
   }
 }

@@ -21,8 +21,7 @@ class AdminDashboardController extends GetxController {
       'icon': Icons.category,
       "value": 200,
       'color': AppColor.primary,
-      "onTap": () => Get.toNamed(RouteName.productCategory.name,
-          arguments: UserViewType.join)
+      "onTap": () => Get.toNamed(RouteName.productCategory.name)
     },
     {
       'title': "Investment Available",

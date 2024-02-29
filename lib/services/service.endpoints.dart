@@ -58,6 +58,7 @@ class EndPoint {
   // block and unblock user admin
   static String blockUser(int id) => '/console/block-user?id=$id';
   static String unblockUser(int id) => '/console/unblock-user?id=$id';
+  static String fetchInvestment = '/user/fetch-investment';
   // admin faq
   static String addFaq = '/console/add-faq';
   static String updateFaq = '/console/update-faq';
@@ -76,8 +77,8 @@ class EndPoint {
   static String addInvestment = '/console/add-investment';
   static String updateInvestment = '/console/update-investment';
   static String deleteInvestment = '/console/delete-investment';
-  static String fetchInvestment = '/console/fetch-investment';
   static String fetchUserPortfolio = '/console/fetch-all-product';
+  static String setCommission = '/console/set-commision';
   static String rejectProduct = '/console/reject-product';
   static String approveProduct = '/console/approve-product';
   static String publishProduct = '/console/publish-product';

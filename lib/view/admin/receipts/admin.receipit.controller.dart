@@ -34,32 +34,34 @@ class AdminReceiptController extends GetxController {
   viewReceipt(int index) => Get.toNamed(
         RouteName.receiptReview.name,
         arguments: ReceiptPreviewData(
-          customerAddress: fetchedReceipt![index].customerAddress,
-          customerName: fetchedReceipt![index].customerName,
-          productInfo: fetchedReceipt![index]
-              .receiptProductInfo!
-              .map((element) => ReceiptItemData.fromJson(element.toJson()))
-              .toList(),
-          title: fetchedReceipt![index].totalAmount.toString(),
-          totalAmount: fetchedReceipt![index].totalAmount,
-          date: fetchedReceipt![index].createdAt.toString().split(" ")[0],
-          receiptId: fetchedReceipt![index].receiptCode,
-          canShare: false,
-          isAdmin: true,
-          id: fetchedReceipt![index].id,
-          status: fetchedReceipt![index].status,
-        ),
+            customerAddress: fetchedReceipt![index].customerAddress,
+            customerName: fetchedReceipt![index].customerName,
+            productInfo: fetchedReceipt![index]
+                .receiptProductInfo!
+                .map((element) => ReceiptItemData.fromJson(element.toJson()))
+                .toList(),
+            title: fetchedReceipt![index].totalAmount.toString(),
+            totalAmount: fetchedReceipt![index].totalAmount,
+            date: fetchedReceipt![index].createdAt.toString().split(" ")[0],
+            receiptId: fetchedReceipt![index].receiptCode,
+            canShare: false,
+            isAdmin: true,
+            id: fetchedReceipt![index].id,
+            status: fetchedReceipt![index].status,
+            user: fetchedReceipt![index].user ?? User()),
       );
 
   fetchReceipt([String? type]) async {
     try {
       isLoading = true;
       update();
-      if (type != null) selected = receiptType.indexOf(type);
-      final RequestResponseModel response = type == null
+      if (type != null) {
+        selected = receiptType.indexWhere((i) => i.toUpperCase() == type);
+      }
+      final RequestResponseModel response = type == null || type == "ALL"
           ? await adminService.fetchUsersReceipt()
           : await adminService
-              .fetchSortUsersReceipt(data: {"type": receiptType[selected]});
+              .fetchSortUsersReceipt(data: {"status": receiptType[selected]});
       isLoading = false;
       update();
       if (response.success) {
@@ -80,7 +82,7 @@ class AdminReceiptController extends GetxController {
 
       update();
       final RequestResponseModel response = await adminService
-          .fetchSortUsersReceipt(data: {"search": searchController.text});
+          .fetchSortUsersReceipt(data: {"receiptCode": searchController.text});
       isFetching(false);
       update();
       if (response.success) {

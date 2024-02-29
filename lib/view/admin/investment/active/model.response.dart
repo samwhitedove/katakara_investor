@@ -6,41 +6,41 @@ import 'dart:convert';
 
 import '../../../../models/receipt/model.fetch.reponse.dart';
 
-InvestmentResponseDataModel investmentResponseDataModelFromJson(String str) =>
-    InvestmentResponseDataModel.fromJson(json.decode(str));
+// InvestmentResponseDataModel investmentResponseDataModelFromJson(String str) =>
+//     InvestmentResponseDataModel.fromJson(json.decode(str));
 
-String investmentResponseDataModelToJson(InvestmentResponseDataModel data) =>
-    json.encode(data.toJson());
+// String investmentResponseDataModelToJson(InvestmentResponseDataModel data) =>
+//     json.encode(data.toJson());
 
-class InvestmentResponseDataModel {
-  String? message;
-  int? statusCode;
-  InvestmentData? data;
-  bool? success;
+// class InvestmentResponseDataModel {
+//   String? message;
+//   int? statusCode;
+//   InvestmentData? data;
+//   bool? success;
 
-  InvestmentResponseDataModel({
-    this.message,
-    this.statusCode,
-    this.data,
-    this.success,
-  });
+//   InvestmentResponseDataModel({
+//     this.message,
+//     this.statusCode,
+//     this.data,
+//     this.success,
+//   });
 
-  factory InvestmentResponseDataModel.fromJson(Map<String, dynamic> json) =>
-      InvestmentResponseDataModel(
-        message: json["message"],
-        statusCode: json["statusCode"],
-        data:
-            json["data"] == null ? null : InvestmentData.fromJson(json["data"]),
-        success: json["success"],
-      );
+//   factory InvestmentResponseDataModel.fromJson(Map<String, dynamic> json) =>
+//       InvestmentResponseDataModel(
+//         message: json["message"],
+//         statusCode: json["statusCode"],
+//         data:
+//             json["data"] == null ? null : InvestmentData.fromJson(json["data"]),
+//         success: json["success"],
+//       );
 
-  Map<String, dynamic> toJson() => {
-        "message": message,
-        "statusCode": statusCode,
-        "data": data?.toJson(),
-        "success": success,
-      };
-}
+//   Map<String, dynamic> toJson() => {
+//         "message": message,
+//         "statusCode": statusCode,
+//         "data": data?.toJson(),
+//         "success": success,
+//       };
+// }
 
 class InvestmentData {
   List<InvestmentDatum>? data;

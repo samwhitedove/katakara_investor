@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/load.more.button.dart';
@@ -39,7 +41,9 @@ class CustomListViewWithFetchMore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("${fetchedata.length} -------- fetch inner dat");
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.zero,
       shrinkWrap: true,
       controller: _scrollController,

@@ -15,6 +15,7 @@ import 'package:katakara_investor/view/widgets/courosel.image.view.dart';
 class InvestmentProductView extends StatelessWidget {
   InvestmentProductView({super.key});
 
+  final find = Get.put(AdminInvestmentActiveController());
   final _ = Get.find<AdminInvestmentActiveController>();
 
   InvestmentDatum productInfo = Get.arguments;

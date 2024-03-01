@@ -230,36 +230,6 @@ class AdminService extends GetxController {
     return response;
   }
 
-  Future<RequestResponseModel> fetchInvestment() async {
-    RequestResponseModel response = await MyRequestClass.krequest(
-        endPoint: EndPoint.fetchInvestment, method: Methods.get);
-    log("make admin user info ------- ${response.message}");
-    return response;
-  }
-
-  Future<RequestResponseModel> filterInvestment(
-      Map<String, dynamic>? data) async {
-    RequestResponseModel response = await MyRequestClass.krequest(
-        endPoint: EndPoint.fetchInvestment, method: Methods.get, query: data);
-    log("make admin user info ------- ${response.message}");
-    return response;
-  }
-
-  Future<RequestResponseModel> searchInvestment(
-      Map<String, dynamic>? data) async {
-    RequestResponseModel response = await MyRequestClass.krequest(
-        endPoint: EndPoint.fetchInvestment, method: Methods.get, query: data);
-    log("make admin user info ------- ${response.message}");
-    return response;
-  }
-
-  Future<RequestResponseModel> fetchMoreInvestment({String? url}) async {
-    RequestResponseModel response =
-        await MyRequestClass.krequest(endPoint: url!, method: Methods.get);
-    log("unblock user info ------- ${response.message}");
-    return response;
-  }
-
   Future<RequestResponseModel> fetchUsersPortfolio(
       {Map<String, dynamic>? data}) async {
     RequestResponseModel response = await MyRequestClass.krequest(

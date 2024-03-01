@@ -9,6 +9,7 @@ import 'package:katakara_investor/customs/customs.dart';
 import 'package:katakara_investor/extensions/extensions.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:katakara_investor/view/admin/investment/active/model.response.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../values/values.dart';
 
@@ -246,6 +247,8 @@ class CW {
     // Color? color,
     Color? iconColor,
     double? iconSize,
+    double? maxHeight,
+    double? maxWidth,
     IconData? icon,
     required String? label,
     required dynamic value,
@@ -275,7 +278,7 @@ class CW {
                       strokeWidth: 2,
                     )).align(Al.right).paddingOnly(right: 10)
                 : DropdownButton<String>(
-                    menuMaxHeight: Get.height * .5,
+                    menuMaxHeight: maxHeight ?? Get.height * .5,
                     value: value,
                     onChanged: (value) => onChange(value!),
                     items: data.map((value) {
@@ -541,6 +544,7 @@ class CW {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
+                  // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CW.backButton(onTap: onTap).align(Al.left),
                     CW.AppSpacer(w: 15),
@@ -803,55 +807,49 @@ class CW {
     );
   }
 
-  static Widget listUserOrProductWidget(
-      {required String name,
-      required String state,
-      required String lga,
-      bool showStatus = true,
-      required dynamic status}) {
+  static Widget listUserOrProductWidget({
+    required InvestmentDatum product,
+    bool showStatus = true,
+    required dynamic status,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Assets.assetsImagesImage.roundImageCorner(useAssets: true),
+        CachedNetworkImage(
+          imageUrl: product.productImage!,
+          width: 50,
+          height: 50,
+        ),
         CW.AppSpacer(w: 10),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name).title(fontSize: 14, color: AppColor.black),
-                Text('$state, $lga').subTitle(fontSize: 11),
-              ],
-            ),
-            CW.AppSpacer(h: 3),
-            Visibility(
-              visible: showStatus,
-              child: Text(status.runtimeType == (List<String>)
-                      ? status.join(", ").toString()
-                      : status.runtimeType == bool
-                          ? !status
-                              ? "Unavailable"
-                              : "Available"
-                          : status.toString())
-                  .subTitle(
-                      fontSize: 10,
-                      color: status.runtimeType == bool
-                          ? status
-                              ? AppColor.primary
-                              : AppColor.red
-                          : AppColor.primary)
-                  .roundCorner(
-                      height: 20,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
-                      showBorder: false,
-                      bgColor: AppColor.white.withOpacity(.8)),
-            ),
-            CW.AppSpacer(h: 1),
-          ],
+        ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: Get.width * .7),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(product.productName!)
+                      .title(fontSize: 14, color: AppColor.black, lines: 1),
+                  Text('${product.state}, ${product.lga}')
+                      .subTitle(fontSize: 11),
+                ],
+              ),
+              CW.AppSpacer(h: 3),
+              Text(
+                status.runtimeType == (List<String>)
+                    ? status.join(", ").toString()
+                    : status.runtimeType == bool
+                        ? !status
+                            ? "Unavailable"
+                            : "Available"
+                        : status.toString(),
+              ).subTitle(fontSize: 10, color: AppColor.primary),
+              CW.AppSpacer(h: 10),
+            ],
+          ),
         )
       ],
     )

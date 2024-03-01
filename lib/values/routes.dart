@@ -200,10 +200,10 @@ class AppRoutes {
         name: '/${RouteName.userPortfolio.name}',
         page: () => const UserProducts(),
       ),
-      GetPage(
-        name: '/${RouteName.activeInvestmentProduct.name}',
-        page: () => const ActiveInvestmentProduct(),
-      ),
+      // GetPage(
+      //   name: '/${RouteName.activeInvestmentProduct.name}',
+      //   page: () => const ActiveInvestmentProduct(),
+      // ),
       // GetPage(
       //   name: '/${RouteName.userInvestmentAvailable.name}',
       //   page: () => const UserActiveInvestmentProduct(),

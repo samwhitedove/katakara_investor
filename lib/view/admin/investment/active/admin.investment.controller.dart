@@ -6,6 +6,7 @@ import 'package:katakara_investor/helper/helper.function.dart';
 import 'package:katakara_investor/models/product/model.category.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';
 import 'package:katakara_investor/services/service.admin.dart';
+import 'package:katakara_investor/services/services.home.dart';
 import 'package:katakara_investor/services/services.portfolio.dart';
 import 'package:katakara_investor/values/strings.dart';
 import 'package:katakara_investor/view/admin/investment/active/model.response.dart';
@@ -24,7 +25,7 @@ class AdminInvestmentActiveController extends GetxController {
   List<InvestmentDatum>? fetchedInvestment = <InvestmentDatum>[];
   Pagination? pagination;
 
-  final AdminService adminService = Get.find<AdminService>();
+  final HomeService homeService = Get.find<HomeService>();
   final PortfolioService portfolioService = Get.find<PortfolioService>();
 
   TextEditingController searchController = TextEditingController();
@@ -41,6 +42,12 @@ class AdminInvestmentActiveController extends GetxController {
     super.onInit();
   }
 
+  List<String> states = stateAndLga.keys.toList()..replaceRange(0, 1, ["ALL"]);
+  RxString selectedState = "ALL".obs;
+  RxString selectedCategory = "ALL".obs;
+
+  RxBool hasFilter = false.obs;
+
   fetchProductCategory() async {
     isLoading = true;
     final response = await portfolioService.fetchProductCategory();
@@ -48,7 +55,7 @@ class AdminInvestmentActiveController extends GetxController {
       fetchCategory.clear();
       List data = response.data ?? [];
       if (data.isNotEmpty) {
-        fetchCategory.add("All");
+        fetchCategory.add("ALL");
         for (var element in data) {
           fetchCategory.add(Category.fromJson(element).category.toString());
         }
@@ -65,17 +72,15 @@ class AdminInvestmentActiveController extends GetxController {
     );
   }
 
-  fetchInvestment([String? type]) async {
-    log('$type start --- image');
+  fetchInvestment([String? category, String? state]) async {
+    log('$category start --- image');
     try {
       isLoading = true;
       update();
-      if (type != null) {
-        selected = fetchCategory.indexWhere((i) => i.toUpperCase() == type);
-      }
-      final response = type == null || type == "ALL"
-          ? await adminService.fetchInvestment()
-          : await adminService.filterInvestment({"category": type});
+      final response = await homeService.filterInvestment({
+        if (category != null && category != "ALL") "category": category,
+        if (state != null && state != "ALL") "state": state
+      });
       isLoading = false;
       update();
       if (response.success) {
@@ -91,19 +96,19 @@ class AdminInvestmentActiveController extends GetxController {
     }
   }
 
-  deleteInvestment(String sku) async {
-    isDeletingInvestment.value = true;
-    update();
-    final RequestResponseModel response =
-        await adminService.deleteInvestment({"sku": sku});
-    isDeletingInvestment.value = false;
-    update();
-    HC.snack(response.message, success: response.success);
-    if (response.success) {
-      Get.back();
-      await fetchInvestment(fetchCategory[selected]);
-      update();
-    }
+  filterInvestment() async {
+    Get.back();
+    String? select;
+    if (selectedState.value != "ALL") select = selectedState.value;
+    await fetchInvestment(selectedCategory.value, select);
+  }
+
+  clearFilter() async {
+    Get.back();
+    if (selectedCategory.value == "ALL" && selectedState.value == "ALL") return;
+    await fetchInvestment();
+    selectedCategory.value = "ALL";
+    selectedState.value = "ALL";
   }
 
   searchReceipt() async {
@@ -113,14 +118,14 @@ class AdminInvestmentActiveController extends GetxController {
       update();
       final RequestResponseModel response = searchController.text
               .startsWith("IST")
-          ? await adminService.searchInvestment({"sku": searchController.text})
-          : await adminService
+          ? await homeService.searchInvestment({"sku": searchController.text})
+          : await homeService
               .searchInvestment({"productName": searchController.text});
       isFetching(false);
       update();
       if (response.success) {
         searchedInvestment!.clear();
-        final data = InvestmentData.fromJson(response.toJson());
+        final data = InvestmentData.fromJson(response.data);
         if (data.data!.isNotEmpty) hasSearch(true);
         searchedInvestment = data.data!;
         searchInvestmentPagination = data.pagination;
@@ -131,11 +136,27 @@ class AdminInvestmentActiveController extends GetxController {
     }
   }
 
+  deleteInvestment(String sku) async {
+    isDeletingInvestment.value = true;
+    update();
+    final RequestResponseModel response =
+        await AdminService().deleteInvestment({"sku": sku});
+    isDeletingInvestment.value = false;
+    update();
+    HC.snack(response.message, success: response.success);
+    if (response.success) {
+      Get.back();
+      await fetchInvestment(fetchCategory[selected]);
+      update();
+    }
+  }
+
   getMoreInvestment() async {
     fetchingMore.value = true;
     update();
     final RequestResponseModel response =
-        await adminService.fetchMoreInvestment(url: pagination!.nextPage);
+        await homeService.fetchMoreInvestment(url: pagination!.nextPage);
+    fetchingMore.value = false;
     if (response.success) {
       final data = InvestmentData.fromJson(response.data);
       // fetchedInvestment = data.data!;
@@ -152,5 +173,15 @@ class AdminInvestmentActiveController extends GetxController {
       update();
     }
     fetchingMore.value = false;
+  }
+
+  changeCategory(String text) {
+    selectedCategory.value = text;
+    hasFilter.value = selectedCategory.value != "ALL" || text != "ALL";
+  }
+
+  changeState(String text) {
+    selectedState.value = text;
+    hasFilter.value = text != "ALL" || selectedState.value != "ALL";
   }
 }

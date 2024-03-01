@@ -23,14 +23,10 @@ class KFIPageScreen extends StatefulWidget {
 class _KFIPageScreenState extends State<KFIPageScreen>
     with TickerProviderStateMixin {
   TabController? controller;
-  // final homeControl = Get.put(HomeKFIController());
-  // final homeController = Get.find<HomeKFIController>();
 
   @override
   void initState() {
     super.initState();
-    // homeController.homeScreenController = widget.ctr;
-    // homeController.homeScreenController = widget.ctr;
     controller = TabController(length: 2, vsync: this);
     controller?.addListener(() {
       Get.find<HomeKFIController>().changeTab(controller!.index);

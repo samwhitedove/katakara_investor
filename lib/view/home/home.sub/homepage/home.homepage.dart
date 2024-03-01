@@ -17,7 +17,7 @@ class HomePageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.find<HomeService>().fetchUserInvestment({"limit": 4});
+    // Get.find<HomeService>().filterInvestment({"limit": 4});
     return GetBuilder<HomeScreenController>(
       init: Get.find<HomeScreenController>(),
       initState: (_) {},
@@ -148,11 +148,15 @@ class HomePageScreen extends StatelessWidget {
                           Column(
                             children: List.generate(
                               ctr.recentProduct.length,
-                              (index) => CW.listUserOrProductWidget(
-                                name: ctr.recentProduct[index].productName!,
-                                state: ctr.recentProduct[index].state!,
-                                lga: ctr.recentProduct[index].lga!,
-                                status: "active",
+                              (index) => InkWell(
+                                onTap: () => Get.toNamed(
+                                  RouteName.investmentView.name,
+                                  arguments: ctr.recentProduct[index],
+                                ),
+                                child: CW.listUserOrProductWidget(
+                                  product: ctr.recentProduct[index],
+                                  status: "active",
+                                ),
                               ),
                             ),
                           ),
@@ -171,7 +175,7 @@ class HomePageScreen extends StatelessWidget {
                               : AppColor.inActiveBlack,
                           onPress: ctr.isActive.value
                               ? () => Get.toNamed(
-                                  RouteName.activeInvestmentProduct.name)
+                                  RouteName.investmentAvailable.name)
                               : () => HC.snack(tGoLiveToActive),
                           text: tInvestNow,
                           child: Row(

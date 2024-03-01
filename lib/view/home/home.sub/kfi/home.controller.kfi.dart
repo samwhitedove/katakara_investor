@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:katakara_investor/customs/custom.widget.dart';
 import 'package:katakara_investor/helper/helper.dart';
 import 'package:katakara_investor/models/kfi/model.kfi.dart';
 import 'package:katakara_investor/models/product/models.fetch.portfolio.response.dart';
@@ -52,12 +51,11 @@ class HomeKFIController extends GetxController {
   PageController pageController = PageController(initialPage: 0);
   changeTab(index) {
     currentKfi.value = index;
-    // pageController.animateToPage(currentKfi.value,
-    //     duration: CW.onesSec, curve: Curves.fastEaseInToSlowEaseOut);
   }
 
   RxString errorMessage = ''.obs;
   List<PortfolioDatum> kfiProduct = [];
+
   Future<List<PortfolioDatum>> fetchKFIInvestment() async {
     isErrorFetchingMergeProduct.value = false;
     isLoading.value = true;

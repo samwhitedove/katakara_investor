@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:katakara_investor/helper/helper.function.dart';
 import 'package:katakara_investor/models/product/model.category.dart';
 import 'package:katakara_investor/models/services/model.service.response.dart';
-import 'package:katakara_investor/services/service.admin.dart';
+import 'package:katakara_investor/services/services.home.dart';
 import 'package:katakara_investor/services/services.portfolio.dart';
 import 'package:katakara_investor/values/strings.dart';
 import 'package:katakara_investor/view/admin/investment/active/model.response.dart';
@@ -24,7 +24,7 @@ class UploadedProductController extends GetxController {
   List<InvestmentDatum>? fetchedInvestment = <InvestmentDatum>[];
   Pagination? pagination;
 
-  final AdminService adminService = Get.find<AdminService>();
+  final HomeService homeService = Get.find<HomeService>();
   final PortfolioService portfolioService = Get.find<PortfolioService>();
 
   TextEditingController searchController = TextEditingController();
@@ -72,8 +72,8 @@ class UploadedProductController extends GetxController {
       update();
       if (type != null) selected = fetchCategory.indexOf(type);
       final RequestResponseModel response = type == null
-          ? await adminService.fetchInvestment()
-          : await adminService.filterInvestment({"category": type});
+          ? await homeService.fetchInvestment()
+          : await homeService.filterInvestment({"category": type});
       isLoading = false;
       update();
       if (response.success) {
@@ -95,8 +95,8 @@ class UploadedProductController extends GetxController {
       update();
       final RequestResponseModel response = searchController.text
               .startsWith("IST")
-          ? await adminService.searchInvestment({"sku": searchController.text})
-          : await adminService
+          ? await homeService.searchInvestment({"sku": searchController.text})
+          : await homeService
               .searchInvestment({"productName": searchController.text});
       isFetching(false);
       update();
@@ -116,7 +116,7 @@ class UploadedProductController extends GetxController {
     fetchingMore.value = true;
     update();
     final RequestResponseModel response =
-        await adminService.fetchMoreInvestment(url: pagination!.nextPage);
+        await homeService.fetchMoreInvestment(url: pagination!.nextPage);
     if (response.success) {
       log(response.data.toString());
       final data = InvestmentData.fromJson(response.toJson());

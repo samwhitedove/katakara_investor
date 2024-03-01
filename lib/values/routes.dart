@@ -134,7 +134,7 @@ class AppRoutes {
           page: () => UserProductDetailView()),
       GetPage(
         name: '/${RouteName.broadcast.name}',
-        page: () => const Broadcast(),
+        page: () => const BroadcastView(),
       ),
       GetPage(
           name: '/${RouteName.addInvestment.name}',
@@ -204,6 +204,10 @@ class AppRoutes {
         name: '/${RouteName.activeInvestmentProduct.name}',
         page: () => const ActiveInvestmentProduct(),
       ),
+      // GetPage(
+      //   name: '/${RouteName.userInvestmentAvailable.name}',
+      //   page: () => const UserActiveInvestmentProduct(),
+      // ),
     ];
   }
 }

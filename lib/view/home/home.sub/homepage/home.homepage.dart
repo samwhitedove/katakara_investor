@@ -170,13 +170,8 @@ class HomePageScreen extends StatelessWidget {
                               ? null
                               : AppColor.inActiveBlack,
                           onPress: ctr.isActive.value
-                              ? () async {
-                                  // Get.find<AuthService>().fetchUser();
-                                  var deviceToken =
-                                      await HC.initFCM().getToken();
-                                  // NotificationController.createNotification();
-                                  log(deviceToken.toString());
-                                }
+                              ? () => Get.toNamed(
+                                  RouteName.activeInvestmentProduct.name)
                               : () => HC.snack(tGoLiveToActive),
                           text: tInvestNow,
                           child: Row(

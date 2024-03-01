@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -30,8 +28,6 @@ class AddInvestmentProduct extends StatelessWidget {
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    // side: 15,
-                    // isLoading: _.isUploading.value,
                     children: [
                       CW.AppSpacer(h: 66),
                       Row(

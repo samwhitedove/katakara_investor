@@ -52,6 +52,7 @@ enum RouteName {
   userPortfolio,
   portfolioSearch,
   activeInvestmentProduct,
+  userInvestmentAvailable,
 }
 
 enum Al { center, right, left }

@@ -320,4 +320,11 @@ class AdminService extends GetxController {
     log("make admin user info ------- ${response.message}");
     return response;
   }
+
+  Future<RequestResponseModel> sendBroadcast(Map<String, dynamic>? data) async {
+    RequestResponseModel response = await MyRequestClass.krequest(
+        endPoint: EndPoint.sendBroadcast, method: Methods.post, body: data);
+    log("make admin user info ------- ${response.message}");
+    return response;
+  }
 }

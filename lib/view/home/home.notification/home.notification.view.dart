@@ -47,170 +47,162 @@ class _NotificationScreenState extends State<NotificationScreen> {
       builder: (_) {
         return Scaffold(
           body: CW.pageWithAppBar(title: "Notifications", children: [
-            Column(
-              children: [
-                SizedBox(
-                  height: Get.height * .9,
-                  child: ListView.builder(
-                      controller: scrollController,
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: _.notification.length,
-                      itemBuilder: (context, index) => Column(
-                            children: [
-                              Card(
-                                margin: EdgeInsets.zero,
-                                elevation: .5,
-                                clipBehavior: Clip.hardEdge,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Column(
+            Expanded(
+              child: ListView.builder(
+                  controller: scrollController,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: _.notification.length,
+                  itemBuilder: (context, index) => Column(
+                        children: [
+                          Card(
+                            margin: EdgeInsets.zero,
+                            elevation: .5,
+                            clipBehavior: Clip.hardEdge,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Row(
+                                      ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                            maxWidth: Get.width * .65),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(_.notification[index].title!)
+                                                .subTitle(
+                                                    bold: _.notification[index]
+                                                            .isRead! ==
+                                                        false,
+                                                    lines: 5,
+                                                    fontSize: 11,
+                                                    color: AppColor.text),
+                                            CW.AppSpacer(h: 4),
+                                            Text(_.notification[index].body!)
+                                                .subTitle(
+                                                    lines: 2,
+                                                    fontSize: 10,
+                                                    color: AppColor.text),
+                                          ],
+                                        ),
+                                      ),
+                                      CW.AppSpacer(w: 20),
+                                      Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.end,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.end,
                                         children: [
-                                          ConstrainedBox(
-                                            constraints: BoxConstraints(
-                                                maxWidth: Get.width * .65),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(_.notification[index]
-                                                        .title!)
-                                                    .subTitle(
-                                                        bold: _
-                                                                .notification[
-                                                                    index]
-                                                                .isRead! ==
-                                                            false,
-                                                        lines: 5,
-                                                        fontSize: 11,
-                                                        color: AppColor.text),
-                                                CW.AppSpacer(h: 4),
-                                                Text(_.notification[index]
-                                                        .body!)
-                                                    .subTitle(
-                                                        lines: 2,
-                                                        fontSize: 10,
-                                                        color: AppColor.text),
-                                              ],
-                                            ),
-                                          ),
-                                          CW.AppSpacer(w: 20),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Text(_.notification[index].date!
-                                                      .toLocal()
-                                                      .toString()
-                                                      .split(" ")[0])
-                                                  .subTitle(
-                                                      fontSize: 10,
-                                                      color: AppColor.text),
-                                              CW.AppSpacer(h: 8),
-                                              Text(_.notification[index].date!
-                                                      .toLocal()
-                                                      .toString()
-                                                      .split(" ")[1]
-                                                      .split(".")[0])
-                                                  .subTitle(
-                                                      fontSize: 10,
-                                                      color: AppColor.text),
-                                              CW.AppSpacer(h: 4),
-                                            ],
-                                          )
+                                          Text(_.notification[index].date!
+                                                  .toLocal()
+                                                  .toString()
+                                                  .split(" ")[0])
+                                              .subTitle(
+                                                  fontSize: 10,
+                                                  color: AppColor.text),
+                                          CW.AppSpacer(h: 8),
+                                          Text(_.notification[index].date!
+                                                  .toLocal()
+                                                  .toString()
+                                                  .split(" ")[1]
+                                                  .split(".")[0])
+                                              .subTitle(
+                                                  fontSize: 10,
+                                                  color: AppColor.text),
+                                          CW.AppSpacer(h: 4),
                                         ],
-                                      ),
-                                      const Divider(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Visibility(
-                                            visible:
-                                                _.notification[index].isRead! ==
-                                                    false,
-                                            child: const Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 4.0),
-                                              child: Icon(
-                                                Icons.circle,
-                                                color: AppColor.red,
-                                                size: 10,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(_.isOpened.value &&
-                                                      _.currentOpened == index
-                                                  ? "> Hide <"
-                                                  : "< View >")
-                                              .subTitle(fontSize: 10)
-                                              .align(Al.right),
-                                        ],
-                                      ),
+                                      )
+                                    ],
+                                  ),
+                                  const Divider(),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
                                       Visibility(
-                                        visible: _.isOpened.value &&
-                                            _.currentOpened == index,
-                                        child: SlideInUp(
-                                          child: Column(
-                                            children: [
-                                              _.notification[index].image !=
-                                                      null
-                                                  ? CachedNetworkImage(
-                                                      imageUrl: _
-                                                          .notification[index]
-                                                          .image!)
-                                                  : const SizedBox(),
-                                              CW.AppSpacer(h: 6),
-                                              Text(_.notification[index].body!)
-                                                  .subTitle(
-                                                      fontSize: 10,
-                                                      lines: 100,
-                                                      color: AppColor.text),
-                                              Visibility(
-                                                  visible: _.notification[index]
-                                                      .hasAction!,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      const Text("click here")
-                                                          .subTitle(
-                                                              fontSize: 10),
-                                                      const Icon(Icons
-                                                          .arrow_right_alt_rounded),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: const Text(
-                                                                "Accept")
-                                                            .title(fontSize: 12)
-                                                            .toButton(
-                                                                onTap: () {}),
-                                                      ),
-                                                    ],
-                                                  ))
-                                            ],
+                                        visible:
+                                            _.notification[index].isRead! ==
+                                                false,
+                                        child: const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 4.0),
+                                          child: Icon(
+                                            Icons.circle,
+                                            color: AppColor.red,
+                                            size: 10,
                                           ),
                                         ),
                                       ),
+                                      Text(_.isOpened.value &&
+                                                  _.currentOpened == index
+                                              ? "> Hide <"
+                                              : "< View >")
+                                          .subTitle(fontSize: 10)
+                                          .align(Al.right),
                                     ],
                                   ),
-                                ),
-                              ).toButton(onTap: () => _.openSelected(index)),
-                              CW.AppSpacer(h: 20),
-                            ],
-                          )),
-                ),
-              ],
-            )
+                                  Visibility(
+                                    visible: _.isOpened.value &&
+                                        _.currentOpened == index,
+                                    child: SlideInUp(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          _.notification[index].image != null
+                                              ? CachedNetworkImage(
+                                                  imageUrl: _
+                                                      .notification[index]
+                                                      .image!)
+                                              : const SizedBox(),
+                                          CW.AppSpacer(h: 6),
+                                          Text(_.notification[index].body!)
+                                              .subTitle(
+                                                  fontSize: 10,
+                                                  lines: 100,
+                                                  color: AppColor.text),
+                                          Visibility(
+                                              visible: _.notification[index]
+                                                  .hasAction!,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  const Text("click here")
+                                                      .subTitle(fontSize: 10),
+                                                  const Icon(Icons
+                                                      .arrow_right_alt_rounded),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: const Text("Accept")
+                                                        .title(fontSize: 12)
+                                                        .toButton(onTap: () {}),
+                                                  ),
+                                                ],
+                                              ))
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ).toButton(onTap: () => _.openSelected(index)),
+                          CW.AppSpacer(h: 20),
+                        ],
+                      )),
+            ),
           ]),
         );
       },

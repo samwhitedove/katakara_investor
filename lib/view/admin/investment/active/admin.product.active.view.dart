@@ -53,38 +53,6 @@ class ActiveProduct extends StatelessWidget {
                               selected: _.selected,
                               onChange: _.fetchInvestment,
                             ),
-                            // PopupMenuButton<String>(
-                            //   icon: const Icon(Icons.sort),
-                            //   onSelected: _.changeUserType,
-                            //   itemBuilder: (BuildContext context) {
-                            //     return <PopupMenuEntry<String>>[
-                            //       ...List.generate(
-                            //         _.fetchCategory.length,
-                            //         (index) => PopupMenuItem<String>(
-                            //           textStyle: const TextStyle(
-                            //               fontSize: 12, color: AppColor.text),
-                            //           value: _.fetchCategory[index],
-                            //           child: Row(
-                            //             children: [
-                            //               Text(_.fetchCategory[index]),
-                            //               _.selected == index
-                            //                   ? const Padding(
-                            //                       padding: EdgeInsets.only(
-                            //                           left: 8.0),
-                            //                       child: CircleAvatar(
-                            //                         radius: 3,
-                            //                         backgroundColor:
-                            //                             AppColor.primary,
-                            //                       ),
-                            //                     )
-                            //                   : const SizedBox()
-                            //             ],
-                            //           ),
-                            //         ),
-                            //       )
-                            //     ];
-                            //   },
-                            // ),
                           ]),
                           Padding(
                             padding:
@@ -142,7 +110,6 @@ class ActiveProduct extends StatelessWidget {
 
 investmentDataView(int index, List<InvestmentDatum> fetchedInvestment,
     Function(String) handleStatusView, Function(int) investmentView) {
-  log('$index number ---------------- index --------');
   final product = fetchedInvestment[index].productImage!.split(',')
     ..removeWhere((element) => element == '');
   return ListTile(

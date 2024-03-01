@@ -42,11 +42,11 @@ class HomeScreenController extends GetxController {
 
   List<InvestmentDatum> recentProduct = [];
 
-  fetchInvestment({int? limit}) async {
+  fetchInvestment({int? limit, String? state}) async {
     isFetching = true;
     update();
     final RequestResponseModel res = await Get.find<HomeService>()
-        .fetchUserInvestment({"limit": limit ?? 10});
+        .fetchUserInvestment({"limit": limit ?? 10, "state": userData.state});
     isFetching = false;
     update();
     if (res.success) {

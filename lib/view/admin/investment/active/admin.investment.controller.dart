@@ -144,12 +144,10 @@ class AdminInvestmentActiveController extends GetxController {
       update();
     }
     if (response.success) {
-      log(response.data.toString());
       final data = InvestmentData.fromJson(response.toJson());
       for (var element in data.data!) {
         fetchedInvestment!.add(element);
       }
-      log(data.pagination.toString());
       pagination = data.pagination!;
       update();
     }

@@ -70,7 +70,7 @@ class NotificationController {
   @pragma("vm:entry-point")
   static Future<void> onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
-    log("notification is displayed rece- on displayedivedNotification  ----- on displayed");
+    // log("${receivedNotification.hashCode} notification is displayed rece- on displayedivedNotification  ----- on displayed");
   }
 
   /// Use this method to detect if the user dismissed a notification
@@ -78,8 +78,8 @@ class NotificationController {
   static Future<void> onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
     // Your code goes here
-    // log("notification is dismissed receivedAction ----- on dismiss");
-    AwesomeNotifications().dismissAllNotifications();
+    // log("${receivedAction.hashCode} notification is dismissed receivedAction ----- on dismiss");
+    AwesomeNotifications().dismiss(receivedAction.hashCode);
   }
 
   /// Use this method to detect when the user taps on a notification or action button
@@ -87,7 +87,7 @@ class NotificationController {
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
     // Your code goes here
-    // log("notification is onAction received $receivedAction ----- on action");
+    log("notification is onAction received ${receivedAction.hashCode} ----- on action");
     AwesomeNotifications()
         .dismissNotificationsByGroupKey(receivedAction.groupKey!);
     // log(Get.currentRoute);
@@ -100,6 +100,8 @@ class NotificationController {
     final messageData = NotificationResposeDataModel.fromJson(message.data);
 
     try {
+      log("${messageData.image}   ------------ image data");
+      // display notification
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           backgroundColor: AppColor.primary,
@@ -123,11 +125,9 @@ class NotificationController {
       );
 
       var extra = jsonDecode(messageData.extra);
-
+      // add notification local storage
       if (message.data['notificationType'] == 'notification') {
-        // log("-------- extra ${extra['hasAction']} notification saving  --------------");
         final notification = Get.find<AppNotificationController>();
-        // log("-------- notification saving  --------------");
         final model = NotificationAlertModel(
           body: messageData.body,
           title: messageData.title,

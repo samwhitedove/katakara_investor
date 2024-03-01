@@ -82,4 +82,5 @@ class EndPoint {
   static String rejectProduct = '/console/reject-product';
   static String approveProduct = '/console/approve-product';
   static String publishProduct = '/console/publish-product';
+  static String sendBroadcast = '/console/send-broadcast';
 }

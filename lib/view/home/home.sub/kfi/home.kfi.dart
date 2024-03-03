@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, non_constant_identifier_names, prefer_const_constructors
 
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -128,25 +130,27 @@ class _KFIPageScreenState extends State<KFIPageScreen>
                       ),
                       Expanded(
                         // height: 100,
-                        child: TabBarView(controller: controller, children: [
-                          _.isLoading.value
-                              ? const Center(child: CircularProgressIndicator())
-                              : Obx(
-                                  () => ShowProducts(
-                                    refresh: _.fetchKFIInvestment,
-                                    isLoading: _.isLoading.value,
-                                    isError:
-                                        _.isErrorFetchingMergeProduct.value,
-                                    product: _.kfiProduct,
-                                    errorMessage: _.errorMessage.value,
+                        child: TabBarView(
+                          controller: controller,
+                          children: [
+                            _.isLoading.value
+                                ? const Center(
+                                    child: CircularProgressIndicator())
+                                : Obx(
+                                    () => ShowProducts(
+                                      refresh: _.fetchKFIInvestment,
+                                      isLoading: _.isLoading.value,
+                                      isError:
+                                          _.isErrorFetchingMergeProduct.value,
+                                      product: _.kfiProduct,
+                                      errorMessage: _.errorMessage.value,
+                                    ),
                                   ),
-                                ),
-                          _.isFetchingMerge.value
-                              ? const Center(child: CircularProgressIndicator())
-                              : _.users.isEmpty
-                                  ? RefreshIndicator(
-                                      onRefresh: _.fetchKFIAccount,
-                                      child: SingleChildScrollView(
+                            _.isFetchingMerge.value
+                                ? const Center(
+                                    child: CircularProgressIndicator())
+                                : _.users.isEmpty
+                                    ? SingleChildScrollView(
                                         physics:
                                             const AlwaysScrollableScrollPhysics(),
                                         child: SizedBox(
@@ -158,27 +162,27 @@ class _KFIPageScreenState extends State<KFIPageScreen>
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                  : RefreshIndicator(
-                                      onRefresh: _.fetchKFIAccount,
-                                      child: ListView.builder(
+                                      )
+                                    : RefreshIndicator(
+                                        onRefresh: _.fetchKFIAccount,
+                                        child: ListView.builder(
+                                          physics:
+                                              const BouncingScrollPhysics(),
                                           itemCount: _.users.length,
                                           itemBuilder: (context, index) =>
                                               UserOverviewListTile(
-                                                fullName:
-                                                    _.users[index].fullName!,
-                                                image:
-                                                    _.users[index].profileImage,
-                                                phone:
-                                                    _.users[index].phoneNumber!,
-                                                lga: _.users[index].lga!,
-                                                state: _.users[index].state!,
-                                                onTap: () => ViewInformation(
-                                                    context, _.users[index], _),
-                                              )),
-                                    ),
-                        ]),
+                                            fullName: _.users[index].fullName!,
+                                            image: _.users[index].profileImage,
+                                            phone: _.users[index].phoneNumber!,
+                                            lga: _.users[index].lga!,
+                                            state: _.users[index].state!,
+                                            onTap: () => ViewInformation(
+                                                context, _.users[index], _),
+                                          ),
+                                        ),
+                                      ),
+                          ],
+                        ),
                       )
                     ],
                   ),
@@ -191,7 +195,7 @@ class _KFIPageScreenState extends State<KFIPageScreen>
     );
   }
 
-  ViewInformation(context, MergeUsers user, HomeKFIController _) {
+  Future ViewInformation(context, MergeUsers user, HomeKFIController _) {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -261,7 +265,8 @@ class _KFIPageScreenState extends State<KFIPageScreen>
     );
   }
 
-  ConfirmUnlink(BuildContext context, String email, HomeKFIController _) {
+  Future ConfirmUnlink(
+      BuildContext context, String email, HomeKFIController _) {
     return showModalBottomSheet(
       enableDrag: true,
       context: context,
@@ -301,7 +306,7 @@ class _KFIPageScreenState extends State<KFIPageScreen>
     );
   }
 
-  InviteUser(BuildContext context, HomeKFIController _,
+  Future InviteUser(BuildContext context, HomeKFIController _,
       {bool isAccept = false}) {
     return showModalBottomSheet(
       enableDrag: true,

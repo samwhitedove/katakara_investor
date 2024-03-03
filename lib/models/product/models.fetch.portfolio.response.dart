@@ -64,7 +64,7 @@ class Data {
       };
 }
 
-enum ProductStatus { PENDING, REJECTED, ACTIVE, RESOLVED }
+enum ProductStatus { PENDING, REJECTED, ACTIVE, RESOLVED, PUBLISHED }
 
 handleStatus(String status) {
   switch (status) {
@@ -76,6 +76,8 @@ handleStatus(String status) {
       return (ProductStatus.ACTIVE, "ACTIVE");
     case "RESOLVED":
       return (ProductStatus.RESOLVED, "RESOLVED");
+    case "PUBLISHED":
+      return (ProductStatus.PUBLISHED, "PUBLISHED");
     default:
       return (ProductStatus.PENDING, "PENDING");
   }

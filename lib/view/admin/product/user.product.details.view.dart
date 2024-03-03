@@ -16,7 +16,7 @@ import 'package:katakara_investor/view/widgets/popup.menu.dart';
 class UserProductDetailView extends StatelessWidget {
   UserProductDetailView({super.key});
 
-  final __ = Get.put(UserProductsController());
+  // final __ = Get.put(UserProductsController());
   final _ = Get.find<UserProductsController>();
 
   PortfolioDatum productInfo = Get.arguments;
@@ -40,8 +40,6 @@ class UserProductDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _.commission.text = productInfo.comission!;
-    _.amount.text = productInfo.amount!;
     return Scaffold(body: GetBuilder<UserProductsController>(
       builder: (controller) {
         _.selectedProduct = productInfo;
@@ -77,7 +75,7 @@ class UserProductDetailView extends StatelessWidget {
 
                                 final status = await _.updateStatus(text);
                                 if (status) {
-                                  if (text == "ACTIVE") {
+                                  if (text == "ACTIVE" || text == "PUBLISHED") {
                                     productInfo.rejectionReason = "";
                                   }
                                   productInfo.status = handleStatus(text!);
@@ -108,7 +106,7 @@ class UserProductDetailView extends StatelessWidget {
                         children: [
                           const Text("Reason for rejection")
                               .subTitle(fontSize: 12),
-                          Text(productInfo.rejectionReason).subTitle(
+                          Text(productInfo.rejectionReason ?? "").subTitle(
                               fontSize: 12, bold: true, color: AppColor.red),
                         ],
                       ).align(Al.left),

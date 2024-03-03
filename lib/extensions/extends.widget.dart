@@ -67,12 +67,17 @@ extension ExtendWidget on Widget {
       {double height = 40,
       double? radius = 40,
       double width = 40,
+      double? maxHeight,
+      double? maxWidth,
       Color? bgColor}) {
     return Container(
+      constraints: BoxConstraints(
+          maxHeight: maxHeight ?? double.infinity,
+          maxWidth: maxWidth ?? double.infinity),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(radius ?? 8), color: bgColor),
-      height: HC.spaceVertical(height),
-      width: HC.spaceHorizontal(width),
+      height: maxHeight != null ? null : HC.spaceVertical(height),
+      width: maxWidth != null ? null : HC.spaceHorizontal(width),
       child: this,
     );
   }

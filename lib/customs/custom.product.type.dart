@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom.product.card.dart';
@@ -19,9 +21,12 @@ class ProductTypeCategory extends StatelessWidget {
     return product.isEmpty
         ? Center(child: NoDataScreen(oncall: onRefresh))
         : RefreshIndicator(
-            onRefresh: () => onRefresh?.call(),
+            onRefresh: () {
+              log("calling another ------");
+              return onRefresh?.call();
+            },
             child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               child: Wrap(
                 spacing: 4,
                 runSpacing: 10,
@@ -42,14 +47,15 @@ class ProductTypeCategory extends StatelessWidget {
                             product[index].status!.$1 == ProductStatus.PENDING,
                         child: Text(product[index].status!.$2)
                             .subTitle(fontSize: 10, color: AppColor.white)
-                            .paddingAll(4)
+                            .paddingAll(2)
                             .simpleRoundCorner(
-                              width: HC.spaceHorizontal(67),
-                              height: HC.spaceHorizontal(30),
+                              maxWidth: HC.spaceHorizontal(67),
+                              maxHeight: HC.spaceHorizontal(30),
                               bgColor: product[index].status!.$1 ==
                                       ProductStatus.PENDING
                                   ? AppColor.subTitle
                                   : AppColor.red,
+                              radius: 4,
                             ),
                       ),
                       Positioned(
@@ -62,11 +68,12 @@ class ProductTypeCategory extends StatelessWidget {
                                   ProductStatus.ACTIVE,
                               child: Text(product[index].status!.$2)
                                   .subTitle(fontSize: 10, color: AppColor.white)
-                                  .paddingAll(4)
+                                  .paddingAll(2)
                                   .simpleRoundCorner(
-                                    width: HC.spaceHorizontal(77),
-                                    height: HC.spaceHorizontal(30),
+                                    maxWidth: HC.spaceHorizontal(77),
+                                    maxHeight: HC.spaceHorizontal(30),
                                     bgColor: AppColor.primary,
+                                    radius: 4,
                                   ),
                             ),
                             CW.AppSpacer(h: 2),
@@ -74,12 +81,12 @@ class ProductTypeCategory extends StatelessWidget {
                               visible: product[index].isMerge!,
                               child: const Text("KFI")
                                   .subTitle(fontSize: 10, color: AppColor.white)
-                                  .paddingAll(4)
+                                  .paddingAll(2)
                                   .simpleRoundCorner(
-                                    width: HC.spaceHorizontal(34),
-                                    height: HC.spaceHorizontal(28),
-                                    bgColor: AppColor.orange,
-                                  ),
+                                      maxWidth: HC.spaceHorizontal(34),
+                                      maxHeight: HC.spaceHorizontal(28),
+                                      bgColor: AppColor.orange,
+                                      radius: 4),
                             ),
                           ],
                         ),

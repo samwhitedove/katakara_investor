@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom.product.type.dart';
 import 'package:katakara_investor/customs/custom.product.type.loading.dart';
+import 'package:katakara_investor/customs/custom.widget.dart';
 import 'package:katakara_investor/models/product/models.fetch.portfolio.response.dart';
 
 class ShowProducts extends StatelessWidget {
@@ -22,29 +25,16 @@ class ShowProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        await refresh.call();
-      },
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: SizedBox(
-          // color: AppColor.black,
-          height: Get.height * (height ?? .63),
-          width: double.infinity,
-          child: isLoading
-              ? const ProductTypeCategoryLoadingState()
-              : isError
-                  ? ErrorFetchingScreen(
-                      error: errorMessage,
-                      onRefresh: refresh,
-                    )
-                  : ProductTypeCategory(
-                      product: product,
-                      onRefresh: refresh,
-                    ),
-        ),
-      ),
-    );
+    return isLoading
+        ? const ProductTypeCategoryLoadingState()
+        : isError
+            ? ErrorFetchingScreen(
+                error: errorMessage,
+                onRefresh: refresh,
+              )
+            : ProductTypeCategory(
+                product: product,
+                onRefresh: refresh,
+              );
   }
 }

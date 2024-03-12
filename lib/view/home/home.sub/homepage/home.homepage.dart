@@ -17,6 +17,7 @@ class HomePageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.find<HomeScreenController>().connectSocket();
     // Get.find<HomeService>().filterInvestment({"limit": 4});
     return GetBuilder<HomeScreenController>(
       init: Get.find<HomeScreenController>(),

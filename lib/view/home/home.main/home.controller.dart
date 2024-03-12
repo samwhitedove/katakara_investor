@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -11,6 +12,9 @@ import 'package:katakara_investor/services/services.auth.dart';
 import 'package:katakara_investor/values/values.dart';
 import 'package:katakara_investor/view/admin/investment/active/model.response.dart';
 import 'package:katakara_investor/view/home/home.dart';
+import 'package:katakara_investor/view/home/home.sub/chat/model.chat.dart';
+import 'package:socket_io_client/socket_io_client.dart' as web_socket;
+import 'package:socket_io_client/socket_io_client.dart';
 
 class HomeScreenController extends GetxController {
   RxBool isLoading = false.obs;
@@ -30,11 +34,104 @@ class HomeScreenController extends GetxController {
     super.onReady();
   }
 
+  late web_socket.Socket? socket;
+
+  List<ChatMapData> chatList = [];
+
+  StreamController<List<ChatMapData>> chatListController =
+      StreamController<List<ChatMapData>>();
+
+  addToChatList(Map<String, dynamic> data) {
+    print(chatList);
+    print(data);
+    ChatMessages chatData = ChatMessages.fromJson(data);
+    List<ChatMapData> previousChat = chatList
+        .where((item) => item.senderUuid == chatData.senderUuid)
+        .toList();
+    if (previousChat.isEmpty) {
+      final chatMap = ChatMapData(
+          lastMessage: chatData.message!,
+          senderName: chatData.senderName!,
+          senderUuid: chatData.senderUuid!,
+          totalUnread: 1,
+          totalMessages: 1,
+          messages: [chatData],
+          profileImage: chatData.profileImage);
+      chatList.add(chatMap);
+      chatListController.add(chatList);
+      return;
+    }
+
+    final chatMap = ChatMapData(
+        lastMessage: chatData.message!,
+        senderName: chatData.senderName!,
+        senderUuid: chatData.senderUuid!,
+        totalUnread: previousChat.first.totalUnread + 1,
+        totalMessages: previousChat.first.messages.length + 1,
+        messages: previousChat.first.messages..add(chatData),
+        profileImage: chatData.profileImage);
+    int index =
+        chatList.indexWhere((item) => item.senderUuid == chatData.senderUuid);
+    chatList[index] = chatMap;
+    chatListController.add(chatList);
+
+    print(chatList);
+  }
+
+  @override
+  void onClose() {
+    socket?.disconnect();
+    chatListController.close();
+    super.onClose();
+  }
+
   @override
   onInit() {
     super.onInit();
     Get.put(PortfolioController());
     Get.put(HomeKFIController());
+  }
+
+  handleReceiveChat(Map<String, dynamic> data) {
+    // chatList.clear();
+    log("$data -------- chat data");
+    addToChatList(data);
+  }
+
+  Future<web_socket.Socket?> socketConnect() async {
+    try {
+      web_socket.Socket socket = web_socket.io(
+        "http://192.168.0.177:3000",
+        OptionBuilder().setTransports(['websocket', 'polling']).build(),
+      );
+      socket.auth = {"token": userData.token};
+      socket.connect();
+      if (socket.connected) print('socket connected -----------------');
+
+      socket.onConnect((_) {
+        print(" ---------------- Socket.io connection established");
+        socket.emit("auth", userData.token);
+      });
+      // socket.onDisconnect((_) => {log("Socket.io connection dropped")});
+      // socket.onError((e) => {log("Socket.io error $e")});
+      socket.onConnectError((e) => {log("Socket.io connection error $e")});
+      return socket;
+    } catch (e) {
+      log('$e socket error -----------------');
+      return null;
+    }
+  }
+
+  void connectSocket() async {
+    try {
+      socket = await socketConnect();
+      socket?.on("chat", (data) => handleReceiveChat(data));
+      socket?.on("error", (data) => log("$data error message---------------"));
+      socket?.on("connect", (data) => log("successful connected to socket"));
+      socket?.on("disconnect", (_) => log("disconnect from server"));
+    } catch (e) {
+      log('$e ----- error connecting to socket  ---');
+    }
   }
 
   String? deviceToken = "";

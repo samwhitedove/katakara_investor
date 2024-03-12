@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:katakara_investor/customs/custom.widget.dart';
@@ -17,7 +18,6 @@ class ChatScreen extends StatelessWidget {
       builder: (_) {
         return Scaffold(
           bottomSheet: SizedBox(
-            // color: AppColor.purple,
             height: 80,
             child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -35,19 +35,19 @@ class ChatScreen extends StatelessWidget {
                           onChangeValue: () {}),
                     ),
                   ),
-                  const Row(
+                  Row(
                     children: [
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.all(8.0),
                         child:
                             Icon(Icons.image_outlined, color: AppColor.primary),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(
+                        padding: const EdgeInsets.all(8.0),
+                        child: const Icon(
                           Icons.send,
                           color: AppColor.primary,
-                        ),
+                        ).toButton(onTap: () => _.sendChat()),
                       ),
                     ],
                   )
@@ -61,17 +61,22 @@ class ChatScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     CW.backButton(),
+                    CW.AppSpacer(w: 20),
+                    CircleAvatar(
+                      child: _.chatData.profileImage == null
+                          ? Assets.assetsImagesImage.roundImageCorner(
+                              useAssets: true, height: 50, width: 50)
+                          : CachedNetworkImage(
+                              imageUrl: _.chatData.profileImage!),
+                    ),
                     // ignore: prefer_const_constructors
-                    Text("Olad Sam")
+                    Text(_.chatData.senderName)
                         .title(fontSize: 20, lines: 1, color: AppColor.black)
                         .paddingOnly(left: 20),
                   ],
                 ),
               ),
               CW.AppSpacer(h: 10),
-              chatWidget(_),
-              chatWidget(_),
-              chatWidget(_),
             ],
           ),
         );

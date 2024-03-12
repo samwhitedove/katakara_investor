@@ -861,62 +861,81 @@ class CW {
       {required String name,
       required String latestMessage,
       required String date,
+      required String senderUuid,
+      required int totalUnread,
+      required String? profileImage,
       Function()? onTap,
       required dynamic status}) {
+    final fDate =
+        HC.formatDate(DateTime.parse(date), formatSimple: true).split('-');
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Assets.assetsImagesImage
-            .roundImageCorner(useAssets: true, height: 50, width: 50),
-        CW.AppSpacer(w: 10),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Row(
           children: [
-            Row(
+            profileImage == null
+                ? Assets.assetsImagesImage
+                    .roundImageCorner(useAssets: true, height: 50, width: 50)
+                : CachedNetworkImage(
+                    imageUrl: profileImage,
+                    height: 50,
+                    width: 50,
+                  ),
+            CW.AppSpacer(w: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  // color: AppColor.blue,
-                  constraints: BoxConstraints(minWidth: Get.width * .7),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4, bottom: 4),
-                        child: Text(name).title(
-                            fontSize: 14, color: AppColor.black, lines: 1),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4, bottom: 0),
-                        child: Text(latestMessage)
-                            .subTitle(fontSize: 11, lines: 1),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4, bottom: 0),
-                        child: Text(
-                          timeago.format(DateTime.now()),
-                        ).subTitle(
-                            fontSize: 10, color: AppColor.grey, lines: 1),
-                      ),
-                    ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 4, bottom: 4),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: Get.width * .6),
+                    child: Text(name)
+                        .title(fontSize: 14, color: AppColor.black, lines: 1),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 4, bottom: 4),
-                  child: Icon(
-                    status
-                        ? Icons.playlist_add_check_circle_rounded
-                        : Icons.playlist_add_check_circle_outlined,
-                    color: status ? AppColor.primary : AppColor.grey,
-                    size: 17,
+                  padding: const EdgeInsets.only(left: 4, bottom: 0),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: Get.width * .6),
+                    child: Text(latestMessage).subTitle(fontSize: 11, lines: 2),
                   ),
                 ),
               ],
             ),
-            CW.AppSpacer(h: 1),
           ],
-        )
+        ),
+        SizedBox(
+          height: 45,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              senderUuid != userData.uuid
+                  ? totalUnread == 0
+                      ? const SizedBox(height: 20)
+                      : CircleAvatar(
+                          radius: 8,
+                          backgroundColor: AppColor.red,
+                          child: Text(totalUnread.toString())
+                              .subTitle(fontSize: 10, color: AppColor.white),
+                        )
+                  : Icon(
+                      status ? Icons.check : Icons.check,
+                      color: status ? AppColor.primary : AppColor.grey,
+                      size: 15,
+                    ),
+              Padding(
+                padding: const EdgeInsets.only(left: 4, bottom: 0),
+                child: Text(HC.isToday(DateTime.parse(date))
+                        ? fDate[1].toString().trim()
+                        : fDate[0].toString().trim())
+                    .subTitle(fontSize: 9, color: AppColor.grey, lines: 1),
+              ),
+            ],
+          ),
+        ).paddingOnly(right: 8),
       ],
     )
         .roundCorner(height: 50, showBorder: false, blurRadius: 1)

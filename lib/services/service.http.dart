@@ -18,6 +18,9 @@ class MyRequestClass {
   static const String _baseUrl = kDebugMode
       ? "http://192.168.0.177:3000/api/v1"
       : "https://investor.mykatakara.com/api/v1";
+
+  static get baseUrl => "http://192.168.0.177:3000";
+
   static CancelToken? cancelToken;
   static Dio? _dio;
 
